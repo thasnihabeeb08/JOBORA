@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - RIYA JHA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Riya Jha
+Email: riyajha@example.com
+Phone: +918234844777
+Location: Indore
+
+EDUCATION
+---------
+• masters in Computer Science
+• IIT Delhi
+• Graduation Year: 2020
+
+WORK EXPERIENCE
+--------------
+• 1 years of professional experience
+• Current Role: Product Manager
+• Skills: C#, Kubernetes, Google Suite, CI/CD, DevOps, Microsoft Office, Artificial Intelligence, UI/UX Design
+
+TECHNICAL SKILLS
+----------------
+C#, Kubernetes, Google Suite, CI/CD, DevOps, Microsoft Office, Artificial Intelligence, UI/UX Design
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

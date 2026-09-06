@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ANANYA BOSE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Ananya Bose
+Email: ananyabose@example.com
+Phone: +919943041292
+Location: Bhopal
+
+EDUCATION
+---------
+• bachelors in Marketing
+• IIT Guwahati
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 4 years of professional experience
+• Current Role: Software Developer
+• Skills: Ruby on Rails, Project Management, Linux, TypeScript, Flask, Machine Learning, Angular, AWS
+
+TECHNICAL SKILLS
+----------------
+Ruby on Rails, Project Management, Linux, TypeScript, Flask, Machine Learning, Angular, AWS
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

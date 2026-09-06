@@ -1,0 +1,39 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Garg
+Email: anvigarg@example.com
+Location: Kolkata
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking DevOps Engineer position. 
+Skilled in docker, kubernetes, aws.
+
+TECHNICAL SKILLS
+---------------
+• docker
+• kubernetes
+• aws
+• ci/cd
+• linux
+• python
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

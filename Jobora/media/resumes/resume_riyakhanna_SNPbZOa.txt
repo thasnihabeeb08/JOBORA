@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Riya Khanna
+Email: riyakhanna@example.com
+Location: Hyderabad
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Assistant Store Manager position. 
+Skilled in retail skills, communication, teamwork.
+
+TECHNICAL SKILLS
+---------------
+• retail skills
+• communication
+• teamwork
+• problem solving
+• analytical thinking
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

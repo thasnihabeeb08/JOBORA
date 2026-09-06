@@ -1,0 +1,38 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Web Development Intern
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vikram Bansal
+Email: vikrambansal@example.com
+Location: Hybrid
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Web Development Intern position.
+Skilled in Communication, Teamwork, Learning, Problem Solving, Microsoft Office.
+
+TECHNICAL SKILLS
+---------------
+• Communication
+• Teamwork
+• Learning
+• Problem Solving
+• Microsoft Office
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

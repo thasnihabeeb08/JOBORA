@@ -1,0 +1,1359 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard - Job Seeker{% endblock %}
+{% block title_icon %}fa-tachometer-alt{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'search_jobs' %}" class="btn btn-primary">
+        <i class="fas fa-search me-2"></i> Search Jobs
+    </a>
+    <a href="{% url 'edit_job_seeker_profile' %}" class="btn btn-outline-primary">
+        <i class="fas fa-user-edit me-2"></i> Edit Profile
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - DASHBOARD === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+    .delay-6 { animation-delay: 1.2s; }
+
+    /* ==================== */
+    /* FIXED: Stats Cards with Ocean Teal Hover Effects */
+    /* ==================== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px 24px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        cursor: pointer;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -20%;
+        width: 50%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        animation: float 15s ease-in-out infinite;
+        transition: all 0.5s ease;
+    }
+
+    /* FIXED: Ocean Teal hover effect */
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .stat-card:hover::before {
+        transform: scale(1.2);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    }
+
+    /* FIXED: All text white on hover */
+    .stat-card:hover .stat-number,
+    .stat-card:hover .stat-label,
+    .stat-card:hover .stat-subtext,
+    .stat-card:hover .stat-subtext a,
+    .stat-card:hover .stat-subtext i {
+        color: white !important;
+    }
+
+    .stat-card:hover .stat-subtext a:hover {
+        color: var(--accent) !important;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-number {
+        transform: scale(1.1);
+    }
+    
+    .stat-label {
+        font-size: 0.95rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-subtext {
+        font-size: 0.85rem;
+        color: var(--gray-medium);
+        margin-top: 5px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-subtext a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .stat-subtext a:hover {
+        color: var(--primary) !important;
+        transform: translateX(5px);
+        display: inline-block;
+    }
+    
+    /* Professional Profile Status Card */
+    .profile-status-card {
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(0, 168, 150, 0.1));
+        border-radius: 24px;
+        margin-bottom: 30px;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInLeft 0.8s ease;
+        transition: all 0.4s ease;
+    }
+
+    .profile-status-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.15), rgba(0, 168, 150, 0.15));
+    }
+
+    .profile-status-card .progress {
+        background: var(--gray-light);
+        border-radius: 10px;
+        overflow: hidden;
+        height: 6px;
+    }
+
+    .profile-status-card .progress-bar {
+        background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        transition: width 1s ease;
+    }
+
+    /* Performance Metric Cards */
+    .metric-card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid var(--gray-light);
+        text-align: center;
+        height: 100%;
+        transition: all 0.4s ease;
+        box-shadow: var(--card-shadow);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .metric-card:hover .metric-value,
+    .metric-card:hover .metric-label,
+    .metric-card:hover .metric-desc {
+        color: white !important;
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .metric-card:hover .metric-value {
+        transform: scale(1.1);
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .metric-desc {
+        font-size: 0.8rem;
+        color: var(--gray-medium);
+        margin-top: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    /* Activity Items */
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .activity-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(8px);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+    }
+    
+    .activity-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    
+    .activity-icon.applied { 
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.1)); 
+        color: var(--primary); 
+    }
+    .activity-icon.shortlisted { 
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 105, 148, 0.1)); 
+        color: var(--secondary); 
+    }
+    .activity-icon.interview { 
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(0, 168, 150, 0.1)); 
+        color: var(--accent); 
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-title {
+        color: var(--primary);
+    }
+    
+    .activity-desc {
+        font-size: 0.85rem;
+        color: var(--gray-medium);
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-desc {
+        color: var(--dark);
+    }
+    
+    .activity-time {
+        font-size: 0.8rem;
+        color: var(--gray-medium);
+    }
+    
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .empty-state:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-icon {
+        color: var(--secondary);
+        transform: scale(1.1);
+    }
+    
+    .empty-state-text {
+        color: var(--dark);
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-text {
+        color: var(--primary);
+    }
+    
+    /* Table Styles */
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .dashboard-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.9rem;
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 2px solid var(--gray-light);
+    }
+    
+    .dashboard-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+    }
+    
+    .dashboard-table tr {
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .dashboard-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+    
+    /* Status Badges */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-applied { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-shortlisted { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-interview { background: rgba(255, 179, 71, 0.1); color: var(--accent); }
+    .badge-selected { background: rgba(0, 168, 150, 0.2); color: var(--secondary-dark); }
+    .badge-rejected { background: rgba(230, 126, 34, 0.1); color: #c0392b; }
+    
+    /* Application Funnel */
+    .funnel-container {
+        position: relative;
+        margin: 20px 0;
+    }
+    
+    .funnel-step {
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border-radius: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+        border: 1px solid transparent;
+    }
+
+    .funnel-step:hover {
+        transform: translateX(10px);
+        border-color: var(--secondary);
+        box-shadow: var(--hover-shadow);
+    }
+    
+    .funnel-step.applied { 
+        background: linear-gradient(90deg, rgba(0, 105, 148, 0.1), transparent); 
+        border-left: 4px solid var(--primary); 
+    }
+    .funnel-step.shortlisted { 
+        background: linear-gradient(90deg, rgba(0, 168, 150, 0.1), transparent); 
+        border-left: 4px solid var(--secondary); 
+    }
+    .funnel-step.interview { 
+        background: linear-gradient(90deg, rgba(255, 179, 71, 0.1), transparent); 
+        border-left: 4px solid var(--accent); 
+    }
+    .funnel-step.selected { 
+        background: linear-gradient(90deg, rgba(74, 159, 197, 0.1), transparent); 
+        border-left: 4px solid var(--primary-light); 
+    }
+    
+    .funnel-count {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+
+    .funnel-step:hover .funnel-count {
+        color: var(--primary);
+        transform: scale(1.1);
+    }
+    
+    .funnel-percentage {
+        font-size: 0.9rem;
+        color: var(--gray-medium);
+    }
+    
+    /* AI Match Score Styles */
+    .ai-match-cell {
+        text-align: center;
+        min-width: 100px;
+    }
+    
+    .ai-match-score {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .ai-match-score:hover {
+        transform: scale(1.1);
+    }
+    
+    .ai-match-bar {
+        width: 70px;
+        height: 6px;
+        background: var(--gray-light);
+        border-radius: 3px;
+        margin: 5px auto;
+        overflow: hidden;
+    }
+    
+    .ai-match-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 1s ease;
+    }
+    
+    .score-excellent { color: var(--secondary); }
+    .score-good { color: var(--accent); }
+    .score-average { color: var(--primary); }
+    .score-low { color: var(--gray-medium); }
+    
+    .bg-excellent { background: var(--secondary); }
+    .bg-good { background: var(--accent); }
+    .bg-average { background: var(--primary); }
+    .bg-low { background: var(--gray-medium); }
+    
+    /* Card Styles */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Button Styles */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+    
+    /* Quick Actions */
+    .d-grid.gap-2.d-md-flex {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .dashboard-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .metric-card {
+            padding: 15px;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+        }
+        
+        .profile-status-card .d-flex {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Professional Profile Status Alert -->
+{% if stats.profile_completion < 80 %}
+<div class="card profile-status-card animate-fadeInLeft">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0 me-3">
+                <i class="fas fa-user-edit fa-2x" style="color: var(--accent); animation: pulse 2s infinite;"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h5 class="card-title mb-1" style="color: var(--dark);">Profile Incomplete</h5>
+                <p class="card-text mb-2" style="color: var(--gray-medium);">
+                    Complete your profile to unlock better job recommendations.
+                </p>
+                <div class="d-flex align-items-center">
+                    <div class="progress flex-grow-1 me-3" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ stats.profile_completion }}%; background: linear-gradient(90deg, var(--accent), var(--secondary));" 
+                             aria-valuenow="{{ stats.profile_completion }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                    <span style="color: var(--accent); font-weight: 600;">{{ stats.profile_completion }}%</span>
+                </div>
+            </div>
+            <div class="flex-shrink-0">
+                <a href="{% url 'edit_job_seeker_profile' %}" class="btn btn-warning">
+                    <i class="fas fa-pencil-alt me-1"></i> Complete Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Stats Overview - FIXED: Now with Ocean Teal hover effects -->
+<div class="stats-grid">
+    <div class="stat-card delay-1">
+        <div class="stat-number">{{ stats.total_applications|default:0 }}</div>
+        <div class="stat-label">Total Applications</div>
+        <div class="stat-subtext">
+            {% if stats.pending_applications > 0 %}
+                <i class="fas fa-clock me-1" style="color: var(--accent);"></i> {{ stats.pending_applications }} pending
+            {% else %}
+                <i class="fas fa-check-circle me-1" style="color: var(--secondary);"></i> No pending applications
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card delay-2">
+        <div class="stat-number">{{ stats.upcoming_interviews|default:0 }}</div>
+        <div class="stat-label">Upcoming Interviews</div>
+        <div class="stat-subtext">
+            {% if stats.upcoming_interviews > 0 and upcoming_interviews_list %}
+                <i class="fas fa-calendar me-1" style="color: var(--accent);"></i> Next: {{ upcoming_interviews_list.0.scheduled_date|date:"M d" }}
+            {% else %}
+                <i class="fas fa-calendar-times me-1" style="color: var(--gray-medium);"></i> No upcoming interviews
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card delay-3">
+        <div class="stat-number">{{ stats.unread_messages|default:0 }}</div>
+        <div class="stat-label">Unread Messages</div>
+        <div class="stat-subtext">
+            {% if stats.unread_messages > 0 %}
+                <a href="{% url 'my_messages' %}"><i class="fas fa-envelope me-1"></i> View messages</a>
+            {% else %}
+                <i class="fas fa-check-circle me-1" style="color: var(--secondary);"></i> No new messages
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card delay-4">
+        <div class="stat-number">{{ stats.profile_completion|default:0 }}%</div>
+        <div class="stat-label">Profile Complete</div>
+        <div class="stat-subtext">
+            {% if stats.profile_completion < 80 %}
+                <a href="{% url 'edit_job_seeker_profile' %}"><i class="fas fa-arrow-right me-1"></i> Complete profile</a>
+            {% else %}
+                <i class="fas fa-check-circle me-1" style="color: var(--secondary);"></i> Profile complete
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Two Column Layout -->
+<div class="row">
+    <!-- Recent Applications -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-alt me-2"></i>
+                    Recent Applications
+                </h5>
+                <a href="{% url 'my_applications' %}" class="btn btn-sm btn-outline-primary">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if recent_applications %}
+                    <div class="table-responsive">
+                        <table class="dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Job Position</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in recent_applications %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-500">{{ app.job.title|truncatechars:25 }}</div>
+                                        <small class="text-muted">{{ app.applied_on|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td class="fw-500">{{ app.job.company.name|truncatechars:20 }}</td>
+                                    <td>
+                                        <span class="status-badge badge-{{ app.status }}">
+                                            {{ app.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h5 class="empty-state-text">No applications yet</h5>
+                        <p class="mb-4" style="color: var(--gray-medium);">Start applying to jobs to track your progress</p>
+                        <a href="{% url 'search_jobs' %}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i> Find Jobs
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upcoming Interviews -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Upcoming Interviews
+                </h5>
+                <a href="{% url 'my_interviews' %}" class="btn btn-sm btn-outline-primary">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if upcoming_interviews_list %}
+                    <div class="table-responsive">
+                        <table class="dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Date & Time</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for interview in upcoming_interviews_list %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-500">{{ interview.application.job.company.name|truncatechars:20 }}</div>
+                                        <small class="text-muted">{{ interview.application.job.title|truncatechars:15 }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="fw-500">{{ interview.scheduled_date|date:"M d, Y" }}</div>
+                                        <small class="text-muted">{{ interview.scheduled_date|time:"g:i A" }}</small>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'interview_detail' interview.id %}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h5 class="empty-state-text">No upcoming interviews</h5>
+                        <p class="mb-4" style="color: var(--gray-medium);">Schedule interviews to see them here</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Metrics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Application Performance
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Application Funnel -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3" style="color: var(--dark); font-weight: 600;">Application Funnel</h6>
+                        <div class="funnel-container">
+                            <div class="funnel-step applied">
+                                <div>
+                                    <div class="fw-500">Applied</div>
+                                    <small style="color: var(--gray-medium);">Jobs you've applied to</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="funnel-count">{{ stats.total_applications|default:0 }}</div>
+                                    <div class="funnel-percentage">100%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="funnel-step shortlisted">
+                                <div>
+                                    <div class="fw-500">Shortlisted</div>
+                                    <small style="color: var(--gray-medium);">Applications shortlisted</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="funnel-count">{{ stats.shortlisted_count|default:0 }}</div>
+                                    <div class="funnel-percentage">
+                                        {% if stats.total_applications > 0 %}
+                                            {% widthratio stats.shortlisted_count stats.total_applications 100 %}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="funnel-step interview">
+                                <div>
+                                    <div class="fw-500">Interviewed</div>
+                                    <small style="color: var(--gray-medium);">Interviews scheduled</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="funnel-count">{{ stats.interview_count|default:0 }}</div>
+                                    <div class="funnel-percentage">
+                                        {% if stats.total_applications > 0 %}
+                                            {% widthratio stats.interview_count stats.total_applications 100 %}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="funnel-step selected">
+                                <div>
+                                    <div class="fw-500">Selected</div>
+                                    <small style="color: var(--gray-medium);">Job offers received</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="funnel-count">{{ stats.selected_count|default:0 }}</div>
+                                    <div class="funnel-percentage">
+                                        {% if stats.total_applications > 0 %}
+                                            {% widthratio stats.selected_count stats.total_applications 100 %}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Key Performance Indicators -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3" style="color: var(--dark); font-weight: 600;">Key Performance Indicators</h6>
+                        <div class="row">
+                            <!-- Success Rate Card -->
+                            <div class="col-4 mb-3">
+                                <div class="metric-card">
+                                    <div class="metric-value">
+                                        {{ stats.success_rate|default:0 }}%
+                                    </div>
+                                    <div class="metric-label">Success Rate</div>
+                                    <div class="metric-desc">
+                                        {% if stats.selected_count > 0 %}
+                                            {{ stats.selected_count }} offer{{ stats.selected_count|pluralize }}
+                                        {% else %}
+                                            No offers yet
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Interview Rate Card -->
+                            <div class="col-4 mb-3">
+                                <div class="metric-card">
+                                    <div class="metric-value">
+                                        {{ stats.interview_rate|default:0 }}%
+                                    </div>
+                                    <div class="metric-label">
+                                        Interview Rate
+                                        <i class="fas fa-info-circle ms-1" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Percentage of applications leading to interviews"></i>
+                                    </div>
+                                    <div class="metric-desc">
+                                        {% if stats.interview_count > 0 %}
+                                            {{ stats.interview_count }} interview{{ stats.interview_count|pluralize }}
+                                        {% else %}
+                                            No interviews
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Profile Score Card -->
+                            <div class="col-4 mb-3">
+                                <div class="metric-card">
+                                    <div class="metric-value">
+                                        {{ stats.profile_completion|default:0 }}%
+                                    </div>
+                                    <div class="metric-label">
+                                        Profile Score
+                                        <i class="fas fa-info-circle ms-1" 
+                                           data-bs-toggle="tooltip"
+                                           title="Profile completion percentage"></i>
+                                    </div>
+                                    <div class="metric-desc">
+                                        {% if stats.profile_completion < 80 %}
+                                            Needs improvement
+                                        {% else %}
+                                            Complete
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-bolt me-2"></i>
+            Quick Actions
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="{% url 'search_jobs' %}" class="btn btn-primary me-2">
+                <i class="fas fa-search me-2"></i> Find Jobs
+            </a>
+            <a href="{% url 'my_applications' %}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-file-alt me-2"></i> My Applications
+            </a>
+            <a href="{% url 'my_messages' %}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-envelope me-2"></i> Messages
+                {% if stats.unread_messages > 0 %}
+                <span class="badge bg-danger ms-2">{{ stats.unread_messages }}</span>
+                {% endif %}
+            </a>
+            <a href="{% url 'saved_jobs' %}" class="btn btn-outline-primary">
+                <i class="fas fa-bookmark me-2"></i> Saved Jobs
+                {% if stats.saved_jobs_count > 0 %}
+                <span id="saved-jobs-count" class="badge bg-primary ms-2">{{ stats.saved_jobs_count }}</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- AI Recommended Jobs with Match Scores -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-title mb-0">
+                <i class="fas fa-robot me-2"></i>
+                AI Recommended Jobs
+            </h5>
+            <small style="color: var(--gray-medium);">Based on your profile and preferences</small>
+        </div>
+        <a href="{% url 'search_jobs' %}" class="btn btn-sm btn-outline-primary">
+            View All <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+    <div class="card-body p-0">
+        {% if recommended_jobs %}
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th style="text-align: center;">Match %</th>
+                            <th>Salary</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in recommended_jobs %}
+                        <tr>
+                            <td>
+                                <div class="fw-500">{{ job.title|truncatechars:30 }}</div>
+                                <small style="color: var(--gray-medium);">{{ job.get_job_type_display }}</small>
+                            </td>
+                            <td class="fw-500">{{ job.company.name|truncatechars:25 }}</td>
+                            <td>
+                                {% if job.is_remote %}
+                                <span class="badge bg-success">Remote</span>
+                                {% else %}
+                                {{ job.location|truncatechars:20 }}
+                                {% endif %}
+                            </td>
+                            
+                            <!-- AI MATCH PERCENTAGE COLUMN -->
+                            <td style="text-align: center; min-width: 100px;">
+                                {% with match_score=job.ai_match_score|default:0 %}
+                                <div class="ai-match-score 
+                                    {% if match_score >= 80 %}score-excellent
+                                    {% elif match_score >= 60 %}score-good
+                                    {% elif match_score >= 40 %}score-average
+                                    {% else %}score-low{% endif %}">
+                                    {{ match_score }}%
+                                </div>
+                                <div class="ai-match-bar">
+                                    <div class="ai-match-fill 
+                                        {% if match_score >= 80 %}bg-excellent
+                                        {% elif match_score >= 60 %}bg-good
+                                        {% elif match_score >= 40 %}bg-average
+                                        {% else %}bg-low{% endif %}" 
+                                        style="width: {{ match_score }}%;"></div>
+                                </div>
+                                <small class="ai-match-label">
+                                    {% if match_score >= 80 %}Excellent Match
+                                    {% elif match_score >= 60 %}Good Match
+                                    {% elif match_score >= 40 %}Average Match
+                                    {% else %}Low Match{% endif %}
+                                </small>
+                                {% endwith %}
+                            </td>
+                            
+                            <td>
+                                <div style="font-size: 13px; color: var(--gray-medium);">
+                                    {% if job.salary_min and job.salary_max %}
+                                    ₹{{ job.salary_min|intcomma }} - {{ job.salary_max|intcomma }}
+                                    {% elif job.salary_min %}
+                                    ₹{{ job.salary_min|intcomma }}
+                                    {% else %}
+                                    Negotiable
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{% url 'view_job_detail' job.id %}" class="btn btn-sm btn-outline-primary" style="padding: 4px 10px; font-size: 12px;">
+                                        View
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-primary save-job-btn" data-job-id="{{ job.id }}" style="padding: 4px 10px; font-size: 12px;">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h5 class="empty-state-text">No job recommendations yet</h5>
+                <p class="mb-4" style="color: var(--gray-medium);">Complete your profile to get personalized job recommendations</p>
+                <a href="{% url 'edit_job_seeker_profile' %}" class="btn btn-primary">
+                    <i class="fas fa-user-edit me-2"></i> Complete Profile
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Dashboard JS loaded');
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Initialize save job buttons
+        const saveButtons = document.querySelectorAll('.save-job-btn');
+        
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const jobId = this.getAttribute('data-job-id');
+                const icon = this.querySelector('i');
+                
+                if (!jobId) {
+                    console.error('No job ID found');
+                    return;
+                }
+                
+                // Toggle save state with animation
+                if (icon.classList.contains('far')) {
+                    // Save job
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                    
+                    saveJob(jobId, true);
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-primary');
+                } else {
+                    // Unsave job
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                    
+                    saveJob(jobId, false);
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-outline-primary');
+                }
+            });
+        });
+    });
+    
+    // Save/Unsave job function
+    function saveJob(jobId, shouldSave = true) {
+        const url = `/job-seeker/save-job/${jobId}/`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: shouldSave ? 'save' : 'unsave' }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSimpleMessage(
+                    shouldSave ? '✅ Job saved to favorites!' : '🗑️ Job removed from favorites',
+                    'success'
+                );
+                updateSavedJobsCount();
+            } else {
+                showSimpleMessage(data.error || 'Failed to save job', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showSimpleMessage('Network error. Please try again.', 'error');
+        });
+    }
+    
+    // Get CSRF token
+    function getCsrfToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return decodeURIComponent(value);
+            }
+        }
+        return '';
+    }
+    
+    // Update saved jobs count
+    function updateSavedJobsCount() {
+        fetch('/job-seeker/saved-jobs-count/')
+            .then(response => response.json())
+            .then(data => {
+                const badge = document.getElementById('saved-jobs-count');
+                if (badge) {
+                    badge.textContent = data.count || 0;
+                    badge.style.display = (data.count > 0) ? 'inline-block' : 'none';
+                }
+            })
+            .catch(error => console.error('Error updating badge:', error));
+    }
+    
+    // Simple inline message
+    function showSimpleMessage(message, type = 'info') {
+        // Remove any existing inline message
+        const existingMsg = document.querySelector('.inline-message');
+        if (existingMsg) existingMsg.remove();
+        
+        // Create new message
+        const msg = document.createElement('div');
+        msg.className = `inline-message alert-${type}`;
+        
+        msg.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                   type === 'error' ? 'exclamation-circle' : 'info-circle'} 
+                    me-2" style="color: ${type === 'success' ? 'var(--secondary)' : '#e74c3c'};"></i>
+                <span>${message}</span>
+                <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(msg);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (msg.parentNode) {
+                msg.remove();
+            }
+        }, 3000);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Menon
+Email: anvimenon@example.com
+Location: Mumbai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Beauty Advisor position. Strong background in retail skills, Communication, Teamwork.
+
+TECHNICAL SKILLS
+---------------
+• retail skills
+• Communication
+• Teamwork
+• Problem Solving
+• Analytical Thinking
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,38 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Hospital Administrator
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Garg
+Email: anvigarg@example.com
+Location: Hyderabad
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Hospital Administrator position.
+Skilled in Python, SQL, Communication, Teamwork, Problem Solving.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• SQL
+• Communication
+• Teamwork
+• Problem Solving
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

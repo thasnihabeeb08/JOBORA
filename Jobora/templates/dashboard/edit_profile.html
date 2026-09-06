@@ -1,0 +1,977 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Jobora - Edit Company Profile{% endblock %}
+
+{% block page_title %}{% if company %}Edit Company Profile{% else %}Complete Company Profile{% endif %}{% endblock %}
+
+{% block page_actions %}
+    <button type="submit" form="companyProfileForm" class="btn-primary" style="padding: 10px 20px;">
+        <i class="fas fa-save me-2"></i> Save Changes
+    </button>
+    <a href="{% if company %}{% url 'company_dashboard' %}{% else %}{% url 'homepage' %}{% endif %}" 
+       class="btn-outline" style="padding: 10px 20px; text-decoration: none;">
+        <i class="fas fa-times me-2"></i> Cancel
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - EDIT COMPANY PROFILE === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* ==================== */
+    /* Dashboard Card Styles */
+    /* ==================== */
+    .dashboard-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .dashboard-card .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .dashboard-card .card-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    .dashboard-card .card-header h5 i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover .card-header h5 i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+
+    .dashboard-card .card-body {
+        padding: 24px;
+    }
+
+    /* ==================== */
+    /* Form Styles */
+    /* ==================== */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-label i {
+        color: var(--secondary);
+        margin-right: 6px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 20px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .form-control.error {
+        border-color: var(--danger);
+    }
+
+    .form-control[readonly] {
+        background: linear-gradient(135deg, var(--light), white);
+        cursor: not-allowed;
+    }
+
+    /* ==================== */
+    /* Checkbox Styles - Ocean Teal Theme (Fixed - No Blue) */
+    /* ==================== */
+    .checkbox-wrapper {
+        margin-top: 10px;
+    }
+    
+    .checkbox-modern {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 20px;
+        border: 2px solid var(--gray-light);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .checkbox-modern:hover {
+        border-color: var(--secondary);
+        transform: translateX(5px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    /* Complete custom checkbox styling - NO BLUE */
+    .checkbox-modern input[type="checkbox"] {
+        width: 22px !important;
+        height: 22px !important;
+        cursor: pointer !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background: white !important;
+        border: 2px solid var(--gray-light) !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+        margin: 0 !important;
+        flex-shrink: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    
+    .checkbox-modern input[type="checkbox"]:checked {
+        background: linear-gradient(135deg, var(--secondary), var(--primary)) !important;
+        border-color: var(--secondary) !important;
+    }
+    
+    .checkbox-modern input[type="checkbox"]:checked::after {
+        content: '\f00c' !important;
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        font-size: 12px !important;
+        color: white !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    .checkbox-modern input[type="checkbox"]:hover {
+        border-color: var(--secondary) !important;
+        transform: scale(1.05) !important;
+    }
+    
+    .checkbox-modern label {
+        font-weight: 600;
+        color: var(--dark);
+        cursor: pointer;
+        flex: 1;
+        margin: 0;
+    }
+    
+    .checkbox-modern label span {
+        font-weight: normal;
+        color: var(--gray-medium);
+        display: block;
+        font-size: 0.8rem;
+        margin-top: 5px;
+    }
+
+    /* ==================== */
+    /* Button Styles */
+    /* ==================== */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    .btn-outline-danger {
+        background: transparent;
+        border: 2px solid var(--danger);
+        color: var(--danger);
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .btn-outline-danger:hover {
+        background: var(--danger);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-sm {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+
+    /* ==================== */
+    /* Logo Preview */
+    /* ==================== */
+    .logo-preview {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        border: 3px dashed var(--gray-light);
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--light), white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .logo-preview:hover {
+        border-color: var(--secondary);
+        transform: scale(1.02);
+        box-shadow: var(--card-shadow);
+    }
+
+    /* ==================== */
+    /* Progress Bar */
+    /* ==================== */
+    .progress-container {
+        flex: 1;
+    }
+
+    .progress-bar-custom {
+        height: 8px;
+        background: var(--gray-light);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    /* ==================== */
+    /* Alert Styles */
+    /* ==================== */
+    .alert-error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        border-left: 4px solid var(--danger);
+        border-radius: 20px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.05));
+        border-left: 4px solid var(--primary);
+        border-radius: 20px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+    }
+
+    /* ==================== */
+    /* Tips Card */
+    /* ==================== */
+    .tips-card {
+        position: sticky;
+        top: 20px;
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+    }
+
+    .tips-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .tip-item {
+        margin-bottom: 20px;
+        padding: 12px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .tip-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+    }
+
+    .tip-item h6 {
+        color: var(--primary);
+        margin: 0 0 8px 0;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .tip-item p {
+        color: var(--gray-medium);
+        font-size: 13px;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* ==================== */
+    /* Grid Layout */
+    /* ==================== */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* ==================== */
+    /* Responsive */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .dashboard-card .card-body {
+            padding: 18px;
+        }
+        
+        .logo-preview {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .btn-primary, .btn-outline {
+            padding: 6px 16px;
+            font-size: 12px;
+        }
+        
+        .checkbox-modern {
+            padding: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
+    <!-- Main Form -->
+    <div>
+        <form method="POST" id="companyProfileForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display form errors at the top -->
+            {% if form.errors %}
+            <div class="alert-error animate-fadeInUp">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <i class="fas fa-exclamation-triangle" style="color: var(--danger); font-size: 20px;"></i>
+                    <div style="flex: 1;">
+                        <h6 style="color: var(--danger); margin: 0 0 8px 0; font-weight: 700;">Please correct the errors below</h6>
+                        <ul style="color: var(--danger); margin: 0; padding-left: 20px; font-size: 13px;">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Profile Completion Alert -->
+            <div class="alert-info animate-fadeInUp delay-1">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-chart-line" style="color: var(--secondary);"></i>
+                            <strong style="color: var(--primary);">Profile Completion: <span id="completenessValue">0</span>%</strong>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div id="completenessBar" class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <small style="color: var(--gray-medium);">
+                        <i class="fas fa-info-circle me-1"></i> Complete all fields for better candidate matches
+                    </small>
+                </div>
+            </div>
+
+            <!-- Company Logo Card -->
+            <div class="dashboard-card delay-2">
+                <div class="card-header">
+                    <h5>
+                        <i class="fas fa-image me-2"></i> Company Logo
+                    </h5>
+                </div>
+                <div class="card-body" style="text-align: center;">
+                    <!-- Logo Preview -->
+                    <div style="margin-bottom: 20px;">
+                        <div id="logoPreview" 
+                             class="logo-preview"
+                             onclick="document.getElementById('id_logo').click()">
+                            {% if company and company.logo %}
+                                <img src="{{ company.logo.url }}" alt="Company Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <div style="text-align: center; color: var(--gray-medium);">
+                                    <i class="fas fa-building" style="font-size: 48px; margin-bottom: 8px;"></i>
+                                    <div style="font-size: 12px;">Click to upload</div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- File Input -->
+                    <input type="file" 
+                           name="logo" 
+                           id="id_logo" 
+                           accept="image/*"
+                           style="display: none;"
+                           onchange="previewLogo(event)">
+                    
+                    <!-- Upload/Remove Buttons -->
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                        <button type="button" class="btn-outline btn-sm" onclick="document.getElementById('id_logo').click()">
+                            <i class="fas fa-upload me-1"></i> Choose Logo
+                        </button>
+                        
+                        {% if company and company.logo %}
+                        <button type="button" class="btn-outline-danger btn-sm" onclick="removeLogo()">
+                            <i class="fas fa-trash me-1"></i> Remove
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <small class="text-muted" style="display: block; margin-top: 12px; color: var(--gray-medium);">
+                        <i class="fas fa-info-circle me-1"></i> Recommended: Square image, 300×300px, max 2MB (JPG, PNG)
+                    </small>
+                    
+                    {% if form.logo.errors %}
+                        <div style="color: var(--danger); font-size: 12px; margin-top: 8px;">{{ form.logo.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Basic Information Card -->
+            <div class="dashboard-card delay-3">
+                <div class="card-header">
+                    <h5>
+                        <i class="fas fa-info-circle me-2"></i> Basic Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-building"></i> Company Name *
+                            </label>
+                            <input type="text" 
+                                   name="company_name" 
+                                   id="id_company_name"
+                                   value="{{ form.company_name.value|default:company.name|default:'' }}"
+                                   class="form-control {% if form.company_name.errors %}error{% endif %}"
+                                   placeholder="Enter company name"
+                                   required>
+                            {% if form.company_name.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.company_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address *
+                            </label>
+                            <input type="email" 
+                                   name="email"
+                                   id="id_email"
+                                   class="form-control"
+                                   value="{{ form.email.value|default:request.user.email }}"
+                                   placeholder="company@example.com"
+                                   required
+                                   readonly>
+                            <small style="color: var(--gray-medium); font-size: 11px;">Your registered email</small>
+                            {% if form.email.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user-tie"></i> Contact Person *
+                            </label>
+                            <input type="text" 
+                                   name="contact_person"
+                                   id="id_contact_person"
+                                   value="{{ form.contact_person.value|default:company.contact_person|default:'' }}"
+                                   class="form-control {% if form.contact_person.errors %}error{% endif %}"
+                                   placeholder="Full name"
+                                   required>
+                            {% if form.contact_person.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.contact_person.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number *
+                            </label>
+                            <input type="tel" 
+                                   name="phone"
+                                   id="id_phone"
+                                   value="{{ form.phone.value|default:company.phone|default:'' }}"
+                                   class="form-control {% if form.phone.errors %}error{% endif %}"
+                                   placeholder="9876543210"
+                                   required>
+                            <small style="color: var(--gray-medium); font-size: 11px;">10-digit mobile number</small>
+                            {% if form.phone.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Details Card -->
+            <div class="dashboard-card delay-4">
+                <div class="card-header">
+                    <h5>
+                        <i class="fas fa-building me-2"></i> Company Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Location *
+                            </label>
+                            <input type="text" 
+                                   name="location"
+                                   id="id_location"
+                                   value="{{ form.location.value|default:company.location|default:'' }}"
+                                   class="form-control {% if form.location.errors %}error{% endif %}"
+                                   placeholder="City, State"
+                                   required>
+                            {% if form.location.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.location.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-chart-line"></i> Industry *
+                            </label>
+                            <select name="industry"
+                                    id="id_industry"
+                                    class="form-control {% if form.industry.errors %}error{% endif %}"
+                                    required>
+                                <option value="">Select Industry</option>
+                                {% for value, label in form.industry.field.choices %}
+                                    <option value="{{ value }}" 
+                                            {% if form.industry.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.industry.errors %}
+                                <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.industry.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Description Card -->
+            <div class="dashboard-card delay-5">
+                <div class="card-header">
+                    <h5>
+                        <i class="fas fa-file-alt me-2"></i> Company Description
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <textarea name="description"
+                                  id="id_description"
+                                  class="form-control {% if form.description.errors %}error{% endif %}"
+                                  rows="6"
+                                  placeholder="Describe your company culture, mission, values, and what makes you a great place to work...">{{ form.description.value|default:company.description|default:'' }}</textarea>
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                            <small style="color: var(--gray-medium);">
+                                <i class="fas fa-info-circle me-1"></i> Maximum 2000 characters
+                            </small>
+                            <small style="color: var(--gray-medium);" id="charCount">0/2000</small>
+                        </div>
+                        {% if form.description.errors %}
+                            <div style="color: var(--danger); font-size: 12px; margin-top: 5px;">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <a href="{% if company %}{% url 'company_dashboard' %}{% else %}{% url 'homepage' %}{% endif %}" 
+                   class="btn-outline" style="padding: 12px 24px;">
+                    <i class="fas fa-arrow-left me-2"></i> Back
+                </a>
+                <button type="submit" class="btn-primary" style="padding: 12px 32px;">
+                    <i class="fas fa-save me-2"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Right Sidebar: Tips -->
+    <div>
+        <div class="tips-card">
+            <div class="card-header">
+                <h5>
+                    <i class="fas fa-lightbulb me-2"></i> Profile Tips
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tip-item">
+                    <h6><i class="fas fa-percentage me-2" style="color: var(--secondary);"></i> Complete Profile</h6>
+                    <p>Companies with complete profiles receive 3x more applications.</p>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-image me-2" style="color: var(--secondary);"></i> Add Your Logo</h6>
+                    <p>Companies with logos appear 70% more professional to candidates.</p>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-file-alt me-2" style="color: var(--secondary);"></i> Detailed Description</h6>
+                    <p>Well-described companies attract better quality candidates.</p>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-phone me-2" style="color: var(--secondary);"></i> Contact Information</h6>
+                    <p>Ensure candidates can reach you via phone and email.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Logo preview function
+    function previewLogo(event) {
+        const input = event.target;
+        const preview = document.getElementById('logoPreview');
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size must be less than 2MB');
+                input.value = '';
+                return;
+            }
+            
+            // Validate file type
+            if (!file.type.match('image.*')) {
+                alert('Please upload an image file (JPG, PNG, GIF)');
+                input.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" alt="Company Logo" style="width: 100%; height: 100%; object-fit: cover;">`;
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    // Remove logo function
+    function removeLogo() {
+        const preview = document.getElementById('logoPreview');
+        const fileInput = document.getElementById('id_logo');
+        
+        // Reset preview
+        preview.innerHTML = `
+            <div style="text-align: center; color: var(--gray-medium);">
+                <i class="fas fa-building" style="font-size: 48px; margin-bottom: 8px;"></i>
+                <div style="font-size: 12px;">Click to upload</div>
+            </div>
+        `;
+        
+        // Clear file input
+        fileInput.value = '';
+        
+        // Add hidden field to indicate logo removal
+        const form = document.getElementById('companyProfileForm');
+        const existingClear = document.querySelector('input[name="logo-clear"]');
+        
+        if (!existingClear) {
+            const clearInput = document.createElement('input');
+            clearInput.type = 'hidden';
+            clearInput.name = 'logo-clear';
+            clearInput.value = '1';
+            form.appendChild(clearInput);
+        }
+    }
+    
+    // Character counter and profile completeness
+    document.addEventListener('DOMContentLoaded', function() {
+        const descField = document.getElementById('id_description');
+        const charCount = document.getElementById('charCount');
+        
+        if (descField && charCount) {
+            function updateCharCount() {
+                const length = descField.value.length;
+                charCount.textContent = length + '/2000';
+                
+                if (length > 1900) {
+                    charCount.style.color = 'var(--danger)';
+                } else if (length > 1500) {
+                    charCount.style.color = 'var(--warning)';
+                } else {
+                    charCount.style.color = 'var(--gray-medium)';
+                }
+                
+                updateCompleteness();
+            }
+            
+            descField.addEventListener('input', updateCharCount);
+            updateCharCount();
+        }
+        
+        // Profile completeness calculation
+        function updateCompleteness() {
+            let score = 0;
+            const fields = [
+                'id_company_name',
+                'id_email',
+                'id_contact_person',
+                'id_phone',
+                'id_location',
+                'id_industry'
+            ];
+            
+            let filledCount = 0;
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field && field.value && field.value.trim().length > 0) {
+                    filledCount++;
+                }
+            });
+            
+            score = (filledCount / fields.length) * 70;
+            
+            // Check logo
+            const logoImg = document.querySelector('#logoPreview img');
+            if (logoImg) {
+                score += 15;
+            }
+            
+            // Check description (minimum 50 chars for good description)
+            if (descField && descField.value && descField.value.trim().length > 50) {
+                score += 15;
+            }
+            
+            score = Math.min(Math.round(score), 100);
+            
+            // Update UI
+            const completenessBar = document.getElementById('completenessBar');
+            const completenessValue = document.getElementById('completenessValue');
+            
+            if (completenessBar) {
+                completenessBar.style.width = score + '%';
+            }
+            
+            if (completenessValue) {
+                completenessValue.textContent = score;
+            }
+        }
+        
+        // Update completeness on field changes
+        const formFields = document.querySelectorAll('input, textarea, select');
+        formFields.forEach(field => {
+            field.addEventListener('input', updateCompleteness);
+            field.addEventListener('change', updateCompleteness);
+        });
+        
+        updateCompleteness();
+    });
+</script>
+{% endblock %}

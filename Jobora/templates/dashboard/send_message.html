@@ -1,0 +1,525 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Jobora - Send Message{% endblock %}
+
+{% block page_title %}
+<div class="d-flex align-items-center">
+    <i class="fas fa-paper-plane me-3" style="font-size: 2rem; color: var(--primary);"></i>
+    <div>
+        <h4 class="mb-0 fw-bold" style="color: var(--dark);">Send Message</h4>
+        <p class="mb-0" style="color: var(--gray-medium);">Communicate with candidates professionally</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'view_applications' %}" class="btn-outline rounded-pill px-4">
+        <i class="fas fa-arrow-left me-2"></i> Back to Applications
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Ocean Teal Theme Variables */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* Button Styles - Matching Job Seeker */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    .animate-fadeInUp { animation: fadeInUp 0.8s ease forwards; opacity: 0; }
+    .animate-fadeInLeft { animation: fadeInLeft 0.8s ease forwards; opacity: 0; }
+    .animate-fadeInRight { animation: fadeInRight 0.8s ease forwards; opacity: 0; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* Card Styles */
+    .modern-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+    }
+    .modern-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* Form Controls */
+    .form-control-custom {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid var(--gray-light);
+        border-radius: 20px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    .form-control-custom:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Template Buttons */
+    .template-btn {
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .template-btn i { transition: all 0.3s ease; }
+    .template-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+    }
+    .template-btn:hover i { transform: scale(1.2); }
+    .btn-interview { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 5px 15px rgba(0, 105, 148, 0.2); }
+    .btn-interview:hover { box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3); }
+    .btn-shortlisted { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .btn-rejection { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+    .btn-offer { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    .btn-info-request { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+
+    /* Preview Section */
+    .preview-section {
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 24px;
+        padding: 20px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+    .preview-section:hover { border-color: var(--secondary); box-shadow: var(--card-shadow); }
+    .preview-content {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        min-height: 200px;
+        border: 1px solid var(--gray-light);
+    }
+
+    /* Toast */
+    .custom-toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 14px 24px;
+        border-radius: 50px;
+        color: white;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease;
+        font-weight: 600;
+        box-shadow: var(--card-shadow);
+    }
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if not application %}
+<div class="alert alert-danger rounded-4 p-4 animate-fadeInUp">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    Application not found. Please go back to Applications and select a candidate.
+</div>
+{% else %}
+
+<!-- Hidden data for JavaScript -->
+<div id="templateData" 
+     data-candidate-name="{{ application.candidate.get_full_name|default:application.candidate.username }}"
+     data-company-name="{{ company.company_name|default:company.name }}"
+     data-job-title="{{ application.job.title }}"
+     data-contact-person="{{ request.user.get_full_name|default:request.user.username }}"
+     data-company-email="{{ company.email|default:'' }}"
+     style="display: none;">
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Candidate Info Card -->
+        <div class="modern-card animate-fadeInUp delay-1 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center gap-4 flex-wrap">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" 
+                         style="width: 75px; height: 75px; font-size: 32px; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                        {{ application.candidate.username|slice:":1"|upper }}
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 fw-bold" style="color: var(--dark);">{{ application.candidate.get_full_name|default:application.candidate.username }}</h5>
+                        <p class="mb-1" style="color: var(--gray-medium);">
+                            <i class="fas fa-envelope me-2" style="color: var(--secondary);"></i> {{ application.candidate.email }}
+                        </p>
+                        {% if application.candidate.userprofile.phone %}
+                        <p class="mb-0" style="color: var(--gray-medium);">
+                            <i class="fas fa-phone me-2" style="color: var(--secondary);"></i> {{ application.candidate.userprofile.phone }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="text-end">
+                        <span class="badge px-3 py-2 rounded-pill mb-2" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                            <i class="fas fa-briefcase me-1"></i> {{ application.job.job_type|title }}
+                        </span>
+                        <p class="small mb-0" style="color: var(--gray-medium);">
+                            <i class="fas fa-calendar-alt me-1"></i> Applied: {{ application.applied_on|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="modern-card animate-fadeInUp delay-2">
+            <div class="card-header bg-white border-0 pt-4 pb-0 px-4" style="border-radius: 30px 30px 0 0;">
+                <h5 class="mb-0 fw-bold" style="color: var(--primary);">
+                    <i class="fas fa-pen-fancy me-2" style="color: var(--secondary);"></i> Compose Message
+                </h5>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="POST" id="messageForm">
+                    {% csrf_token %}
+                    
+                    <!-- Subject Field -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold mb-2" style="color: var(--primary);">
+                            <i class="fas fa-heading me-1" style="color: var(--secondary);"></i> Subject <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               name="{{ form.subject.name }}"
+                               id="id_subject"
+                               value="{{ form.subject.value|default:'' }}"
+                               class="form-control-custom"
+                               placeholder="e.g., Interview Invitation - Software Developer">
+                        <div class="small mt-2" style="color: var(--gray-medium);">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span id="subjectCount">{{ form.subject.value|length|default:0 }}</span>/200 characters
+                        </div>
+                    </div>
+                    
+                    <!-- Message Content -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold mb-2" style="color: var(--primary);">
+                            <i class="fas fa-edit me-1" style="color: var(--secondary);"></i> Message <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="{{ form.content.name }}"
+                                  id="id_content"
+                                  class="form-control-custom"
+                                  rows="8"
+                                  placeholder="Write your professional message here...">{{ form.content.value|default:'' }}</textarea>
+                        <div class="small mt-2" style="color: var(--gray-medium);">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span id="contentCount">{{ form.content.value|length|default:0 }}</span>/5000 characters
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Templates Section -->
+                    <div class="mb-4 p-4" style="background: linear-gradient(135deg, var(--light), white); border-radius: 24px;">
+                        <label class="form-label fw-bold mb-3" style="color: var(--primary);">
+                            <i class="fas fa-magic me-2" style="color: var(--secondary);"></i> Quick Templates
+                        </label>
+                        <div class="d-flex flex-wrap gap-3 mb-3">
+                            <button type="button" class="template-btn btn-interview" data-template="interview">
+                                <i class="fas fa-calendar-check"></i> Interview
+                            </button>
+                            <button type="button" class="template-btn btn-shortlisted" data-template="shortlisted">
+                                <i class="fas fa-star"></i> Shortlisted
+                            </button>
+                            <button type="button" class="template-btn btn-rejection" data-template="rejection">
+                                <i class="fas fa-times-circle"></i> Rejection
+                            </button>
+                            <button type="button" class="template-btn btn-offer" data-template="offer">
+                                <i class="fas fa-gift"></i> Job Offer
+                            </button>
+                            <button type="button" class="template-btn btn-info-request" data-template="request_info">
+                                <i class="fas fa-question-circle"></i> Request Info
+                            </button>
+                        </div>
+                        <div class="small" style="color: var(--gray-medium);">
+                            <i class="fas fa-lightbulb me-1" style="color: var(--accent);"></i>
+                            Click any template to automatically fill the subject and message fields
+                        </div>
+                    </div>
+                    
+                    <!-- Message Preview -->
+                    <div class="preview-section">
+                        <label class="form-label fw-bold mb-3" style="color: var(--primary);">
+                            <i class="fas fa-eye me-2" style="color: var(--secondary);"></i> Message Preview
+                        </label>
+                        <div id="messagePreview" class="preview-content">
+                            <div class="text-center py-5" style="color: var(--gray-medium);">
+                                <i class="fas fa-edit fa-3x mb-3 d-block" style="color: var(--gray-light);"></i>
+                                Your message preview will appear here
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center pt-4 mt-3 border-top" style="border-color: var(--gray-light) !important;">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="save_template" id="saveTemplate" style="accent-color: var(--secondary);">
+                            <label class="form-check-label small fw-medium" for="saveTemplate" style="color: var(--gray-medium);">
+                                Save this message as a template
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'candidate_profile' application.id %}" class="btn-outline">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn-primary" id="submitBtn">
+                                <i class="fas fa-paper-plane me-2"></i> Send Message
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const subjectField = document.getElementById('id_subject');
+    const contentField = document.getElementById('id_content');
+    const subjectCount = document.getElementById('subjectCount');
+    const contentCount = document.getElementById('contentCount');
+    const messagePreview = document.getElementById('messagePreview');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageForm = document.getElementById('messageForm');
+    
+    // Get template data
+    const templateDataDiv = document.getElementById('templateData');
+    const candidateName = templateDataDiv?.dataset.candidateName || 'Candidate';
+    const companyName = templateDataDiv?.dataset.companyName || 'Company';
+    const jobTitle = templateDataDiv?.dataset.jobTitle || 'the position';
+    const contactPerson = templateDataDiv?.dataset.contactPerson || 'Hiring Manager';
+    const companyEmail = templateDataDiv?.dataset.companyEmail || '';
+    
+    // Templates
+    const templates = {
+        interview: {
+            subject: `Interview Invitation - ${jobTitle}`,
+            content: `Dear ${candidateName},\n\nWe were impressed with your application for the ${jobTitle} position at ${companyName}.\n\nWe would like to invite you for an interview to discuss your qualifications and learn more about your experience.\n\nInterview Details:\n- Duration: 45-60 minutes\n- Format: Video call\n- Panel: Hiring Manager and Team Lead\n\nPlease let us know your availability for the upcoming week.\n\nBest regards,\n${contactPerson}\n${companyName}\n${companyEmail}`
+        },
+        shortlisted: {
+            subject: `Application Update - ${jobTitle}`,
+            content: `Dear ${candidateName},\n\nThank you for your application for the ${jobTitle} position at ${companyName}.\n\nWe are pleased to inform you that your application has been shortlisted for further consideration. Our team will review all shortlisted candidates and will be in touch with the next steps within the next week.\n\nWe appreciate your interest in joining our team.\n\nBest regards,\n${contactPerson}\n${companyName}`
+        },
+        rejection: {
+            subject: `Update on Your Application - ${jobTitle}`,
+            content: `Dear ${candidateName},\n\nThank you for your application for the ${jobTitle} position at ${companyName}.\n\nAfter careful consideration, we have decided to move forward with other candidates whose experience more closely matches our current needs.\n\nWe were impressed with your background and encourage you to apply for future positions.\n\nWe wish you the best in your job search.\n\nBest regards,\n${contactPerson}\n${companyName}`
+        },
+        offer: {
+            subject: `Job Offer - ${jobTitle}`,
+            content: `Dear ${candidateName},\n\nWe are delighted to offer you the position of ${jobTitle} at ${companyName}!\n\nYour skills and experience stood out among all applicants, and we believe you will be a valuable addition to our team.\n\nOffer Details:\n- Position: ${jobTitle}\n- Start Date: [Start Date]\n- Location: [Office/Remote/Hybrid]\n\nPlease find the formal offer letter attached. We request you to review the terms and conditions.\n\nWe look forward to welcoming you to our team!\n\nBest regards,\n${contactPerson}\n${companyName}`
+        },
+        request_info: {
+            subject: `Additional Information Request - ${jobTitle}`,
+            content: `Dear ${candidateName},\n\nThank you for your application for the ${jobTitle} position at ${companyName}.\n\nWe would like to request some additional information to better evaluate your application:\n\n1. What is your current/expected salary?\n2. What is your earliest available start date?\n3. Do you have any specific questions about the role?\n\nPlease reply to this message with the requested information.\n\nBest regards,\n${contactPerson}\n${companyName}`
+        }
+    };
+    
+    // Update counters
+    function updateCounters() {
+        if (subjectField && subjectCount) subjectCount.textContent = subjectField.value.length;
+        if (contentField && contentCount) contentCount.textContent = contentField.value.length;
+        updatePreview();
+    }
+    
+    // Update preview
+    function updatePreview() {
+        if (!messagePreview) return;
+        const subject = subjectField?.value || '';
+        const content = contentField?.value || '';
+        
+        if (!subject && !content) {
+            messagePreview.innerHTML = `<div class="text-center py-5" style="color: var(--gray-medium);">
+                <i class="fas fa-edit fa-3x mb-3 d-block" style="color: var(--gray-light);"></i>
+                Your message preview will appear here
+            </div>`;
+            return;
+        }
+        
+        let html = '';
+        if (subject) {
+            html += `<div class="fw-bold mb-3 pb-2" style="color: var(--primary); border-bottom: 2px solid var(--gray-light);">
+                <i class="fas fa-envelope me-2"></i> ${escapeHtml(subject)}
+            </div>`;
+        }
+        if (content) {
+            html += `<div style="color: var(--dark); line-height: 1.8; white-space: pre-wrap;">${escapeHtml(content).replace(/\n/g, '<br>')}</div>`;
+        }
+        messagePreview.innerHTML = html;
+    }
+    
+    // Apply template
+    function applyTemplate(templateName) {
+        const template = templates[templateName];
+        if (template) {
+            subjectField.value = template.subject;
+            contentField.value = template.content;
+            updateCounters();
+            showToast(`✨ "${templateName.replace('_', ' ')}" template applied`, 'success');
+            messagePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+    
+    // Add click handlers
+    document.querySelectorAll('.template-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const templateName = this.getAttribute('data-template');
+            applyTemplate(templateName);
+        });
+    });
+    
+    // Form validation
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            if (!subjectField.value.trim()) {
+                e.preventDefault();
+                showToast('⚠️ Please enter a subject', 'error');
+                subjectField.focus();
+                return;
+            }
+            if (!contentField.value.trim()) {
+                e.preventDefault();
+                showToast('⚠️ Please enter a message', 'error');
+                contentField.focus();
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Sending...';
+        });
+    }
+    
+    // Event listeners
+    if (subjectField) subjectField.addEventListener('input', updateCounters);
+    if (contentField) contentField.addEventListener('input', updateCounters);
+    
+    // Initialize
+    updateCounters();
+    
+    // Helper functions
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function showToast(message, type) {
+        document.querySelectorAll('.custom-toast').forEach(t => t.remove());
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast';
+        toast.style.background = type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, var(--secondary), var(--secondary-dark))';
+        toast.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

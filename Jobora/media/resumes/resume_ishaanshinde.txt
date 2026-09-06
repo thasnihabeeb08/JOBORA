@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ISHAAN SHINDE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Ishaan Shinde
+Email: ishaanshinde@example.com
+Phone: +918699778397
+Location: Thiruvananthapuram
+
+EDUCATION
+---------
+• bachelors in Business Administration
+• Jadavpur University
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 9 years of professional experience
+• Current Role: Data Analyst
+• Skills: C++, Illustrator, Problem Solving, Ansible, CI/CD, DevOps, PHP, Artificial Intelligence
+
+TECHNICAL SKILLS
+----------------
+C++, Illustrator, Problem Solving, Ansible, CI/CD, DevOps, PHP, Artificial Intelligence
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

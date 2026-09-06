@@ -1,0 +1,1016 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+
+{% block title %}Jobora - Manage Jobs{% endblock %}
+{% block page_title %}Manage Job Postings{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - MANAGE JOBS === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* ==================== */
+    /* Page Header */
+    /* ==================== */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .page-header p {
+        margin: 5px 0 0 0;
+        color: var(--gray-medium);
+    }
+
+    /* ==================== */
+    /* Filter Bar */
+    /* ==================== */
+    .filter-bar {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        padding: 20px;
+        margin-bottom: 25px;
+        transition: all 0.4s ease;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .filter-bar:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-input-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-medium);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 16px 12px 42px;
+        border: 2px solid var(--gray-light);
+        border-radius: 30px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+    }
+
+    .filter-select {
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 30px;
+        font-size: 14px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 150px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* Table Container */
+    /* ==================== */
+    .table-container {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        overflow: hidden;
+        transition: all 0.4s ease;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .table-container:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .table-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--gray-light);
+        background: linear-gradient(135deg, var(--light), white);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .table-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .table-header h3 i {
+        color: var(--secondary);
+        margin-right: 8px;
+    }
+
+    .total-badge {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 5px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* ==================== */
+    /* Table Styles */
+    /* ==================== */
+    .jobs-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .jobs-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.75rem;
+        padding: 15px 20px;
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--gray-light);
+    }
+
+    .jobs-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+    }
+
+    .jobs-table tr {
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .jobs-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+
+    /* ==================== */
+    /* Job Title with Salary Badge */
+    /* ==================== */
+    .job-title {
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 5px;
+    }
+
+    .salary-badge {
+        font-size: 11px;
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    /* Job Type Badge */
+    .job-type-badge {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--primary);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    /* Location */
+    .location-text {
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .location-text i {
+        color: var(--secondary);
+        width: 14px;
+    }
+
+    .remote-badge {
+        font-size: 11px;
+        color: var(--secondary);
+        margin-left: 19px;
+        display: block;
+    }
+
+    /* Applications Count */
+    .applications-count {
+        font-weight: 700;
+        color: var(--secondary);
+        font-size: 1.1rem;
+    }
+
+    .view-applications-link {
+        color: var(--gray-medium);
+        margin-left: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .view-applications-link:hover {
+        color: var(--primary);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--secondary);
+    }
+
+    .status-inactive {
+        background: rgba(127, 140, 141, 0.1);
+        color: var(--gray-medium);
+    }
+
+    .status-expired {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        color: var(--danger);
+    }
+
+    /* Date Column */
+    .posted-date {
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+    .deadline-date {
+        font-size: 11px;
+        color: var(--gray-medium);
+        margin-top: 3px;
+    }
+
+    /* ==================== */
+    /* Action Buttons */
+    /* ==================== */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .action-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-btn-edit {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 105, 148, 0.05));
+        color: var(--primary);
+    }
+
+    .action-btn-edit:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    .action-btn-view {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--secondary);
+    }
+
+    .action-btn-view:hover {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    .action-btn-toggle {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+        color: var(--warning);
+    }
+
+    .action-btn-toggle:hover {
+        background: linear-gradient(135deg, var(--warning), #d97706);
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    .action-btn-delete {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        color: var(--danger);
+    }
+
+    .action-btn-delete:hover {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    /* ==================== */
+    /* Pagination */
+    /* ==================== */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        border-top: 1px solid var(--gray-light);
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .pagination-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .page-link {
+        padding: 8px 14px;
+        border: 1px solid var(--gray-light);
+        border-radius: 12px;
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .page-link:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        transform: translateY(-2px);
+        border-color: transparent;
+    }
+
+    .page-current {
+        padding: 8px 18px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* ==================== */
+    /* Stats Grid */
+    /* ==================== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-top: 25px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 24px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.4s ease;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .stat-card:hover .stat-number,
+    .stat-card:hover .stat-label {
+        color: white !important;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-number {
+        transform: scale(1.1);
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: var(--gray-medium);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    /* ==================== */
+    /* Empty State */
+    /* ==================== */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px;
+    }
+
+    .empty-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .empty-icon i {
+        font-size: 45px;
+        color: var(--gray-medium);
+    }
+
+    .empty-state h3 {
+        color: var(--dark);
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: var(--gray-medium);
+        margin-bottom: 25px;
+    }
+
+    /* ==================== */
+    /* Button Primary */
+    /* ==================== */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* Responsive */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .filter-row {
+            flex-direction: column;
+        }
+        
+        .search-input-wrapper {
+            width: 100%;
+        }
+        
+        .filter-select {
+            width: 100%;
+        }
+        
+        .jobs-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .table-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Simple Header -->
+<div class="page-header animate-fadeInUp">
+    <div>
+        <h2>Manage Your Job Postings</h2>
+        <p>View, edit, or deactivate your job listings</p>
+    </div>
+    <a href="{% url 'post_job' %}" class="btn-primary">
+        <i class="fas fa-plus-circle me-2"></i> Post New Job
+    </a>
+</div>
+
+<!-- Search and Filter -->
+<div class="filter-bar">
+    <div class="filter-row">
+        <div class="search-input-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" 
+                   id="searchJobs" 
+                   placeholder="Search jobs by title, location, or skills..." 
+                   class="search-input"
+                   value="{{ search_query|default:'' }}">
+        </div>
+        <select id="statusFilter" class="filter-select">
+            <option value="">All Status</option>
+            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+            <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+        </select>
+        <button onclick="applyFilters()" class="btn-primary" style="padding: 10px 24px;">
+            <i class="fas fa-filter me-2"></i> Apply Filter
+        </button>
+    </div>
+</div>
+
+<!-- Jobs Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>
+            <i class="fas fa-list-ul me-2"></i> Your Job Listings
+        </h3>
+        <span class="total-badge">
+            <i class="fas fa-briefcase me-1"></i> {{ jobs.paginator.count|default:"0" }} Total
+        </span>
+    </div>
+
+    {% if jobs %}
+        <div style="overflow-x: auto;">
+            <table class="jobs-table">
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th style="text-align: center;">Applications</th>
+                        <th style="text-align: center;">Status</th>
+                        <th>Posted Date</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <!-- Job Title with Salary -->
+                        <td>
+                            <div class="job-title">{{ job.title|truncatechars:35 }}</div>
+                            <div class="salary-badge">
+                                <i class="fas fa-rupee-sign" style="font-size: 10px;"></i>
+                                {% if job.salary_min or job.salary_max %}
+                                    {% if job.salary_min and job.salary_max %}
+                                        {{ job.salary_min|floatformat:0|intcomma }} - {{ job.salary_max|floatformat:0|intcomma }}
+                                    {% elif job.salary_min %}
+                                        {{ job.salary_min|floatformat:0|intcomma }}+
+                                    {% elif job.salary_max %}
+                                        Up to {{ job.salary_max|floatformat:0|intcomma }}
+                                    {% endif %}
+                                {% else %}
+                                    Negotiable
+                                {% endif %}
+                            </div>
+                        </td>
+                        
+                        <!-- Job Type -->
+                        <td>
+                            <span class="job-type-badge">
+                                <i class="fas 
+                                    {% if job.job_type == 'full_time' %}fa-clock
+                                    {% elif job.job_type == 'part_time' %}fa-hourglass-half
+                                    {% elif job.job_type == 'contract' %}fa-file-contract
+                                    {% elif job.job_type == 'internship' %}fa-graduation-cap
+                                    {% else %}fa-briefcase{% endif %} me-1"></i>
+                                {{ job.get_job_type_display }}
+                            </span>
+                        </td>
+                        
+                        <!-- Location -->
+                        <td>
+                            <div class="location-text">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ job.location|truncatechars:25 }}
+                            </div>
+                            {% if job.is_remote %}
+                                <span class="remote-badge">
+                                    <i class="fas fa-wifi"></i> Remote
+                                </span>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Applications Count -->
+                        <td style="text-align: center;">
+                            <span class="applications-count">{{ job.applications.count }}</span>
+                            {% if job.applications.count > 0 %}
+                                <a href="{% url 'view_job_applications' job.id %}" class="view-applications-link" title="View Applications">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Status -->
+                        <td style="text-align: center;">
+                            {% if job.application_deadline %}
+                                {% now "Y-m-d" as todays_date %}
+                                {% if job.application_deadline|date:"Y-m-d" < todays_date %}
+                                    <span class="status-badge status-expired">
+                                        <i class="fas fa-clock"></i> Expired
+                                    </span>
+                                {% elif job.is_active %}
+                                    <span class="status-badge status-active">
+                                        <i class="fas fa-check-circle"></i> Active
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">
+                                        <i class="fas fa-pause-circle"></i> Inactive
+                                    </span>
+                                {% endif %}
+                            {% elif job.is_active %}
+                                <span class="status-badge status-active">
+                                    <i class="fas fa-check-circle"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-inactive">
+                                    <i class="fas fa-pause-circle"></i> Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Posted Date with Deadline -->
+                        <td>
+                            <div class="posted-date">{{ job.posted_on|date:"M d, Y" }}</div>
+                            {% if job.application_deadline %}
+                                <div class="deadline-date">
+                                    <i class="fas fa-hourglass-end"></i> Deadline: {{ job.application_deadline|date:"M d, Y" }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Action Buttons -->
+                        <td>
+                            <div class="action-buttons">
+                                <!-- Edit -->
+                                <a href="{% url 'edit_job' job.id %}" 
+                                   class="action-btn action-btn-edit"
+                                   title="Edit Job">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <!-- View Applications -->
+                                <a href="{% url 'view_job_applications' job.id %}" 
+                                   class="action-btn action-btn-view"
+                                   title="View Applications">
+                                    <i class="fas fa-users"></i>
+                                </a>
+                                
+                                <!-- Toggle Status -->
+                                <form method="POST" 
+                                      action="{% url 'toggle_job_status' job.id %}" 
+                                      style="display: inline;"
+                                      onsubmit="return confirmToggleStatus(this, '{{ job.is_active|yesno:"deactivate,activate" }}')">
+                                    {% csrf_token %}
+                                    <button type="submit" 
+                                            class="action-btn action-btn-toggle"
+                                            title="{% if job.is_active %}Deactivate{% else %}Activate{% endif %} Job">
+                                        {% if job.is_active %}
+                                            <i class="fas fa-pause"></i>
+                                        {% else %}
+                                            <i class="fas fa-play"></i>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                                
+                                <!-- Delete -->
+                                <form method="POST" 
+                                      action="{% url 'delete_job' job.id %}" 
+                                      style="display: inline;"
+                                      onsubmit="return confirmDelete()">
+                                    {% csrf_token %}
+                                    <button type="submit" 
+                                            class="action-btn action-btn-delete"
+                                            title="Delete Job">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if jobs.paginator.num_pages > 1 %}
+        <div class="pagination-container">
+            <div class="pagination-links">
+                {% if jobs.has_previous %}
+                    <a href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="page-link">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    <a href="?page={{ jobs.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="page-link">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                {% endif %}
+                
+                <span class="page-current">
+                    Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
+                </span>
+                
+                {% if jobs.has_next %}
+                    <a href="?page={{ jobs.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="page-link">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                    <a href="?page={{ jobs.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="page-link">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h3>No Jobs Posted Yet</h3>
+            <p>Start posting jobs to find the perfect candidates for your company.</p>
+            <a href="{% url 'post_job' %}" class="btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> Post Your First Job
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Stats Summary -->
+<div class="stats-grid">
+    <div class="stat-card delay-1">
+        <div class="stat-number">{{ jobs.paginator.count|default:"0" }}</div>
+        <div class="stat-label">Total Jobs</div>
+    </div>
+    
+    <div class="stat-card delay-2">
+        <div class="stat-number">
+            {% if jobs %}
+                {% with active_count=jobs|length %}
+                    {{ active_count }}
+                {% endwith %}
+            {% else %}
+                0
+            {% endif %}
+        </div>
+        <div class="stat-label">Active Jobs</div>
+    </div>
+    
+    <div class="stat-card delay-3">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Applications Today</div>
+    </div>
+    
+    <div class="stat-card delay-4">
+        <div class="stat-number">{{ total_applications|default:"0" }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+</div>
+
+<script>
+    function applyFilters() {
+        const search = document.getElementById('searchJobs').value;
+        const status = document.getElementById('statusFilter').value;
+        
+        let url = window.location.pathname;
+        let params = [];
+        
+        if (search) params.push(`search=${encodeURIComponent(search)}`);
+        if (status) params.push(`status=${status}`);
+        
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+        
+        window.location.href = url;
+    }
+    
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this job? This action cannot be undone.');
+    }
+    
+    function confirmToggleStatus(form, action) {
+        return confirm(`Are you sure you want to ${action} this job?`);
+    }
+    
+    // Auto-submit search on enter
+    const searchInput = document.getElementById('searchJobs');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+    }
+    
+    // Animate table rows
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableRows = document.querySelectorAll('.jobs-table tbody tr');
+        tableRows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.05}s`;
+        });
+        
+        // Animate stat numbers counting up
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const finalValue = parseInt(stat.innerText);
+            if (!isNaN(finalValue) && finalValue > 0) {
+                let current = 0;
+                const increment = Math.ceil(finalValue / 30);
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= finalValue) {
+                        stat.innerText = finalValue;
+                        clearInterval(timer);
+                    } else {
+                        stat.innerText = current;
+                    }
+                }, 30);
+            }
+        });
+    });
+</script>
+{% endblock %}

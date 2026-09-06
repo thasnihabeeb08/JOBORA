@@ -1,0 +1,54 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Ishaan Agarwal
+Email: ishaanagarwal@example.com
+Phone: +916835729974
+Location: Pune
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced IT professional with expertise in java, firewall, leadership. 
+Proven track record of delivering high-quality solutions and working in team environments.
+
+TECHNICAL SKILLS
+---------------
+• java
+• firewall
+• leadership
+• teamwork
+• azure
+• docker
+• adobe xd
+• communication
+
+WORK EXPERIENCE
+--------------
+• 6+ years of professional experience
+• Developed and maintained multiple software applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+• Solved complex technical problems
+• Communicated effectively with stakeholders
+
+EDUCATION
+---------
+• Bachelor's Degree
+• DTU Delhi
+• 2020
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

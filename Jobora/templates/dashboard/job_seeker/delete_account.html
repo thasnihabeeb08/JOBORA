@@ -1,0 +1,858 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+
+{% block title %}Delete Account - Job Seeker{% endblock %}
+
+{% block title_icon %}fa-trash-alt{% endblock %}
+{% block page_title %}Delete Account{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'job_seeker_dashboard' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --danger: #dc3545;
+        --danger-light: #e4606d;
+        --danger-dark: #bd2130;
+        --warning: #ffc107;
+        --warning-light: #ffdb6d;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3); }
+        50% { transform: scale(1.05); box-shadow: 0 20px 40px rgba(220, 53, 69, 0.5); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .animate-shake {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-2 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-3 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-4 { animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-5 { animation-delay: 1s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-6 { animation-delay: 1.2s; opacity: 0; animation-fill-mode: forwards; }
+
+    /* Main Card */
+    .delete-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .delete-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -10%;
+        width: 30%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .delete-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--danger);
+    }
+
+    /* Card Header */
+    .delete-card-header {
+        background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .delete-card-header h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+    }
+
+    .delete-card-header h5 i {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .card-body {
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Alert Styles */
+    .alert-warning-card {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 179, 71, 0.1));
+        border-left: 4px solid var(--accent);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 25px;
+        animation: fadeInLeft 0.6s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .alert-warning-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -5%;
+        width: 20%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(255, 179, 71, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 15s ease-in-out infinite;
+    }
+
+    .alert-warning-card i {
+        color: var(--accent);
+        font-size: 2rem;
+    }
+
+    .alert-warning-card h5 {
+        color: var(--dark);
+        font-weight: 700;
+    }
+
+    .alert-warning-card p {
+        color: var(--gray-medium);
+    }
+
+    .alert-danger-card {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(230, 86, 102, 0.05));
+        border-left: 4px solid var(--danger);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 25px;
+        animation: fadeInRight 0.6s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .alert-danger-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        left: -5%;
+        width: 20%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(220, 53, 69, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 15s ease-in-out infinite reverse;
+    }
+
+    .alert-danger-card i {
+        color: var(--danger);
+    }
+
+    /* Section Headers */
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-title i {
+        color: var(--secondary);
+    }
+
+    /* List Styles */
+    .delete-list {
+        background: var(--light);
+        border-radius: 20px;
+        padding: 5px 0;
+        margin-bottom: 25px;
+        border: 1px solid var(--gray-light);
+    }
+
+    .delete-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .delete-list-item:nth-child(1) { animation-delay: 0.1s; }
+    .delete-list-item:nth-child(2) { animation-delay: 0.2s; }
+    .delete-list-item:nth-child(3) { animation-delay: 0.3s; }
+    .delete-list-item:nth-child(4) { animation-delay: 0.4s; }
+    .delete-list-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .delete-list-item:hover {
+        background: white;
+        transform: translateX(8px);
+        border-radius: 12px;
+        margin: 2px 5px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .delete-list-item:last-child {
+        border-bottom: none;
+    }
+
+    .delete-list-item i {
+        color: var(--danger);
+        transition: all 0.3s;
+        font-size: 1.1rem;
+    }
+
+    .delete-list-item:hover i {
+        transform: scale(1.2) rotate(5deg);
+        color: var(--danger-dark);
+    }
+
+    .delete-list-item span {
+        color: var(--dark);
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    /* Alternative Options */
+    .alternative-list {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--gray-light);
+        margin-bottom: 25px;
+    }
+
+    .alternative-item {
+        display: block;
+        padding: 20px;
+        background: white;
+        border-bottom: 1px solid var(--gray-light);
+        text-decoration: none;
+        transition: all 0.4s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .alternative-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: linear-gradient(135deg, var(--secondary), var(--accent));
+        transform: scaleY(0);
+        transition: transform 0.3s;
+    }
+
+    .alternative-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .alternative-item:hover {
+        background: var(--light);
+        transform: translateX(8px);
+        box-shadow: var(--card-shadow);
+    }
+
+    .alternative-item:last-child {
+        border-bottom: none;
+    }
+
+    .alternative-item h6 {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 5px;
+        transition: all 0.3s;
+    }
+
+    .alternative-item:hover h6 {
+        color: var(--secondary);
+        transform: translateX(5px);
+    }
+
+    .alternative-item p {
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+
+    .alternative-item i {
+        color: var(--secondary);
+        transition: all 0.3s;
+    }
+
+    .alternative-item:hover i {
+        transform: scale(1.2) rotate(5deg);
+        color: var(--accent);
+    }
+
+    /* Form Styles */
+    .form-check {
+        padding: 12px 20px;
+        background: var(--light);
+        border-radius: 16px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+    }
+
+    .form-check:hover {
+        background: white;
+        border-color: var(--secondary);
+        transform: translateX(5px);
+        box-shadow: var(--card-shadow);
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        cursor: pointer;
+        border: 2px solid var(--gray-light);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+
+    .form-check-label {
+        color: var(--dark);
+        font-weight: 500;
+        cursor: pointer;
+        padding-left: 8px;
+    }
+
+    /* Final Warning */
+    .final-warning {
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(220, 53, 69, 0.1));
+        border: 1px solid var(--accent);
+        border-radius: 16px;
+        padding: 15px 20px;
+        margin: 25px 0;
+        animation: pulse 3s infinite;
+    }
+
+    .final-warning i {
+        color: var(--accent);
+        animation: bounce 2s infinite;
+    }
+
+    .final-warning strong {
+        color: var(--dark);
+    }
+
+    .final-warning span {
+        color: var(--gray-medium);
+    }
+
+    /* Button Styles */
+    .btn-cancel {
+        background: white;
+        color: var(--gray-medium);
+        border: 2px solid var(--gray-light);
+        padding: 12px 30px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-cancel:hover {
+        background: var(--light);
+        color: var(--dark);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: var(--card-shadow);
+        border-color: var(--gray-medium);
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.4s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 10px 20px rgba(220, 53, 69, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-delete::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-delete:active::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .btn-delete:hover:not(:disabled) {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(220, 53, 69, 0.4);
+    }
+
+    .btn-delete:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: linear-gradient(135deg, var(--gray-medium), #999);
+    }
+
+    .btn-delete i {
+        animation: pulse 2s infinite;
+    }
+
+    /* Support Card */
+    .support-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s;
+        overflow: hidden;
+        margin-top: 25px;
+        animation: fadeInUp 1s ease;
+    }
+
+    .support-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .support-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .support-card-header h6 {
+        color: var(--primary);
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .support-card-header i {
+        color: var(--secondary);
+        animation: bounce 2s infinite;
+    }
+
+    .support-list {
+        list-style: none;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .support-list li {
+        padding: 12px 0;
+        border-bottom: 1px dashed var(--gray-light);
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: fadeInLeft 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .support-list li:nth-child(1) { animation-delay: 0.1s; }
+    .support-list li:nth-child(2) { animation-delay: 0.2s; }
+    .support-list li:nth-child(3) { animation-delay: 0.3s; }
+    .support-list li:nth-child(4) { animation-delay: 0.4s; }
+
+    .support-list li:hover {
+        transform: translateX(10px);
+        background: var(--light);
+        padding-left: 15px;
+        border-radius: 10px;
+    }
+
+    .support-list li i {
+        color: var(--secondary);
+        width: 25px;
+        font-size: 1.1rem;
+    }
+
+    .support-list li:last-child {
+        border-bottom: none;
+    }
+
+    .support-list a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .support-list a:hover {
+        color: var(--primary);
+        transform: translateX(5px);
+        display: inline-block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+        
+        .delete-list-item {
+            padding: 12px 15px;
+        }
+        
+        .btn-cancel, .btn-delete {
+            padding: 10px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Main Delete Card -->
+        <div class="delete-card">
+            <div class="delete-card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Delete Your Account
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Warning Message -->
+                <div class="alert-danger-card animate-fadeInLeft">
+                    <div class="d-flex">
+                        <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                        <div>
+                            <h5 class="alert-heading" style="color: var(--danger); font-weight: 700;">⚠️ Warning: This action is permanent!</h5>
+                            <p class="mb-0" style="color: var(--gray-medium);">Once you delete your account, there is no going back. All your data will be permanently removed.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- What will be deleted -->
+                <div class="section-title animate-fadeInRight">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>What will be deleted:</span>
+                </div>
+                
+                <div class="delete-list">
+                    <div class="delete-list-item">
+                        <span>Your Profile Information</span>
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="delete-list-item">
+                        <span>All Job Applications</span>
+                        <i class="fas fa-file-exclamation"></i>
+                    </div>
+                    <div class="delete-list-item">
+                        <span>Messages & Conversations</span>
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div class="delete-list-item">
+                        <span>Interview Records</span>
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <div class="delete-list-item">
+                        <span>Analytics & Activity Data</span>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                
+                <!-- Alternative Options -->
+                <div class="section-title animate-fadeInLeft">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Consider these alternatives:</span>
+                </div>
+                
+                <div class="alternative-list">
+                    <a href="{% url 'edit_job_seeker_profile' %}" class="alternative-item">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">📝 Update Your Profile</h6>
+                                <p class="mb-1">Update your information instead of deleting</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                    <a href="{% url 'job_seeker_dashboard' %}" class="alternative-item">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">⏸️ Take a Break</h6>
+                                <p class="mb-1">You can simply stop using the platform for a while</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Deletion Form -->
+                <form method="POST" action="{% url 'delete_account' %}" id="deleteForm">
+                    {% csrf_token %}
+                    
+                    <!-- Confirmation Checkboxes -->
+                    <div class="section-title animate-fadeInRight">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Please confirm:</span>
+                    </div>
+                    
+                    <div class="form-check animate-fadeInLeft delay-1">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete1" required>
+                        <label class="form-check-label" for="confirmDelete1">
+                            I understand this action is permanent and cannot be undone
+                        </label>
+                    </div>
+                    
+                    <div class="form-check animate-fadeInLeft delay-2">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete2" required>
+                        <label class="form-check-label" for="confirmDelete2">
+                            I understand all my data will be permanently deleted
+                        </label>
+                    </div>
+                    
+                    <div class="form-check animate-fadeInLeft delay-3">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete3" required>
+                        <label class="form-check-label" for="confirmDelete3">
+                            I have downloaded any data I want to keep
+                        </label>
+                    </div>
+                    
+                    <!-- Final Warning -->
+                    <div class="final-warning animate-pulse">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock fa-2x me-3"></i>
+                            <div>
+                                <strong>⚠️ Final Warning:</strong>
+                                <span class="d-block" style="color: var(--gray-medium);">Account deletion is immediate and irreversible. No recovery option.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'job_seeker_dashboard' %}" class="btn-cancel">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn-delete" id="deleteBtn" disabled>
+                            <i class="fas fa-trash-alt me-2"></i> Permanently Delete Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Support Contact Card -->
+        <div class="support-card">
+            <div class="support-card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-life-ring me-2"></i> Need Help? We're here for you
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                <ul class="support-list">
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <span class="text-muted">Email:</span>
+                        <a href="mailto:support@jobora.com" class="ms-auto">support@jobora.com</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone-alt"></i>
+                        <span class="text-muted">Phone:</span>
+                        <span class="ms-auto" style="color: var(--dark);">+91 484 123 4567</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-mobile-alt"></i>
+                        <span class="text-muted">Mobile:</span>
+                        <span class="ms-auto" style="color: var(--dark);">+91 98765 43210</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-question-circle"></i>
+                        <span class="text-muted">Help Center:</span>
+                        <a href="/contact/" class="ms-auto">Visit Help Center <i class="fas fa-external-link-alt ms-1"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const checkboxes = [
+            document.getElementById('confirmDelete1'),
+            document.getElementById('confirmDelete2'),
+            document.getElementById('confirmDelete3')
+        ];
+        
+        // Enable/disable delete button based on checkboxes
+        function updateDeleteButton() {
+            const allChecked = checkboxes.every(checkbox => checkbox.checked);
+            deleteBtn.disabled = !allChecked;
+            
+            if (allChecked) {
+                deleteBtn.classList.add('animate-pulse');
+            } else {
+                deleteBtn.classList.remove('animate-pulse');
+            }
+        }
+        
+        // Add event listeners to checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateDeleteButton();
+                // Add shake animation when checking
+                if (this.checked) {
+                    this.parentElement.classList.add('animate-shake');
+                    setTimeout(() => {
+                        this.parentElement.classList.remove('animate-shake');
+                    }, 500);
+                }
+            });
+        });
+        
+        // Form submission confirmation
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Double confirmation with styled messages
+            if (!confirm('⚠️ FINAL WARNING: Are you absolutely sure you want to delete your account? This cannot be undone!')) {
+                return false;
+            }
+            
+            if (!confirm('💔 This will permanently delete ALL your data: applications, messages, interviews, and profile. There is NO recovery option. Continue?')) {
+                return false;
+            }
+            
+            // Show loading state
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Deleting Account...';
+            deleteBtn.disabled = true;
+            
+            // Add fade-out effect
+            document.querySelector('.delete-card').style.opacity = '0.5';
+            document.querySelector('.delete-card').style.transform = 'scale(0.98)';
+            
+            // Submit form after animation
+            setTimeout(() => {
+                this.submit();
+            }, 500);
+        });
+        
+        // Initial state
+        updateDeleteButton();
+        
+        // Add hover animations to list items
+        document.querySelectorAll('.delete-list-item, .alternative-item, .support-list li').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s';
+            });
+        });
+    });
+</script>
+{% endblock %}

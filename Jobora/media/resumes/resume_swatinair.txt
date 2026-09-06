@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - SWATI NAIR
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Swati Nair
+Email: swatinair@example.com
+Phone: +917337060534
+Location: Mysore
+
+EDUCATION
+---------
+• masters in Business Administration
+• Christ University
+• Graduation Year: 2024
+
+WORK EXPERIENCE
+--------------
+• 10 years of professional experience
+• Current Role: Marketing Manager
+• Skills: Django, Communication, Java, Illustrator, Ansible, Adobe XD, Figma, Angular
+
+TECHNICAL SKILLS
+----------------
+Django, Communication, Java, Illustrator, Ansible, Adobe XD, Figma, Angular
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

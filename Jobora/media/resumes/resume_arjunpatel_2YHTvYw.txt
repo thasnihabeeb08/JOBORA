@@ -1,0 +1,40 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Product Manager
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Arjun Patel
+Email: arjunpatel@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Product Manager position.
+Skilled in Product Strategy, Roadmapping, Agile, Scrum, Market Research.
+
+TECHNICAL SKILLS
+---------------
+• Product Strategy
+• Roadmapping
+• Agile
+• Scrum
+• Market Research
+• Analytics
+• User Stories
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

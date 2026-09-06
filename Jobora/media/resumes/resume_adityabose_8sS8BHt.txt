@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - DevOps Engineer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Aditya Bose
+Email: adityabose@example.com
+Location: Mumbai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking DevOps Engineer position.
+Skilled in Docker, Kubernetes, AWS, CI/CD, Linux.
+
+TECHNICAL SKILLS
+---------------
+• Docker
+• Kubernetes
+• AWS
+• CI/CD
+• Linux
+• Python
+• Jenkins
+• Terraform
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

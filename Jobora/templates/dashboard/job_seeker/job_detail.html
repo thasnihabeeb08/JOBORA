@@ -1,0 +1,1111 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load humanize %}
+
+{% block title %}{{ job.title }} - Job Details{% endblock %}
+
+{% block title_icon %}fa-briefcase{% endblock %}
+{% block page_title %}{{ job.title }}{% endblock %}
+
+{% block page_actions %}
+    {% if not has_applied %}
+        <a href="{% url 'apply_job' job.id %}" class="btn btn-primary">
+            <i class="fas fa-paper-plane me-2"></i> Apply Now
+        </a>
+    {% else %}
+        <button class="btn btn-success" disabled>
+            <i class="fas fa-check me-2"></i> Applied
+        </button>
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === EXACT DASHBOARD STYLING === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* EXACT HOMEPAGE ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.3); }
+        50% { transform: scale(1.05); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.5); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.3); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    .animate-bounce {
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-2 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-3 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-4 { animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-5 { animation-delay: 1s; opacity: 0; animation-fill-mode: forwards; }
+    .delay-6 { animation-delay: 1.2s; opacity: 0; animation-fill-mode: forwards; }
+
+    /* Main Card Styles */
+    .job-detail-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .job-detail-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -10%;
+        width: 30%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .job-detail-card::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 30%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(255, 179, 71, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 25s ease-in-out infinite reverse;
+        pointer-events: none;
+    }
+
+    .job-detail-card:hover {
+        transform: translateY(-10px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* Card Header */
+    .detail-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .detail-card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .detail-card-header .card-title i {
+        color: var(--secondary);
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .card-body {
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Company Header Section */
+    .company-header {
+        margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .job-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .company-info-grid {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+
+    .company-info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1rem;
+        color: var(--dark);
+        padding: 8px 15px;
+        background: var(--light);
+        border-radius: 40px;
+        transition: all 0.3s;
+    }
+
+    .company-info-item:hover {
+        transform: translateY(-3px);
+        background: white;
+        box-shadow: var(--card-shadow);
+    }
+
+    .company-info-item i {
+        color: var(--secondary);
+        font-size: 1.1rem;
+    }
+
+    .remote-badge {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        padding: 5px 15px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+    .salary-section {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.1));
+        padding: 15px 25px;
+        border-radius: 20px;
+        text-align: center;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s;
+    }
+
+    .salary-section:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .salary-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--secondary);
+        margin-bottom: 5px;
+    }
+
+    .salary-period {
+        font-size: 0.9rem;
+        color: var(--gray-medium);
+    }
+
+    /* Job Badges */
+    .job-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .job-badge {
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        background: white;
+        border: 1px solid var(--gray-light);
+        color: var(--dark);
+    }
+
+    .job-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .job-badge.primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        border: none;
+    }
+
+    .job-badge.secondary {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        border: none;
+    }
+
+    .job-badge.accent {
+        background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        color: var(--dark);
+        border: none;
+    }
+
+    .job-badge.featured {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
+        color: white;
+        border: none;
+        animation: pulse 2s infinite;
+    }
+
+    /* Section Headers */
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--gray-light);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-title i {
+        color: var(--secondary);
+        font-size: 1.4rem;
+    }
+
+    /* Content Sections */
+    .content-section {
+        margin-bottom: 35px;
+        line-height: 1.8;
+    }
+
+    .content-section p {
+        color: var(--dark);
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    /* Skills Tags */
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .skill-tag {
+        padding: 8px 20px;
+        background: linear-gradient(135deg, var(--light), white);
+        border: 1px solid var(--gray-light);
+        border-radius: 40px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--dark);
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+    }
+
+    .skill-tag:hover {
+        transform: translateY(-5px) scale(1.05);
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3);
+    }
+
+    /* Job Details Table */
+    .details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .details-table tr {
+        transition: all 0.3s;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .details-table tr:nth-child(1) { animation-delay: 0.1s; }
+    .details-table tr:nth-child(2) { animation-delay: 0.2s; }
+    .details-table tr:nth-child(3) { animation-delay: 0.3s; }
+    .details-table tr:nth-child(4) { animation-delay: 0.4s; }
+    .details-table tr:nth-child(5) { animation-delay: 0.5s; }
+    .details-table tr:nth-child(6) { animation-delay: 0.6s; }
+
+    .details-table th {
+        width: 30%;
+        padding: 15px 20px;
+        background: var(--light);
+        font-weight: 600;
+        color: var(--primary);
+        border: 1px solid var(--gray-light);
+        font-size: 0.95rem;
+    }
+
+    .details-table td {
+        padding: 15px 20px;
+        background: white;
+        color: var(--dark);
+        border: 1px solid var(--gray-light);
+        font-size: 0.95rem;
+    }
+
+    .details-table tr:hover td {
+        background: var(--light);
+    }
+
+    /* Apply Button Section */
+    .apply-section {
+        text-align: center;
+        margin-top: 30px;
+        padding: 30px;
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .apply-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 30%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 15s ease-in-out infinite;
+    }
+
+    .btn-apply {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        border: none;
+        padding: 15px 50px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+        transition: all 0.4s;
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    .btn-apply::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-apply:active::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .btn-apply:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(0, 168, 150, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-apply i {
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* FIXED: White button for View Your Application */
+    .btn-view-application {
+        background: white;
+        color: var(--secondary) !important;
+        border: 2px solid var(--secondary);
+        padding: 12px 30px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-block;
+        text-decoration: none;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-view-application:hover {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white !important;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+        border-color: transparent;
+        text-decoration: none;
+    }
+
+    .btn-view-application i {
+        transition: transform 0.3s;
+    }
+
+    .btn-view-application:hover i {
+        transform: translateX(5px);
+    }
+
+    /* Alert Styles */
+    .alert-applied {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.1));
+        border: 1px solid var(--secondary);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+
+    .alert-applied i {
+        color: var(--secondary);
+        font-size: 1.5rem;
+    }
+
+    .alert-applied strong {
+        color: var(--secondary) !important;
+    }
+
+    /* Company Info Card */
+    .company-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s;
+        overflow: hidden;
+        position: relative;
+        animation: fadeInRight 0.8s ease;
+    }
+
+    .company-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .company-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -10%;
+        width: 30%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .company-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .company-card-header h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .company-card-header h5 i {
+        color: var(--secondary);
+    }
+
+    .company-card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .company-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 15px;
+    }
+
+    .company-profile-link {
+        background: linear-gradient(135deg, var(--light), white);
+        border: 1px solid var(--gray-light);
+        border-radius: 40px;
+        padding: 12px 20px;
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        transition: all 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .company-profile-link:hover {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3);
+        border-color: transparent;
+        text-decoration: none;
+    }
+
+    .company-profile-link i {
+        transition: transform 0.3s;
+    }
+
+    .company-profile-link:hover i {
+        transform: translateX(5px);
+    }
+
+    .company-description {
+        color: var(--gray-medium);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .company-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--gray-light);
+        transition: all 0.3s;
+    }
+
+    .company-detail-item:hover {
+        transform: translateX(8px);
+        background: var(--light);
+        padding-left: 10px;
+        border-radius: 10px;
+    }
+
+    .company-detail-item i {
+        color: var(--secondary);
+        width: 25px;
+        font-size: 1.1rem;
+    }
+
+    .company-detail-item small {
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+    }
+
+    .company-detail-item span {
+        color: var(--dark);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .company-website-link {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .company-website-link:hover {
+        color: var(--primary);
+        transform: translateX(5px);
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    /* Similar Jobs Card */
+    .similar-jobs-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s;
+        overflow: hidden;
+        margin-top: 25px;
+        position: relative;
+        animation: fadeInRight 0.8s ease;
+    }
+
+    .similar-jobs-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .similar-jobs-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -10%;
+        width: 30%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(255, 179, 71, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .similar-job-item {
+        padding: 20px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInLeft 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .similar-job-item:nth-child(1) { animation-delay: 0.1s; }
+    .similar-job-item:nth-child(2) { animation-delay: 0.2s; }
+    .similar-job-item:nth-child(3) { animation-delay: 0.3s; }
+    .similar-job-item:nth-child(4) { animation-delay: 0.4s; }
+    .similar-job-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .similar-job-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: linear-gradient(135deg, var(--secondary), var(--accent));
+        transform: scaleY(0);
+        transition: transform 0.3s;
+    }
+
+    .similar-job-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .similar-job-item:hover {
+        background: var(--light);
+        transform: translateX(8px);
+    }
+
+    .similar-job-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 5px;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .similar-job-title:hover {
+        color: var(--secondary);
+        transform: translateX(5px);
+        text-decoration: none;
+    }
+
+    .similar-job-company {
+        font-size: 0.9rem;
+        color: var(--gray-medium);
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .similar-job-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .similar-job-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--light);
+        color: var(--dark);
+        border: 1px solid var(--gray-light);
+    }
+
+    .similar-job-badge.type {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        border: none;
+    }
+
+    .similar-job-badge.location {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        border: none;
+    }
+
+    .browse-more-btn {
+        background: linear-gradient(135deg, var(--light), white);
+        border: 1px solid var(--gray-light);
+        border-radius: 40px;
+        padding: 12px;
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        margin: 20px;
+        transition: all 0.3s;
+    }
+
+    .browse-more-btn:hover {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+        color: white;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3);
+        border-color: transparent;
+        text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .job-title {
+            font-size: 1.8rem;
+        }
+
+        .company-header {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .salary-section {
+            width: 100%;
+        }
+
+        .company-info-grid {
+            gap: 15px;
+        }
+
+        .details-table th {
+            width: 40%;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-apply {
+            padding: 12px 30px;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Job Details -->
+    <div class="col-lg-8">
+        <div class="job-detail-card">
+            <div class="card-body">
+                <!-- Company Header Section -->
+                <div class="company-header">
+                    <div>
+                        <h1 class="job-title">{{ job.title }}</h1>
+                        <div class="company-info-grid">
+                            <div class="company-info-item">
+                                <i class="fas fa-building"></i>
+                                <span class="fw-medium">{{ job.company.name }}</span>
+                            </div>
+                            <div class="company-info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ job.location }}</span>
+                                {% if job.is_remote %}
+                                    <span class="remote-badge">Remote</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if job.salary_min %}
+                    <div class="salary-section">
+                        <div class="salary-amount">
+                            <i class="fas fa-rupee-sign"></i> {{ job.salary_min|intcomma }} - {{ job.salary_max|intcomma }}
+                        </div>
+                        <div class="salary-period">Per Annum</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Job Badges -->
+                <div class="job-badges">
+                    <span class="job-badge primary">{{ job.get_job_type_display }}</span>
+                    <span class="job-badge secondary">{{ job.get_experience_level_display }}</span>
+                    <span class="job-badge accent">{{ job.category.name }}</span>
+                    {% if job.is_featured %}
+                        <span class="job-badge featured">Featured</span>
+                    {% endif %}
+                </div>
+
+                <!-- Job Description -->
+                <div class="content-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i>
+                        Job Description
+                    </h3>
+                    <div class="job-description">
+                        {{ job.description|linebreaks }}
+                    </div>
+                </div>
+
+                <!-- Requirements -->
+                <div class="content-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Requirements
+                    </h3>
+                    <div class="requirements">
+                        {{ job.requirements|linebreaks }}
+                    </div>
+                </div>
+
+                <!-- Skills Required -->
+                <div class="content-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-code"></i>
+                        Skills Required
+                    </h3>
+                    <div class="skills-container">
+                        {% for skill in job.skills_required_list %}
+                            <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Job Details Table -->
+                <div class="content-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Job Details
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="details-table">
+                            <tbody>
+                                <tr>
+                                    <th>Job Type</th>
+                                    <td>{{ job.get_job_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Experience Level</th>
+                                    <td>{{ job.get_experience_level_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Category</th>
+                                    <td>{{ job.category.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Education Required</th>
+                                    <td>{{ job.education_required|default:"Not specified" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Application Deadline</th>
+                                    <td>{{ job.application_deadline|date:"F d, Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Posted On</th>
+                                    <td>{{ job.posted_on|date:"F d, Y" }} ({{ job.posted_on|timesince }} ago)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Apply Section with FIXED white button -->
+                <div class="apply-section">
+                    {% if not has_applied %}
+                        <a href="{% url 'apply_job' job.id %}" class="btn-apply">
+                            <i class="fas fa-paper-plane me-2"></i> Apply for this Job
+                        </a>
+                        <p class="text-muted mt-3" style="color: var(--gray-medium) !important;">
+                            <small><i class="fas fa-info-circle me-1"></i> You'll need to submit a resume and cover letter</small>
+                        </p>
+                    {% else %}
+                        <div class="alert-applied">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>You have already applied for this job</strong>
+                            <p class="mt-2 mb-0" style="color: var(--gray-medium);">on {{ user_application.applied_on|date:"F d, Y" }}</p>
+                        </div>
+                        <a href="{% url 'application_detail' user_application.id %}" class="btn-view-application">
+                            <i class="fas fa-eye me-2"></i> View Your Application
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Company Info with Profile Link -->
+        <div class="company-card">
+            <div class="company-card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-building me-2"></i>
+                    Company Details
+                </h5>
+            </div>
+            <div class="company-card-body">
+                <h6 class="company-name">{{ job.company.name }}</h6>
+                
+                <a href="{% url 'view_company_profile' job.company.id %}" class="company-profile-link">
+                    <i class="fas fa-building me-1"></i> View Full Company Profile
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+                
+                <p class="company-description">
+                    {{ job.company.description|truncatechars:150 }}
+                </p>
+                
+                <div class="company-detail-item">
+                    <i class="fas fa-industry"></i>
+                    <small class="text-muted">Industry:</small>
+                    <span class="ms-auto">{{ job.company.industry }}</span>
+                </div>
+                
+                <div class="company-detail-item">
+                    <i class="fas fa-users"></i>
+                    <small class="text-muted">Company Size:</small>
+                    <span class="ms-auto">{{ job.company.get_company_size_display }}</span>
+                </div>
+                
+                {% if job.company.website %}
+                    <div class="company-detail-item">
+                        <i class="fas fa-globe"></i>
+                        <small class="text-muted">Website:</small>
+                        <a href="{{ job.company.website }}" target="_blank" class="company-website-link ms-auto">
+                            Visit <i class="fas fa-external-link-alt ms-1"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Similar Jobs -->
+        <div class="similar-jobs-card">
+            <div class="company-card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Similar Jobs
+                </h5>
+            </div>
+            <div class="company-card-body p-0">
+                {% if similar_jobs %}
+                    {% for similar_job in similar_jobs %}
+                        <div class="similar-job-item">
+                            <a href="{% url 'view_job_detail' similar_job.id %}" class="similar-job-title">
+                                {{ similar_job.title|truncatechars:40 }}
+                            </a>
+                            <span class="similar-job-company">{{ similar_job.company.name }}</span>
+                            <div class="similar-job-badges">
+                                <span class="similar-job-badge type">{{ similar_job.get_job_type_display }}</span>
+                                <span class="similar-job-badge location">{{ similar_job.location }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5" style="color: var(--gray-medium);">
+                        <i class="fas fa-briefcase fa-3x mb-3" style="opacity: 0.5;"></i>
+                        <p>No similar jobs found</p>
+                    </div>
+                {% endif %}
+                <a href="{% url 'search_jobs' %}" class="browse-more-btn">
+                    <i class="fas fa-search me-2"></i> Browse More Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Job detail page loaded');
+        
+        // Add hover animations to skill tags
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            tag.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            tag.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+        
+        // Add animation to table rows
+        document.querySelectorAll('.details-table tr').forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}

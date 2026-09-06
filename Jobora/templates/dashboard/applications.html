@@ -1,0 +1,1022 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+
+{% block title %}Jobora - Manage Applications{% endblock %}
+{% block page_title %}{% if job %}Applications for {{ job.title }}{% else %}All Applications{% endif %}{% endblock %}
+
+{% block page_actions %}
+<div style="display: flex; gap: 10px;">
+    {% if company_jobs %}
+    <select id="jobFilter" class="form-control" style="width: 200px;" onchange="filterByJob(this.value)">
+        <option value="">All Jobs</option>
+        {% for comp_job in company_jobs %}
+        <option value="{{ comp_job.id }}" {% if job and job.id == comp_job.id %}selected{% endif %}>
+            {{ comp_job.title|truncatechars:25 }}
+        </option>
+        {% endfor %}
+    </select>
+    {% endif %}
+    
+    <a href="{% url 'post_job' %}" class="btn-primary">
+        <i class="fas fa-plus-circle"></i> Post New Job
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - MANAGE APPLICATIONS === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+
+    /* ==================== */
+    /* Stats Cards */
+    /* ==================== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 24px;
+        padding: 25px 20px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        cursor: pointer;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -20%;
+        width: 50%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        animation: float 15s ease-in-out infinite;
+        transition: all 0.5s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .stat-card:hover::before {
+        transform: scale(1.2);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    }
+
+    .stat-card:hover .stat-number,
+    .stat-card:hover .stat-label,
+    .stat-card:hover .stat-subtext {
+        color: white !important;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-number {
+        transform: scale(1.1);
+    }
+    
+    .stat-label {
+        font-size: 0.95rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-subtext {
+        font-size: 0.8rem;
+        color: var(--gray-medium);
+        margin-top: 5px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    /* ==================== */
+    /* Dashboard Card */
+    /* ==================== */
+    .dashboard-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* Filter Bar */
+    /* ==================== */
+    .filter-bar {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px;
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        align-items: end;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.85rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+    }
+
+    /* ==================== */
+    /* Button Styles */
+    /* ==================== */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    .btn-sm {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+
+    /* ==================== */
+    /* Table Styles */
+    /* ==================== */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .data-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.85rem;
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 2px solid var(--gray-light);
+    }
+    
+    .data-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+    }
+    
+    .data-table tr {
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .data-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+
+    /* High match row highlight */
+    .high-match-row td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(0, 168, 150, 0.02));
+    }
+
+    /* ==================== */
+    /* Status Badges */
+    /* ==================== */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-applied { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-shortlisted { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-interview { background: rgba(255, 179, 71, 0.1); color: var(--accent); }
+    .badge-selected { background: rgba(0, 168, 150, 0.2); color: var(--secondary-dark); }
+    .badge-rejected { background: rgba(230, 126, 34, 0.1); color: #c0392b; }
+
+    /* ==================== */
+    /* AI Match Score Styles */
+    /* ==================== */
+    .ai-match-cell {
+        text-align: center;
+        min-width: 110px;
+    }
+    
+    .ai-match-score {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .ai-match-score:hover {
+        transform: scale(1.1);
+    }
+    
+    .ai-match-bar {
+        width: 100px;
+        height: 8px;
+        background: var(--gray-light);
+        border-radius: 4px;
+        margin: 8px auto;
+        overflow: hidden;
+    }
+    
+    .ai-match-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-match-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    .score-excellent { color: var(--secondary); }
+    .score-good { color: var(--accent); }
+    .score-average { color: var(--primary); }
+    .score-low { color: var(--gray-medium); }
+    
+    .bg-excellent { background: var(--secondary); }
+    .bg-good { background: var(--accent); }
+    .bg-average { background: var(--primary); }
+    .bg-low { background: var(--gray-medium); }
+
+    /* ==================== */
+    /* Candidate Avatar */
+    /* ==================== */
+    .candidate-avatar {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .candidate-avatar:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* ==================== */
+    /* Empty State */
+    /* ==================== */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .empty-state:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-icon {
+        color: var(--secondary);
+        transform: scale(1.1);
+    }
+    
+    .empty-state-text {
+        color: var(--dark);
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-text {
+        color: var(--primary);
+    }
+
+    /* ==================== */
+    /* Status Summary Cards */
+    /* ==================== */
+    .status-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .status-summary-item {
+        padding: 18px;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    .status-summary-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .status-summary-item.applied { background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 105, 148, 0.05)); border-left: 4px solid var(--primary); }
+    .status-summary-item.shortlisted { background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 168, 150, 0.05)); border-left: 4px solid var(--secondary); }
+    .status-summary-item.interview { background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(255, 179, 71, 0.05)); border-left: 4px solid var(--accent); }
+    .status-summary-item.selected { background: linear-gradient(135deg, rgba(0, 168, 150, 0.15), rgba(0, 168, 150, 0.05)); border-left: 4px solid var(--secondary-dark); }
+    .status-summary-item.rejected { background: linear-gradient(135deg, rgba(192, 57, 43, 0.1), rgba(192, 57, 43, 0.05)); border-left: 4px solid #c0392b; }
+
+    .status-summary-number {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .status-summary-label {
+        font-size: 13px;
+        color: var(--gray-medium);
+        font-weight: 500;
+    }
+
+    /* ==================== */
+    /* Pagination */
+    /* ==================== */
+    .pagination-container {
+        padding: 20px;
+        border-top: 1px solid var(--gray-light);
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .pagination-nav {
+        display: flex;
+        gap: 8px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .page-link {
+        display: block;
+        padding: 10px 14px;
+        border: 1px solid var(--gray-light);
+        border-radius: 12px;
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .page-link:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        transform: translateY(-2px);
+        border-color: transparent;
+    }
+
+    .page-link.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-color: transparent;
+    }
+
+    /* ==================== */
+    /* Responsive */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .data-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+        
+        .status-summary-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Stats Overview - Ocean Teal Theme -->
+<div class="stats-grid">
+    <div class="stat-card delay-1">
+        <div class="stat-number">{{ total_applications|default:"0" }}</div>
+        <div class="stat-label">Total Applications</div>
+        <div class="stat-subtext">
+            <i class="fas fa-briefcase me-1"></i> Across all job postings
+        </div>
+    </div>
+    
+    <div class="stat-card delay-2">
+        <div class="stat-number">{{ status_counts.shortlisted|default:"0" }}</div>
+        <div class="stat-label">Shortlisted</div>
+        <div class="stat-subtext">
+            {% if total_applications > 0 %}
+                <i class="fas fa-chart-line me-1"></i> {% widthratio status_counts.shortlisted|default:0 total_applications 100 %}% of applications
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card delay-3">
+        <div class="stat-number">{{ status_counts.interview|default:"0" }}</div>
+        <div class="stat-label">Interview Stage</div>
+        <div class="stat-subtext">
+            {% if status_counts.interview > 0 %}
+                <i class="fas fa-users me-1"></i> {{ status_counts.interview }} candidates in pipeline
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card delay-4">
+        <div class="stat-number">{{ status_counts.selected|default:"0" }}</div>
+        <div class="stat-label">Selected</div>
+        <div class="stat-subtext">
+            {% if status_counts.selected > 0 %}
+                <i class="fas fa-trophy me-1 animate-pulse" style="color: var(--accent);"></i> 🎉 Hired!
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="dashboard-card">
+    <div class="filter-bar">
+        <form method="GET" id="filterForm" class="filter-form">
+            <!-- Status Filter -->
+            <div class="form-group">
+                <label><i class="fas fa-filter me-1"></i> Status</label>
+                <select name="status" class="form-control">
+                    <option value="">All Status</option>
+                    <option value="applied" {% if request.GET.status == 'applied' %}selected{% endif %}>Applied</option>
+                    <option value="shortlisted" {% if request.GET.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                    <option value="interview" {% if request.GET.status == 'interview' %}selected{% endif %}>Interview</option>
+                    <option value="selected" {% if request.GET.status == 'selected' %}selected{% endif %}>Selected</option>
+                    <option value="rejected" {% if request.GET.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            
+            <!-- Date From -->
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt me-1"></i> Date From</label>
+                <input type="date" name="date_from" class="form-control" 
+                       value="{{ request.GET.date_from|default:'' }}">
+            </div>
+            
+            <!-- Date To -->
+            <div class="form-group">
+                <label><i class="fas fa-calendar-check me-1"></i> Date To</label>
+                <input type="date" name="date_to" class="form-control" 
+                       value="{{ request.GET.date_to|default:'' }}">
+            </div>
+            
+            <!-- Filter Buttons -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                <a href="{% url 'view_applications' %}" class="btn-outline">
+                    <i class="fas fa-redo-alt"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Applications Table with AI Match Scores -->
+<div class="dashboard-card">
+    <div style="padding: 20px 25px; border-bottom: 1px solid var(--gray-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h5 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--primary);">
+            <i class="fas fa-users me-2" style="color: var(--secondary);"></i>
+            Applications 
+            <span style="font-size: 11px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 4px 10px; border-radius: 20px; margin-left: 10px;">
+                <i class="fas fa-robot me-1"></i> Sorted by AI Match %
+            </span>
+        </h5>
+        <span style="color: var(--gray-medium); font-size: 14px;">
+            <i class="fas fa-chalkboard-user me-1"></i> Total: {{ total_applications|default:"0" }} applications
+        </span>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        {% if applications %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Candidate</th>
+                    <th>Job Position</th>
+                    <th>Applied Date</th>
+                    <th style="text-align: center; background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.1));">
+                        <i class="fas fa-robot me-1"></i> AI Match %
+                    </th>
+                    <th>Status</th>
+                    <th>Resume</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in applications %}
+                {% with app=item.application %}
+                <tr class="{% if app.match_percentage >= 80 %}high-match-row{% endif %}">
+                    <td style="padding: 15px; font-weight: 600; color: var(--gray-medium);">{{ forloop.counter }}</td>
+                    <td style="padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="candidate-avatar">
+                                {{ app.candidate.first_name|first|default:app.candidate.username|first|upper }}
+                            </div>
+                            <div>
+                                <strong style="color: var(--dark);">{{ app.candidate.get_full_name|default:app.candidate.username }}</strong><br>
+                                <small style="color: var(--gray-medium);">{{ app.candidate.email|truncatechars:25 }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 15px;">
+                        <strong style="color: var(--primary);">{{ app.job.title|truncatechars:30 }}</strong><br>
+                        <small style="color: var(--gray-medium);"><i class="fas fa-map-marker-alt me-1"></i> {{ app.job.location|truncatechars:20|default:"Location not specified" }}</small>
+                    </td>
+                    <td style="padding: 15px;">
+                        <div style="font-weight: 500; color: var(--dark);">{{ app.applied_on|date:"M d, Y" }}</div>
+                        <small style="color: var(--gray-medium);">{{ app.applied_on|timesince }} ago</small>
+                    </td>
+                    
+                    <!-- AI MATCH PERCENTAGE COLUMN -->
+                    <td class="ai-match-cell" style="padding: 15px;">
+                        <div class="ai-match-score 
+                            {% if app.match_percentage >= 80 %}score-excellent
+                            {% elif app.match_percentage >= 60 %}score-good
+                            {% elif app.match_percentage >= 40 %}score-average
+                            {% else %}score-low{% endif %}">
+                            {{ app.match_percentage|default:"0" }}%
+                        </div>
+                        <div class="ai-match-bar">
+                            <div class="ai-match-fill 
+                                {% if app.match_percentage >= 80 %}bg-excellent
+                                {% elif app.match_percentage >= 60 %}bg-good
+                                {% elif app.match_percentage >= 40 %}bg-average
+                                {% else %}bg-low{% endif %}" 
+                                style="width: {{ app.match_percentage|default:0 }}%;"></div>
+                        </div>
+                        <small style="color: var(--gray-medium);">
+                            {% if app.match_percentage >= 80 %}Excellent Match
+                            {% elif app.match_percentage >= 60 %}Good Match
+                            {% elif app.match_percentage >= 40 %}Average Match
+                            {% else %}Low Match{% endif %}
+                        </small>
+                        {% if app.rule_score %}
+                        <div style="font-size: 10px; color: var(--gray-medium); margin-top: 4px;">
+                            Rule: {{ app.rule_score }}%
+                        </div>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px;">
+                        <span class="status-badge badge-{{ app.status }}" 
+                              id="status-badge-{{ app.id }}">
+                            <i class="fas 
+                                {% if app.status == 'applied' %}fa-paper-plane
+                                {% elif app.status == 'shortlisted' %}fa-check-circle
+                                {% elif app.status == 'interview' %}fa-calendar-alt
+                                {% elif app.status == 'selected' %}fa-trophy
+                                {% elif app.status == 'rejected' %}fa-times-circle
+                                {% endif %}"></i>
+                            {{ app.get_status_display }}
+                        </span>
+                    </td>
+                    
+                    <td style="padding: 15px;">
+                        {% if app.resume and app.resume.url %}
+                        <a href="{{ app.resume.url }}" target="_blank" class="btn-outline btn-sm" style="padding: 6px 12px;">
+                            <i class="fas fa-file-pdf"></i> View
+                        </a>
+                        {% else %}
+                        <span style="color: var(--gray-medium); font-size: 12px;">
+                            <i class="fas fa-times-circle"></i> No resume
+                        </span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px;">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <a href="{% url 'candidate_profile' app.id %}" 
+                               class="btn-outline btn-sm" 
+                               title="View Profile">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            
+                            <a href="{% url 'schedule_interview' app.id %}" 
+                               class="btn-outline btn-sm" 
+                               style="background: rgba(255, 179, 71, 0.1); border-color: var(--accent); color: var(--accent-dark);"
+                               title="Schedule Interview">
+                                <i class="fas fa-calendar-alt"></i>
+                            </a>
+                            
+                            <a href="{% url 'send_message' app.id %}" 
+                               class="btn-outline btn-sm" 
+                               title="Send Message">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h5 class="empty-state-text">No Applications Found</h5>
+            <p style="color: var(--gray-medium); margin-bottom: 25px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                {% if request.GET.status or request.GET.date_from or request.GET.date_to %}
+                    No applications match your filter criteria. Try adjusting your filters.
+                {% else %}
+                    {% if job %}No applications received for this job yet.{% else %}No applications received yet. Post jobs to start receiving applications.{% endif %}
+                {% endif %}
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                {% if request.GET.status or request.GET.date_from or request.GET.date_to %}
+                <a href="{% url 'view_applications' %}" class="btn-outline">
+                    <i class="fas fa-redo-alt me-2"></i> Clear Filters
+                </a>
+                {% endif %}
+                <a href="{% url 'post_job' %}" class="btn-primary">
+                    <i class="fas fa-plus-circle"></i> Post New Job
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Pagination Section -->
+    {% if applications.paginator.num_pages > 1 %}
+    <div class="pagination-container">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            <nav aria-label="Page navigation">
+                <ul class="pagination-nav">
+                    {% if applications.has_previous %}
+                    <li>
+                        <a href="?page=1{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" 
+                           class="page-link">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="?page={{ applications.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" 
+                           class="page-link">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for i in applications.paginator.page_range %}
+                        {% if applications.number == i %}
+                        <li>
+                            <span class="page-link active">{{ i }}</span>
+                        </li>
+                        {% elif i > applications.number|add:'-3' and i < applications.number|add:'3' %}
+                        <li>
+                            <a href="?page={{ i }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" 
+                               class="page-link">
+                                {{ i }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if applications.has_next %}
+                    <li>
+                        <a href="?page={{ applications.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" 
+                           class="page-link">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="?page={{ applications.paginator.num_pages }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" 
+                           class="page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            
+            <div style="color: var(--gray-medium); font-size: 13px;">
+                Showing <strong style="color: var(--secondary);">{{ applications.start_index }}</strong> 
+                to <strong style="color: var(--secondary);">{{ applications.end_index }}</strong> 
+                of <strong style="color: var(--secondary);">{{ applications.paginator.count }}</strong> applications
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% if applications %}
+    <div style="padding: 20px; border-top: 1px solid var(--gray-light); text-align: center;">
+        <div style="color: var(--gray-medium); font-size: 13px;">
+            Showing all <strong style="color: var(--secondary);">{{ applications.paginator.count }}</strong> applications
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<!-- Status Distribution Summary -->
+<div class="dashboard-card">
+    <div style="padding: 20px 25px; border-bottom: 1px solid var(--gray-light);">
+        <h5 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--primary);">
+            <i class="fas fa-chart-pie me-2" style="color: var(--secondary);"></i>
+            Application Status Summary
+        </h5>
+    </div>
+    <div style="padding: 25px;">
+        <div class="status-summary-grid">
+            <div class="status-summary-item applied">
+                <div class="status-summary-number" style="color: var(--primary);">{{ total_applications|default:"0" }}</div>
+                <div class="status-summary-label"><i class="fas fa-paper-plane me-1"></i> Applied</div>
+            </div>
+            
+            <div class="status-summary-item shortlisted">
+                <div class="status-summary-number" style="color: var(--secondary);">{{ status_counts.shortlisted|default:"0" }}</div>
+                <div class="status-summary-label"><i class="fas fa-check-circle me-1"></i> Shortlisted</div>
+            </div>
+            
+            <div class="status-summary-item interview">
+                <div class="status-summary-number" style="color: var(--accent);">{{ status_counts.interview|default:"0" }}</div>
+                <div class="status-summary-label"><i class="fas fa-calendar-alt me-1"></i> Interview</div>
+            </div>
+            
+            <div class="status-summary-item selected">
+                <div class="status-summary-number" style="color: var(--secondary-dark);">{{ status_counts.selected|default:"0" }}</div>
+                <div class="status-summary-label"><i class="fas fa-trophy me-1"></i> Selected</div>
+            </div>
+            
+            <div class="status-summary-item rejected">
+                <div class="status-summary-number" style="color: #c0392b;">{{ status_counts.rejected|default:"0" }}</div>
+                <div class="status-summary-label"><i class="fas fa-times-circle me-1"></i> Rejected</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Filter by job
+function filterByJob(jobId) {
+    if (jobId) {
+        window.location.href = `/company/applications/${jobId}/`;
+    } else {
+        window.location.href = '/company/applications/';
+    }
+}
+
+// Initialize animations on load
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stat cards with delay
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        card.style.animationDelay = `${(index + 1) * 0.15}s`;
+    });
+    
+    // Animate table rows with delay
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+    tableRows.forEach((row, index) => {
+        row.style.animationDelay = `${(index + 1) * 0.05}s`;
+    });
+    
+    // Animate status summary items
+    const statusItems = document.querySelectorAll('.status-summary-item');
+    statusItems.forEach((item, index) => {
+        item.style.animationDelay = `${(index + 1) * 0.1}s`;
+    });
+});
+</script>
+{% endblock %}

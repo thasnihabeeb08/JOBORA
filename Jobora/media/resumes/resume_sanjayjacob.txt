@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - SANJAY JACOB
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Sanjay Jacob
+Email: sanjayjacob@example.com
+Phone: +918514492339
+Location: Surat
+
+EDUCATION
+---------
+• masters in Information Technology
+• NIT Calicut
+• Graduation Year: 2024
+
+WORK EXPERIENCE
+--------------
+• 5 years of professional experience
+• Current Role: Data Analyst
+• Skills: SQL, Communication, Project Management, Python, Ruby on Rails, DevOps, Flask, CI/CD
+
+TECHNICAL SKILLS
+----------------
+SQL, Communication, Project Management, Python, Ruby on Rails, DevOps, Flask, CI/CD
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

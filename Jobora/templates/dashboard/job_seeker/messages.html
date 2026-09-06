@@ -1,0 +1,1274 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load static %}
+
+{% block title %}My Messages - Jobora{% endblock %}
+{% block title_icon %}fa-envelope{% endblock %}
+{% block page_title %}My Messages{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'send_message' %}" class="btn-primary">
+    <i class="fas fa-plus me-2"></i>New Message
+</a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - MESSAGES === */
+    :root {
+        --primary: #006994;
+        --primary-light: #2a8cbc;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #20c4b0;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #e6f3f5;
+        --light-teal: #d4f0f0;
+        --gray-light: #cce7e8;
+        --gray-medium: #5f7d8c;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.12);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.2);
+        --teal-glow: 0 0 20px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* Main Cards */
+    .message-card {
+        background: linear-gradient(135deg, #ffffff, #faffff);
+        border-radius: 30px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+        position: relative;
+        backdrop-filter: blur(10px);
+    }
+
+    .message-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 40%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.08) 0%, rgba(255, 179, 71, 0.05) 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .message-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .message-card .card-header {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.05), rgba(0, 168, 150, 0.08));
+        padding: 18px 25px;
+        border-bottom: 2px solid rgba(0, 168, 150, 0.15);
+    }
+
+    .message-card .card-header h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .message-card .card-header h5 i {
+        color: var(--secondary);
+    }
+
+    /* Conversation List */
+    .conversation-list {
+        max-height: 600px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--secondary) var(--light);
+    }
+
+    .conversation-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .conversation-list::-webkit-scrollbar-track {
+        background: var(--light);
+    }
+
+    .conversation-list::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 10px;
+    }
+
+    .conversation-list::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+
+    .conversation-item {
+        padding: 15px;
+        border-left: 3px solid transparent;
+        transition: all 0.4s;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px solid var(--gray-light);
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .conversation-item:nth-child(1) { animation-delay: 0.1s; }
+    .conversation-item:nth-child(2) { animation-delay: 0.2s; }
+    .conversation-item:nth-child(3) { animation-delay: 0.3s; }
+    .conversation-item:nth-child(4) { animation-delay: 0.4s; }
+    .conversation-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .conversation-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: linear-gradient(135deg, var(--secondary), var(--accent));
+        transform: scaleY(0);
+        transition: transform 0.4s;
+    }
+
+    .conversation-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .conversation-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .conversation-item.active-conversation {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.05));
+        border-left: 3px solid var(--secondary);
+    }
+
+    .company-avatar {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        object-fit: cover;
+        border: 2px solid transparent;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 2px;
+        transition: all 0.4s;
+    }
+
+    .conversation-item:hover .company-avatar {
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.3);
+    }
+
+    .company-avatar-placeholder {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.3rem;
+        transition: all 0.4s;
+    }
+
+    .conversation-item:hover .company-avatar-placeholder {
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.3);
+    }
+
+    /* Unread Indicator */
+    .unread-indicator {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 14px;
+        height: 14px;
+        background: linear-gradient(135deg, var(--accent), #ff6b6b);
+        border-radius: 50%;
+        border: 2px solid white;
+        animation: pulse 1.5s infinite;
+    }
+
+    .unread-badge {
+        background: linear-gradient(135deg, var(--accent), #ff6b6b);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 5px 15px rgba(255, 179, 71, 0.3);
+    }
+
+    /* Messages Container */
+    .messages-container {
+        height: 500px;
+        overflow-y: auto;
+        padding: 25px;
+        background: linear-gradient(135deg, var(--light), white);
+        scrollbar-width: thin;
+        scrollbar-color: var(--secondary) var(--light);
+    }
+
+    .messages-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+        background: var(--light);
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 10px;
+    }
+
+    /* Message Bubbles */
+    .message-wrapper {
+        margin-bottom: 20px;
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .message-bubble {
+        max-width: 75%;
+        padding: 18px 22px;
+        border-radius: 25px;
+        position: relative;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-bubble:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .message-sent {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-bottom-right-radius: 5px;
+        margin-left: auto;
+    }
+
+    .message-received {
+        background: white;
+        color: var(--dark);
+        border: 1px solid var(--gray-light);
+        border-bottom-left-radius: 5px;
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .message-received .message-header {
+        border-bottom: 1px solid var(--gray-light);
+    }
+
+    .message-sender {
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .message-sent .message-sender i {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .message-received .message-sender i {
+        color: var(--secondary);
+    }
+
+    .message-time {
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+
+    .message-subject {
+        font-weight: 700;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 1rem;
+    }
+
+    .message-received .message-subject {
+        border-bottom: 1px solid var(--gray-light);
+        color: var(--primary);
+    }
+
+    .message-content {
+        line-height: 1.7;
+        word-wrap: break-word;
+    }
+
+    .message-content p {
+        margin-bottom: 12px;
+    }
+
+    .message-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Read Receipt */
+    .read-receipt {
+        margin-top: 10px;
+        text-align: right;
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+
+    .message-sent .read-receipt i {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, white, var(--light));
+        border-radius: 30px;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        animation: float 3s infinite;
+    }
+
+    .empty-state-icon i {
+        font-size: 48px;
+        color: var(--secondary);
+    }
+
+    .empty-state h4 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: var(--gray-medium);
+        max-width: 400px;
+        margin: 0 auto 25px;
+    }
+
+    /* Quick Tips */
+    .tips-card {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.05));
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+    }
+
+    .tips-card h6 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .tips-card h6 i {
+        color: var(--accent);
+    }
+
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tips-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--gray-light);
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+        animation: fadeInLeft 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .tips-list li:nth-child(1) { animation-delay: 0.1s; }
+    .tips-list li:nth-child(2) { animation-delay: 0.2s; }
+    .tips-list li:nth-child(3) { animation-delay: 0.3s; }
+
+    .tips-list li i {
+        color: var(--secondary);
+    }
+
+    .tips-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* ==================== */
+    /* FIXED: BUTTON STYLES - PROPER ALIGNMENT */
+    /* ==================== */
+    
+    /* Main action buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white !important;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 5px 15px rgba(0, 105, 148, 0.2);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-primary:active::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 25px rgba(0, 168, 150, 0.4);
+        color: white !important;
+        text-decoration: none;
+    }
+
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary) !important;
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white !important;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 25px rgba(0, 168, 150, 0.3);
+        text-decoration: none;
+    }
+
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 12px;
+        border-radius: 30px;
+    }
+
+    /* FIXED: Header Actions Container */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    /* FIXED: Reply Button */
+    .btn-reply {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white !important;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .btn-reply:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 168, 150, 0.3);
+        color: white !important;
+        text-decoration: none;
+    }
+
+    /* FIXED: View Job Button */
+    .btn-view-job {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary) !important;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .btn-view-job:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 168, 150, 0.25);
+        text-decoration: none;
+    }
+
+    /* FIXED: Job Info Section */
+    .job-info-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+    /* Three dots menu button */
+    .header-actions .btn-light {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: white;
+        border: 1px solid var(--gray-light);
+        cursor: pointer;
+    }
+
+    .header-actions .btn-light:hover {
+        background: var(--light);
+        transform: translateY(-2px);
+    }
+
+    .btn-light {
+        background: white;
+        border: 1px solid var(--gray-light);
+        color: var(--dark);
+        padding: 8px 16px;
+        border-radius: 30px;
+        transition: all 0.3s;
+    }
+
+    .btn-light:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal */
+    .modal-content {
+        border-radius: 30px;
+        border: 1px solid var(--secondary);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--light), white);
+        border-bottom: 2px solid var(--secondary);
+    }
+
+    .modal-header h5 {
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .modal-header h5 i {
+        color: var(--accent);
+    }
+
+    .modal-footer {
+        background: var(--light);
+        border-top: 1px solid var(--gray-light);
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--hover-shadow);
+        padding: 8px 0;
+    }
+
+    .dropdown-item {
+        padding: 10px 20px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+    }
+
+    .dropdown-item.text-danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626 !important;
+    }
+
+    /* Badges */
+    .badge.bg-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .badge.bg-light {
+        background: linear-gradient(135deg, var(--light), white) !important;
+        color: var(--primary) !important;
+        border: 1px solid var(--secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .message-bubble {
+            max-width: 90% !important;
+        }
+        
+        .messages-container {
+            height: 400px !important;
+        }
+        
+        .col-lg-4, .col-lg-8 {
+            width: 100%;
+        }
+        
+        .header-actions {
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        
+        .job-info-section {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Conversations Sidebar -->
+    <div class="col-lg-4">
+        <div class="message-card animate-fadeInLeft">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-inbox me-2"></i>Inbox
+                </h5>
+                {% if total_unread > 0 %}
+                <span class="badge bg-danger rounded-pill px-3 py-2 animate-pulse">{{ total_unread }} New</span>
+                {% endif %}
+            </div>
+            
+            <!-- Compose Button -->
+            <div class="p-3 border-bottom">
+                <a href="{% url 'send_message' %}" class="btn-primary w-100 py-2" style="display: block; text-align: center;">
+                    <i class="fas fa-pen-fancy me-2"></i>Compose New Message
+                </a>
+            </div>
+            
+            <!-- Conversation List -->
+            <div class="conversation-list">
+                {% for conv in conversations %}
+                <a href="{% url 'my_messages' %}?conversation={{ conv.id }}" 
+                   class="conversation-item {% if active_conversation and active_conversation.id == conv.id %}active-conversation{% endif %}">
+                    <div class="d-flex">
+                        <!-- Company Avatar -->
+                        <div class="position-relative me-3">
+                            {% if conv.with_company.logo %}
+                                <img src="{{ conv.with_company.logo.url }}" 
+                                     alt="{{ conv.with_company.name }}" 
+                                     class="company-avatar">
+                            {% else %}
+                                <div class="company-avatar-placeholder">
+                                    {{ conv.with_company.name|first|upper }}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Unread Indicator -->
+                            {% if conv.unread_count > 0 %}
+                            <span class="unread-indicator"></span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Conversation Info -->
+                        <div class="flex-grow-1 min-width-0">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-bold text-truncate" style="color: var(--primary);">
+                                    {{ conv.with_company.name|truncatechars:20 }}
+                                    {% if conv.with_company.is_verified %}
+                                    <i class="fas fa-check-circle" style="color: var(--secondary);"></i>
+                                    {% endif %}
+                                </h6>
+                                {% if conv.last_message %}
+                                <small class="text-muted ms-2 flex-shrink-0">
+                                    {{ conv.last_message.sent_at|date:"M d" }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            
+                            {% if conv.job %}
+                            <div class="mb-2">
+                                <span class="badge bg-light rounded-pill small">
+                                    <i class="fas fa-briefcase me-1" style="color: var(--secondary);"></i>
+                                    {{ conv.job.title|truncatechars:18 }}
+                                </span>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Message Preview -->
+                            {% if conv.last_message %}
+                            <p class="mb-0 small" style="color: var(--gray-medium);">
+                                {% if conv.last_message.sender == request.user %}
+                                <span class="fw-semibold" style="color: var(--secondary);">You:</span>
+                                {% endif %}
+                                {{ conv.last_message.content|striptags|truncatechars:30 }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">No messages yet</h6>
+                    <p class="text-muted small px-4 mb-4">
+                        When companies contact you, their messages will appear here
+                    </p>
+                    <a href="{% url 'search_jobs' %}" class="btn-outline-primary btn-sm">
+                        <i class="fas fa-search me-2"></i>Browse Jobs
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="col-lg-8">
+        {% if active_conversation %}
+        <div class="message-card animate-fadeInRight">
+            <!-- Conversation Header - FIXED: Proper button alignment -->
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <!-- Company Avatar -->
+                    <div class="me-3">
+                        {% if active_conversation.with_company.logo %}
+                            <img src="{{ active_conversation.with_company.logo.url }}" 
+                                 alt="{{ active_conversation.with_company.name }}" 
+                                 class="company-avatar" 
+                                 style="width: 54px; height: 54px;">
+                        {% else %}
+                            <div class="company-avatar-placeholder" style="width: 54px; height: 54px;">
+                                {{ active_conversation.with_company.name|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Company Info -->
+                    <div>
+                        <h5 class="mb-1 fw-bold" style="color: var(--primary);">
+                            {{ active_conversation.with_company.name }}
+                            {% if active_conversation.with_company.is_verified %}
+                            <i class="fas fa-check-circle" style="color: var(--secondary);"></i>
+                            {% endif %}
+                        </h5>
+                        {% if active_conversation.job %}
+                        <div class="job-info-section">
+                            <span class="badge bg-light">
+                                <i class="fas fa-briefcase me-1" style="color: var(--secondary);"></i>
+                                {{ active_conversation.job.title }}
+                            </span>
+                            <a href="{% url 'view_job_detail' active_conversation.job.id %}" class="btn-view-job">
+                                <i class="fas fa-eye"></i> View Job
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Header Actions - FIXED: Reply button properly aligned -->
+                <div class="header-actions">
+                    <a href="{% url 'send_message' %}?recipient={{ active_conversation.with_company.id }}" class="btn-reply">
+                        <i class="fas fa-reply"></i> Reply
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown" style="width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteConversationModal">
+                                    <i class="fas fa-trash me-2 text-danger"></i>Delete Conversation
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                {% for message in active_conversation.messages.all %}
+                <!-- Message Item -->
+                <div class="message-wrapper" id="message-{{ message.id }}" style="animation-delay: {{ forloop.counter0|add:1|divisibleby:5 }}s;">
+                    <div class="d-flex {% if message.sender == request.user %}justify-content-end{% endif %}">
+                        <!-- Message Bubble -->
+                        <div class="message-bubble {% if message.sender == request.user %}message-sent{% else %}message-received{% endif %}">
+                            
+                            <!-- Message Header with Delete Option for Received Messages -->
+                            <div class="message-header">
+                                <div class="message-sender">
+                                    {% if message.sender != request.user %}
+                                    <i class="fas fa-building"></i>
+                                    <span>{{ active_conversation.with_company.name }}</span>
+                                    {% else %}
+                                    <i class="fas fa-user"></i>
+                                    <span>You</span>
+                                    {% endif %}
+                                </div>
+                                <div class="message-time">
+                                    {{ message.sent_at|date:"M d, Y h:i A" }}
+                                    
+                                    <!-- Delete Button for Received Messages Only -->
+                                    {% if message.sender != request.user %}
+                                    <div class="dropdown d-inline-block ms-2">
+                                        <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown" style="font-size: 1rem;">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="#" onclick="showDeleteMessageModal({{ message.id }})">
+                                                    <i class="fas fa-trash me-2 text-danger"></i>Delete this message
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Message Subject (if any) -->
+                            {% if message.subject %}
+                            <div class="message-subject">
+                                {{ message.subject }}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Message Content -->
+                            <div class="message-content">
+                                {% if message.content %}
+                                    {% with paragraphs=message.content.splitlines %}
+                                        {% for paragraph in paragraphs %}
+                                            {% if paragraph %}
+                                                <p>{{ paragraph }}</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                    <em class="opacity-50">No content</em>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Read Receipt -->
+                            {% if message.sender == request.user %}
+                            <div class="read-receipt">
+                                {% if message.is_read %}
+                                <i class="fas fa-check-double me-1"></i> Read
+                                {% else %}
+                                <i class="fas fa-check me-1"></i> Sent
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Empty Conversation -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">No messages yet</h6>
+                    <p class="text-muted small mb-4">
+                        Start the conversation with {{ active_conversation.with_company.name }}
+                    </p>
+                    <a href="{% url 'send_message' %}?recipient={{ active_conversation.with_company.id }}" class="btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Send First Message
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Reply Footer -->
+            <div class="card-footer bg-white border-0 p-3 text-center">
+                <a href="{% url 'send_message' %}?recipient={{ active_conversation.with_company.id }}" class="btn-primary px-5 py-2">
+                    <i class="fas fa-reply me-2"></i>Reply to this conversation
+                </a>
+                <p class="text-muted small mt-2 mb-0">
+                    <i class="fas fa-info-circle me-1" style="color: var(--secondary);"></i>
+                    Click the button above to reply. You'll be redirected to the compose message page.
+                </p>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- No Conversation Selected -->
+        <div class="message-card" style="min-height: 600px;">
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                <div class="text-center" style="max-width: 400px;">
+                    <div class="empty-state-icon animate-float">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" style="color: var(--primary);">Your Messages</h4>
+                    <p class="text-muted mb-4">
+                        Select a conversation from the sidebar to view your messages. 
+                        Companies will contact you here about job applications.
+                    </p>
+                    
+                    <!-- Quick Tips -->
+                    <div class="tips-card mb-4 text-start">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-lightbulb me-2" style="color: var(--accent);"></i>
+                            Quick Tips
+                        </h6>
+                        <ul class="tips-list">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                Companies contact you here for interviews
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                Click "Reply" button to respond to messages
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                You can delete individual messages from companies
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'send_message' %}" class="btn-primary">
+                            <i class="fas fa-plus me-2"></i>New Message
+                        </a>
+                        <a href="{% url 'search_jobs' %}" class="btn-outline-primary">
+                            <i class="fas fa-search me-2"></i>Find Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Single Message Modal -->
+<div class="modal fade" id="deleteMessageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-trash text-danger me-2"></i>
+                    Delete Message
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-2">Are you sure you want to delete this message from <strong style="color: var(--primary);">{{ active_conversation.with_company.name }}</strong>?</p>
+                <p class="text-muted small mb-0">
+                    <i class="fas fa-exclamation-triangle me-1" style="color: var(--accent);"></i>
+                    This action cannot be undone. The message will be permanently deleted.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-light" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{% url 'delete_message' %}" id="deleteMessageForm" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="message_id" id="deleteMessageId" value="">
+                    <button type="submit" class="btn-danger px-4">Delete Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Conversation Modal -->
+{% if active_conversation %}
+<div class="modal fade" id="deleteConversationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-trash text-danger me-2"></i>
+                    Delete Conversation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-2">Are you sure you want to delete this conversation with <strong style="color: var(--primary);">{{ active_conversation.with_company.name }}</strong>?</p>
+                <p class="text-muted small mb-0">
+                    <i class="fas fa-exclamation-triangle me-1" style="color: var(--accent);"></i>
+                    This action cannot be undone. All messages will be permanently deleted.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-light" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{% url 'delete_conversation' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="conversation_id" value="{{ active_conversation.id }}">
+                    <button type="submit" class="btn-danger px-4">Delete Conversation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-scroll to bottom of messages
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Add animation to messages
+        const messages = document.querySelectorAll('.message-wrapper');
+        messages.forEach((msg, index) => {
+            msg.style.animationDelay = `${index * 0.1}s`;
+        });
+    }
+    
+    // Fix for any images that fail to load
+    document.querySelectorAll('img').forEach(function(img) {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const parent = this.parentNode;
+            if (!parent.querySelector('.company-avatar-placeholder:not(img)')) {
+                const fallback = document.createElement('div');
+                fallback.className = 'company-avatar-placeholder';
+                fallback.style.cssText = 'width: 54px; height: 54px; font-size: 1.3rem;';
+                fallback.textContent = this.alt.charAt(0).toUpperCase();
+                parent.appendChild(fallback);
+            }
+        });
+    });
+});
+
+// Function to show delete message modal
+function showDeleteMessageModal(messageId) {
+    document.getElementById('deleteMessageId').value = messageId;
+    const modal = new bootstrap.Modal(document.getElementById('deleteMessageModal'));
+    modal.show();
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        padding: 16px 24px;
+        background: ${type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #00a896, #006994)'};
+        color: white;
+        border-radius: 50px;
+        box-shadow: var(--hover-shadow);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+        border: 1px solid rgba(255,255,255,0.2);
+    `;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} fa-lg"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                document.body.removeChild(toast);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

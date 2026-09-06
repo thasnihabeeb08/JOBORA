@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Kabir Yadav
+Email: kabiryadav@example.com
+Location: Hybrid
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Web Development Intern position. 
+Skilled in html, css, javascript.
+
+TECHNICAL SKILLS
+---------------
+• html
+• css
+• javascript
+• react basics
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

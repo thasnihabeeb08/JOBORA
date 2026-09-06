@@ -1,0 +1,52 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Swati Nair
+Email: swatinair@example.com
+Phone: +917337060534
+Location: Mysore
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in Django, Communication, Java. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• Django
+• Communication
+• Java
+• Illustrator
+• Ansible
+• Adobe XD
+• Figma
+• Angular
+
+WORK EXPERIENCE
+--------------
+• 10+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Master's Degree
+• Christ University
+• 2024
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

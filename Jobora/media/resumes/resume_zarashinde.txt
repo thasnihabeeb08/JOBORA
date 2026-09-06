@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ZARA SHINDE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Zara Shinde
+Email: zarashinde@example.com
+Phone: +916926559403
+Location: Indore
+
+EDUCATION
+---------
+• masters in Computer Science
+• NSIT Delhi
+• Graduation Year: 2016
+
+WORK EXPERIENCE
+--------------
+• 6 years of professional experience
+• Current Role: Software Developer
+• Skills: Excel, GraphQL, Java, Artificial Intelligence, Linux, SQL, Team Leadership, Data Analysis
+
+TECHNICAL SKILLS
+----------------
+Excel, GraphQL, Java, Artificial Intelligence, Linux, SQL, Team Leadership, Data Analysis
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

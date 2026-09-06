@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - AADHYA DESAI
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Aadhya Desai
+Email: aadhyadesai@example.com
+Phone: +919720924524
+Location: Ahmedabad
+
+EDUCATION
+---------
+• bachelors in Marketing
+• LPU
+• Graduation Year: 2011
+
+WORK EXPERIENCE
+--------------
+• 1 years of professional experience
+• Current Role: Marketing Manager
+• Skills: CI/CD, Ruby on Rails, Data Analysis, Photoshop, Communication, Angular, Jenkins, Flask
+
+TECHNICAL SKILLS
+----------------
+CI/CD, Ruby on Rails, Data Analysis, Photoshop, Communication, Angular, Jenkins, Flask
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

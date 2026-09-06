@@ -1,0 +1,838 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}Company Details - Admin{% endblock %}
+
+{% block page_title %}Company Profile{% endblock %}
+
+{% block page_actions %}
+<div style="display: flex; gap: 10px;">
+    <a href="{% url 'admin_companies' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Companies
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - COMPANY DETAILS === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    /* ==================== */
+    /* CARD STYLES */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* COMPANY LOGO */
+    /* ==================== */
+    .company-logo-wrapper {
+        margin: 0 auto 20px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .company-logo-img {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--secondary);
+        box-shadow: 0 10px 30px rgba(0, 105, 148, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .company-logo-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.3);
+    }
+    
+    .company-logo-placeholder {
+        width: 130px;
+        height: 130px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 52px;
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(0, 105, 148, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .company-logo-placeholder:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* COMPANY NAME */
+    /* ==================== */
+    .company-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .company-name:hover {
+        color: var(--primary);
+    }
+
+    /* ==================== */
+    /* STATUS BADGES */
+    /* ==================== */
+    .badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-verified {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-pending {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    }
+    
+    .badge-active {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-inactive {
+        background: linear-gradient(135deg, var(--gray-medium), var(--dark));
+    }
+    
+    .badge-count {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    /* ==================== */
+    /* INFO SECTIONS */
+    /* ==================== */
+    .info-section {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+    
+    .info-section:hover {
+        transform: translateX(5px);
+        border-bottom-color: var(--secondary);
+    }
+    
+    .info-label {
+        color: var(--gray-medium);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .info-label i {
+        color: var(--secondary);
+        margin-right: 5px;
+        width: 16px;
+    }
+    
+    .info-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 1rem;
+    }
+    
+    .info-value a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .info-value a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+    }
+
+    /* ==================== */
+    /* DESCRIPTION */
+    /* ==================== */
+    .description-box {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        line-height: 1.8;
+        color: var(--dark);
+    }
+    
+    .description-box:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* BUTTONS */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(255, 179, 71, 0.2);
+    }
+    
+    .btn-warning:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(255, 179, 71, 0.3);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ==================== */
+    /* TABLE STYLES */
+    /* ==================== */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .admin-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.8rem;
+        border-bottom: 2px solid var(--gray-light);
+    }
+    
+    .admin-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+        color: var(--dark);
+    }
+    
+    .admin-table tr {
+        transition: all 0.3s ease;
+    }
+    
+    .admin-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+
+    /* ==================== */
+    /* EMPTY STATE */
+    /* ==================== */
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px 0;
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s ease;
+    }
+
+    .empty-state:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .empty-state:hover .empty-icon {
+        color: var(--secondary);
+        transform: scale(1.1);
+    }
+    
+    .empty-state p {
+        color: var(--gray-medium);
+        margin: 0;
+    }
+
+    /* ==================== */
+    /* ACTION BUTTONS GROUP */
+    /* ==================== */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    /* ==================== */
+    /* TEXT UTILITIES */
+    /* ==================== */
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-muted {
+        color: var(--gray-medium) !important;
+    }
+    
+    .mt-2 {
+        margin-top: 0.5rem;
+    }
+    
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+    
+    .mb-0 {
+        margin-bottom: 0;
+    }
+    
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+    
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .me-2 {
+        margin-right: 0.5rem;
+    }
+    
+    .py-4 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .fa-3x {
+        font-size: 3rem;
+    }
+
+    /* ==================== */
+    /* RESPONSIVE */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+        }
+        
+        .card-header .card-title {
+            font-size: 1rem;
+        }
+        
+        .company-name {
+            font-size: 1.4rem;
+        }
+        
+        .company-logo-img,
+        .company-logo-placeholder {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .admin-table th,
+        .admin-table td {
+            padding: 10px 12px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Company Profile Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-building me-2"></i>
+                    Company Information
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <!-- Logo -->
+                <div class="company-logo-wrapper">
+                    {% if company.logo %}
+                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-img">
+                    {% else %}
+                    <div class="company-logo-placeholder">
+                        {{ company.name|first|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <h4 class="company-name">
+                    {{ company.name }}
+                </h4>
+                
+                <!-- Status Badge -->
+                <div style="margin: 15px 0;">
+                    {% if company.is_approved %}
+                        <span class="badge badge-verified">
+                            <i class="fas fa-check-circle me-1"></i> Verified Company
+                        </span>
+                    {% else %}
+                        <span class="badge badge-pending">
+                            <i class="fas fa-clock me-1"></i> Pending Verification
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    {% if company.is_approved %}
+                    <form method="POST" action="{% url 'reject_company' company.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning" onclick="return confirm('⚠️ Reject {{ company.name }}? This will mark the company as unverified.')">
+                            <i class="fas fa-times me-2"></i> Reject
+                        </button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{% url 'verify_company' company.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success" onclick="return confirm('✅ Verify {{ company.name }}? This will activate the company account.')">
+                            <i class="fas fa-check me-2"></i> Verify
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <form method="POST" action="{% url 'delete_company' company.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('⚠️ DANGER: This will permanently delete {{ company.name }} and ALL their jobs! This action cannot be undone. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-address-card me-2"></i>
+                    Contact Details
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="info-section">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i> Contact Person
+                    </div>
+                    <div class="info-value">{{ company.contact_person|default:"—" }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </div>
+                    <div class="info-value">{{ company.email|default:company.user.email }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i> Phone
+                    </div>
+                    <div class="info-value">{{ company.phone|default:"—" }}</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">
+                        <i class="fas fa-globe"></i> Website
+                    </div>
+                    <div class="info-value">
+                        {% if company.website %}
+                        <a href="{{ company.website }}" target="_blank">
+                            {{ company.website|truncatechars:30 }}
+                            <i class="fas fa-external-link-alt ms-1" style="font-size: 10px;"></i>
+                        </a>
+                        {% else %}
+                        <span style="color: var(--gray-medium);">Not provided</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Company Details -->
+    <div class="col-md-8 mb-4">
+        <!-- About Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    About Company
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">
+                            <i class="fas fa-industry"></i> Industry
+                        </div>
+                        <div class="info-value">{{ company.get_industry_display|default:"—" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">
+                            <i class="fas fa-map-marker-alt"></i> Location
+                        </div>
+                        <div class="info-value">{{ company.location|default:"—" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-plus"></i> Member Since
+                        </div>
+                        <div class="info-value">{{ company.created_at|date:"F d, Y" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-edit"></i> Last Updated
+                        </div>
+                        <div class="info-value">{{ company.updated_at|date:"F d, Y" }}</div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="info-label mb-2">
+                            <i class="fas fa-align-left"></i> Description
+                        </div>
+                        <div class="description-box">
+                            {% if company.description %}
+                                {{ company.description|linebreaks }}
+                            {% else %}
+                                <span style="color: var(--gray-medium);">No description provided.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jobs Posted Card -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Jobs Posted
+                </h5>
+                <span class="badge badge-count">
+                    <i class="fas fa-chart-line me-1"></i> {{ jobs|length }} jobs
+                </span>
+            </div>
+            <div class="card-body">
+                {% if jobs %}
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Posted On</th>
+                                <th>Status</th>
+                                <th class="text-center">Applications</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for job in jobs %}
+                            <tr>
+                                <td style="font-weight: 600; color: var(--primary);">{{ job.title }}</td>
+                                <td><span class="badge" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">{{ job.get_job_type_display }}</span></td>
+                                <td><i class="fas fa-map-marker-alt me-1" style="color: var(--secondary);"></i> {{ job.location }}</td>
+                                <td>{{ job.posted_on|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if job.is_active %}
+                                    <span class="badge badge-active">
+                                        <i class="fas fa-circle me-1" style="font-size: 8px;"></i> Active
+                                    </span>
+                                    {% else %}
+                                    <span class="badge badge-inactive">
+                                        <i class="fas fa-circle me-1" style="font-size: 8px;"></i> Inactive
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-count">{{ job.applications.count }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-briefcase empty-icon"></i>
+                    <p>No jobs posted by this company yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Company Details JS loaded');
+        
+        // Add hover effects for cards
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Animate numbers on load
+        const jobCount = document.querySelector('.badge-count');
+        if (jobCount) {
+            const finalValue = parseInt(jobCount.innerText.replace(/[^0-9]/g, ''));
+            if (!isNaN(finalValue)) {
+                let currentValue = 0;
+                const duration = 800;
+                const increment = finalValue / (duration / 16);
+                
+                const updateNumber = () => {
+                    currentValue += increment;
+                    if (currentValue < finalValue) {
+                        jobCount.innerHTML = `<i class="fas fa-chart-line me-1"></i> ${Math.floor(currentValue)} jobs`;
+                        requestAnimationFrame(updateNumber);
+                    } else {
+                        jobCount.innerHTML = `<i class="fas fa-chart-line me-1"></i> ${finalValue} jobs`;
+                    }
+                };
+                
+                updateNumber();
+            }
+        }
+        
+        // Add row hover animation
+        const rows = document.querySelectorAll('.admin-table tbody tr');
+        rows.forEach((row, index) => {
+            row.style.animation = `fadeInRight 0.5s ease forwards ${index * 0.05}s`;
+            row.style.opacity = '0';
+        });
+    });
+</script>
+{% endblock %}

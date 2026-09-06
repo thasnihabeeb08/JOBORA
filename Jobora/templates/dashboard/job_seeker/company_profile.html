@@ -1,0 +1,118 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load humanize %}
+
+{% block title %}{{ company.name }} - Company Profile{% endblock %}
+{% block page_title %}{{ company.name }}{% endblock %}
+
+{% block page_actions %}
+<a href="javascript:history.back()" class="btn btn-outline-primary">
+    <i class="fas fa-arrow-left me-2"></i> Back
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Company Info Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="company-logo mb-3">
+                    {% if company.logo %}
+                        <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="width: 120px; height: 120px; object-fit: contain; border-radius: 50%; border: 3px solid #2563eb; padding: 5px;">
+                    {% else %}
+                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #2563eb, #1e40af); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <span style="font-size: 48px; color: white; font-weight: 600;">{{ company.name|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <h3>{{ company.name }}</h3>
+                
+                {% if company.is_approved %}
+                    <span class="badge bg-success mb-3">Verified Company</span>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="text-start">
+                    <p><i class="fas fa-industry me-2 text-primary"></i> <strong>Industry:</strong> {{ company.get_industry_display }}</p>
+                    <p><i class="fas fa-map-marker-alt me-2 text-primary"></i> <strong>Location:</strong> {{ company.location }}</p>
+                    <p><i class="fas fa-envelope me-2 text-primary"></i> <strong>Email:</strong> {{ company.email|default:"Not provided" }}</p>
+                    <p><i class="fas fa-phone me-2 text-primary"></i> <strong>Phone:</strong> {{ company.phone|default:"Not provided" }}</p>
+                    <p><i class="fas fa-user-tie me-2 text-primary"></i> <strong>Contact Person:</strong> {{ company.contact_person }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Company Details -->
+    <div class="col-md-8 mb-4">
+        <!-- About Company -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">About {{ company.name }}</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ company.description|default:"No description provided."|linebreaks }}</p>
+            </div>
+        </div>
+        
+        <!-- Active Jobs -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Active Jobs ({{ active_jobs.count }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if active_jobs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Location</th>
+                                    <th>Type</th>
+                                    <th>Salary</th>
+                                    <th>Deadline</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in active_jobs %}
+                                <tr>
+                                    <td><strong>{{ job.title }}</strong></td>
+                                    <td>
+                                        {% if job.is_remote %}
+                                            <span class="badge bg-success">Remote</span>
+                                        {% else %}
+                                            {{ job.location }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ job.get_job_type_display }}</td>
+                                    <td>
+                                        {% if job.salary_min and job.salary_max %}
+                                            ₹{{ job.salary_min|intcomma }} - {{ job.salary_max|intcomma }}
+                                        {% else %}
+                                            Negotiable
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ job.application_deadline|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'view_job_detail' job.id %}" class="btn btn-sm btn-primary">
+                                            View Job
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">No active jobs at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

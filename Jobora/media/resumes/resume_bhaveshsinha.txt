@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - BHAVESH SINHA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Bhavesh Sinha
+Email: bhaveshsinha@example.com
+Phone: +917513801519
+Location: Surat
+
+EDUCATION
+---------
+• masters in Marketing
+• IIT Roorkee
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 14 years of professional experience
+• Current Role: Marketing Manager
+• Skills: UI/UX Design, Java, FastAPI, Kubernetes, Docker, Team Leadership, C++, MongoDB
+
+TECHNICAL SKILLS
+----------------
+UI/UX Design, Java, FastAPI, Kubernetes, Docker, Team Leadership, C++, MongoDB
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

@@ -1,0 +1,38 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Python Developer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Lavanya Jha
+Email: lavanyajha@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Python Developer position.
+Skilled in Python, SQL, Communication, Teamwork, Problem Solving.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• SQL
+• Communication
+• Teamwork
+• Problem Solving
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

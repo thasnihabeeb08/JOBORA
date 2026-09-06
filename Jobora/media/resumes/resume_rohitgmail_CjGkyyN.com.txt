@@ -1,0 +1,46 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Rohit Sabu
+Email: rohit@gmail.com
+Phone: 8891459779
+Location: Kottayam,Kerala
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in Python, Django. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• Django
+
+WORK EXPERIENCE
+--------------
+• 3+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Bachelor's Degree
+• Kristu Jyothi College Of Management and Technology
+• 2026
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

@@ -1,0 +1,1501 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Jobora - Schedule Interview{% endblock %}
+{% block page_title %}{% if is_edit %}Edit Interview{% else %}Schedule Interview{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - SCHEDULE INTERVIEW === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* ==================== */
+    /* Dashboard Card Styles */
+    /* ==================== */
+    .dashboard-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* Page Header */
+    /* ==================== */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .page-header h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0 0 5px 0;
+    }
+
+    .page-header p {
+        color: var(--gray-medium);
+        margin: 0;
+    }
+
+    /* ==================== */
+    /* Candidate Info Card */
+    /* ==================== */
+    .info-card {
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 24px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        padding: 10px;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    /* ==================== */
+    /* Warning Card */
+    /* ==================== */
+    .warning-card {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+        border-left: 4px solid var(--warning);
+        border-radius: 20px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .warning-icon {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, var(--warning), #d97706);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .warning-icon i {
+        color: white;
+        font-size: 20px;
+    }
+
+    .warning-content strong {
+        color: #92400e;
+    }
+
+    .warning-content p {
+        color: #92400e;
+        margin: 5px 0 0 0;
+    }
+
+    /* ==================== */
+    /* Form Styles */
+    /* ==================== */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-label i {
+        color: var(--secondary);
+        margin-right: 6px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 20px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .form-control.has-error {
+        border-color: var(--danger);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    /* Field Error */
+    .field-error {
+        color: var(--danger);
+        font-size: 12px;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Platform Hint */
+    .platform-hint {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.05), rgba(0, 168, 150, 0.03));
+        border: 1px solid var(--gray-light);
+        border-radius: 16px;
+        padding: 10px 14px;
+        font-size: 12px;
+        color: var(--primary);
+        margin-top: 8px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .platform-hint a {
+        color: var(--secondary);
+        text-decoration: none;
+    }
+
+    .platform-hint a:hover {
+        text-decoration: underline;
+    }
+
+    /* Strength Indicator */
+    .strength-indicator {
+        margin-top: 8px;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Char Counter */
+    .char-counter {
+        text-align: right;
+        font-size: 12px;
+        color: var(--gray-medium);
+        margin-top: 8px;
+    }
+
+    .char-counter.warning {
+        color: var(--warning);
+    }
+
+    .char-counter.error {
+        color: var(--danger);
+    }
+
+    /* ==================== */
+    /* Button Styles */
+    /* ==================== */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    /* ==================== */
+    /* Status Badges */
+    /* ==================== */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge-applied { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-shortlisted { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-interview { background: rgba(255, 179, 71, 0.1); color: var(--accent); }
+    .badge-selected { background: rgba(0, 168, 150, 0.2); color: var(--secondary-dark); }
+    .badge-rejected { background: rgba(230, 126, 34, 0.1); color: #c0392b; }
+    .badge-primary { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-success { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+    /* ==================== */
+    /* Calendar Preview */
+    /* ==================== */
+    .calendar-preview {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 25px;
+        border-radius: 24px;
+        text-align: center;
+    }
+
+    .preview-date {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .preview-details {
+        color: var(--gray-medium);
+        font-size: 14px;
+    }
+
+    /* ==================== */
+    /* Tips Card */
+    /* ==================== */
+    .tips-card {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(0, 105, 148, 0.03));
+        border-radius: 24px;
+        padding: 20px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+    }
+
+    .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .tips-icon {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tips-icon i {
+        color: white;
+        font-size: 20px;
+    }
+
+    .tips-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .tips-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .tip-section h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+
+    .tip-section ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--gray-medium);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .tip-section li {
+        margin-bottom: 5px;
+    }
+
+    /* ==================== */
+    /* Checkbox */
+    /* ==================== */
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    .checkbox-label input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* Notification Toast */
+    /* ==================== */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 14px 20px;
+        border-radius: 16px;
+        color: white;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        max-width: 350px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .notification-success {
+        background: linear-gradient(135deg, var(--success), #059669);
+    }
+
+    .notification-error {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+    }
+
+    /* ==================== */
+    /* Form Actions */
+    /* ==================== */
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 2px solid var(--gray-light);
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    /* ==================== */
+    /* Responsive */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .action-buttons {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .tips-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{% if is_edit %}Edit Interview Schedule{% else %}Schedule New Interview{% endif %}</h2>
+        <p>Schedule an interview with 
+            {% if application and application.candidate %}
+                {{ application.candidate.first_name|default:application.candidate.username }}
+            {% else %}
+                Candidate
+            {% endif %}
+        </p>
+    </div>
+    <div>
+        {% if application %}
+        <a href="{% url 'candidate_profile' application.id %}" class="btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Profile
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Candidate & Job Info -->
+{% if application %}
+<div class="info-card animate-fadeInUp delay-1">
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="info-label"><i class="fas fa-user"></i> Candidate</div>
+            <div class="info-value">
+                {% if application.candidate.first_name or application.candidate.last_name %}
+                    {{ application.candidate.first_name }} {{ application.candidate.last_name }}
+                {% else %}
+                    {{ application.candidate.username }}
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label"><i class="fas fa-briefcase"></i> Job Position</div>
+            <div class="info-value">{{ application.job.title }}</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label"><i class="fas fa-tag"></i> Current Status</div>
+            <div>
+                <span class="status-badge 
+                    {% if application.status == 'applied' %}badge-applied
+                    {% elif application.status == 'shortlisted' %}badge-shortlisted
+                    {% elif application.status == 'interview' %}badge-interview
+                    {% elif application.status == 'selected' %}badge-selected
+                    {% elif application.status == 'rejected' %}badge-rejected
+                    {% endif %}">
+                    <i class="fas 
+                        {% if application.status == 'applied' %}fa-paper-plane
+                        {% elif application.status == 'shortlisted' %}fa-check-circle
+                        {% elif application.status == 'interview' %}fa-calendar-alt
+                        {% elif application.status == 'selected' %}fa-trophy
+                        {% elif application.status == 'rejected' %}fa-times-circle
+                        {% endif %}"></i>
+                    {{ application.get_status_display }}
+                </span>
+            </div>
+        </div>
+        
+        <!-- Show if editing existing interview -->
+        {% if is_edit and interview %}
+        <div class="info-item">
+            <div class="info-label"><i class="fas fa-calendar-check"></i> Interview Status</div>
+            <div>
+                <span class="status-badge 
+                    {% if interview.status == 'scheduled' %}badge-primary
+                    {% elif interview.status == 'completed' %}badge-success
+                    {% elif interview.status == 'cancelled' %}badge-danger
+                    {% endif %}">
+                    <i class="fas 
+                        {% if interview.status == 'scheduled' %}fa-clock
+                        {% elif interview.status == 'completed' %}fa-check-circle
+                        {% elif interview.status == 'cancelled' %}fa-times-circle
+                        {% endif %}"></i>
+                    {{ interview.get_status_display }}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Warning for existing interview -->
+{% if is_edit and interview %}
+<div class="warning-card animate-fadeInLeft delay-2">
+    <div class="warning-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="warning-content">
+        <strong>You are editing an existing interview</strong>
+        <p>Originally scheduled for: {{ interview.scheduled_date|date:"F d, Y h:i A" }}</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Interview Schedule Form -->
+<div class="dashboard-card delay-3">
+    <div style="padding: 25px;">
+        <form method="POST" id="interviewForm">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div>
+                    <!-- Interview Date & Time -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar-alt"></i> Interview Date & Time *</label>
+                        <input type="datetime-local" 
+                               name="scheduled_date" 
+                               id="id_scheduled_date" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.scheduled_date|date:'Y-m-d' }}T{{ interview.scheduled_date|time:'H:i' }}{% else %}{{ form_data.scheduled_date|default:'' }}{% endif %}"
+                               required>
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Select date and time (at least 1 hour from now)
+                        </small>
+                        <div id="date-error" class="field-error" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Interview must be scheduled at least 1 hour from now
+                        </div>
+                    </div>
+                    
+                    <!-- Interview Type -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-video"></i> Interview Type *</label>
+                        <select name="interview_type" id="id_interview_type" class="form-control" required>
+                            <option value="">Select type</option>
+                            <option value="virtual" {% if is_edit and interview.interview_type == 'virtual' %}selected{% elif form_data.interview_type == 'virtual' %}selected{% endif %}>Virtual</option>
+                            <option value="in_person" {% if is_edit and interview.interview_type == 'in_person' %}selected{% elif form_data.interview_type == 'in_person' %}selected{% endif %}>In-person</option>
+                            <option value="phone" {% if is_edit and interview.interview_type == 'phone' %}selected{% elif form_data.interview_type == 'phone' %}selected{% endif %}>Phone</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Platform -->
+                    <div class="form-group" id="platform-group">
+                        <label class="form-label"><i class="fas fa-desktop"></i> Platform <span id="platform-required" style="color: var(--danger); display: none;">*</span></label>
+                        <input type="text" 
+                               name="platform" 
+                               id="id_platform" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.platform }}{% else %}{{ form_data.platform|default:'' }}{% endif %}"
+                               placeholder="e.g., Google Meet, Zoom, Microsoft Teams">
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Required for virtual interviews
+                        </small>
+                        <div id="platform-hint" class="platform-hint" style="display: none;"></div>
+                        <div id="platform-error" class="field-error" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Platform is required for virtual interviews
+                        </div>
+                    </div>
+                    
+                    <!-- Interviewer -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user-tie"></i> Interviewer Name *</label>
+                        <input type="text" 
+                               name="interviewer" 
+                               id="id_interviewer" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.interviewer }}{% else %}{{ form_data.interviewer|default:'' }}{% endif %}"
+                               placeholder="Enter interviewer name"
+                               required>
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Name of the person conducting the interview
+                        </small>
+                    </div>
+                    
+                    <!-- Location for in-person interviews -->
+                    <div class="form-group" id="location-group" style="display: none;">
+                        <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                        <input type="text" 
+                               name="location" 
+                               id="id_location" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.location }}{% else %}{{ form_data.location|default:'' }}{% endif %}"
+                               placeholder="Full address for in-person interview">
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Required for in-person interviews
+                        </small>
+                        <div id="location-error" class="field-error" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div id="virtual-fields">
+                    <!-- Meeting Link -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-link"></i> Meeting Link</label>
+                        <input type="url" 
+                               name="meeting_link" 
+                               id="id_meeting_link" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.meeting_link }}{% else %}{{ form_data.meeting_link|default:'' }}{% endif %}"
+                               placeholder="https://meet.google.com/abc-defg-hij">
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Full URL for the virtual meeting
+                        </small>
+                        <div id="link-error" class="field-error" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Please enter a valid URL starting with http:// or https://
+                        </div>
+                    </div>
+                    
+                    <!-- Meeting ID -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-hashtag"></i> Meeting ID</label>
+                        <input type="text" 
+                               name="meeting_id" 
+                               id="id_meeting_id" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.meeting_id }}{% else %}{{ form_data.meeting_id|default:'' }}{% endif %}"
+                               placeholder="e.g., 123 456 7890">
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Optional: Meeting ID for platforms like Zoom
+                        </small>
+                        <div id="meeting-id-error" class="field-error" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Passcode -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Passcode</label>
+                        <input type="text" 
+                               name="passcode" 
+                               id="id_passcode" 
+                               class="form-control"
+                               value="{% if is_edit and interview %}{{ interview.passcode }}{% else %}{{ form_data.passcode|default:'' }}{% endif %}"
+                               placeholder="Optional passcode">
+                        <small style="color: var(--gray-medium); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Optional: Passcode for the meeting
+                        </small>
+                        <div id="passcode-error" class="field-error" style="display: none;"></div>
+                        <div id="passcode-strength" class="strength-indicator" style="display: none;"></div>
+                    </div>
+                    
+                    <!-- Interview Duration -->
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-hourglass-half"></i> Estimated Duration *</label>
+                        <select name="duration" class="form-control" id="duration" required>
+                            <option value="">Select duration</option>
+                            <option value="30" {% if is_edit and interview.duration_minutes == 30 %}selected{% elif form_data.duration == '30' %}selected{% endif %}>30 minutes</option>
+                            <option value="45" {% if is_edit and interview.duration_minutes == 45 %}selected{% elif not form_data.duration or form_data.duration == '45' %}selected{% endif %}>45 minutes</option>
+                            <option value="60" {% if is_edit and interview.duration_minutes == 60 %}selected{% elif form_data.duration == '60' %}selected{% endif %}>1 hour</option>
+                            <option value="90" {% if is_edit and interview.duration_minutes == 90 %}selected{% elif form_data.duration == '90' %}selected{% endif %}>1.5 hours</option>
+                            <option value="120" {% if is_edit and interview.duration_minutes == 120 %}selected{% elif form_data.duration == '120' %}selected{% endif %}>2 hours</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Notes -->
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-sticky-note"></i> Additional Notes</label>
+                <textarea name="notes" 
+                          id="id_notes" 
+                          class="form-control" 
+                          rows="4" 
+                          placeholder="Any special instructions or agenda for the interview..."
+                          maxlength="1000">{% if is_edit and interview %}{{ interview.notes }}{% else %}{{ form_data.notes|default:'' }}{% endif %}</textarea>
+                <div class="char-counter">
+                    <span id="char-count">{% if is_edit and interview %}{{ interview.notes|length }}{% else %}0{% endif %}</span>/1000 characters
+                </div>
+                <div id="notes-error" class="field-error" style="display: none;"></div>
+            </div>
+            
+            <!-- Demo Data Button (only for new interviews) -->
+            {% if not is_edit %}
+            <div style="margin: 20px 0; text-align: center;">
+                <button type="button" onclick="fillDemoData()" class="btn-outline" style="padding: 8px 20px;">
+                    <i class="fas fa-magic"></i> Fill Demo Data (Testing)
+                </button>
+                <small style="display: block; color: var(--gray-medium); margin-top: 8px;">
+                    <i class="fas fa-info-circle"></i> Use this to quickly fill sample data for testing
+                </small>
+            </div>
+            {% endif %}
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="send_email" id="sendEmail" {% if not is_edit %}checked{% endif %}>
+                        <span>
+                            {% if is_edit %}
+                                Send update email to candidate
+                            {% else %}
+                                Send email notification to candidate
+                            {% endif %}
+                        </span>
+                    </label>
+                </div>
+                
+                <div class="action-buttons">
+                    {% if application %}
+                    <a href="{% url 'candidate_profile' application.id %}" class="btn-outline">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    {% endif %}
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        {% if is_edit %}
+                            <i class="fas fa-save"></i> Update Interview
+                        {% else %}
+                            <i class="fas fa-calendar-plus"></i> Schedule Interview
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Calendar Preview -->
+<div class="dashboard-card delay-4">
+    <div style="padding: 25px;">
+        <h3 style="margin-bottom: 20px; color: var(--primary); font-size: 1.1rem; font-weight: 700;">
+            <i class="fas fa-calendar-alt" style="color: var(--secondary); margin-right: 10px;"></i>
+            Calendar Preview
+        </h3>
+        
+        <div class="calendar-preview">
+            <div id="calendarPreview">
+                <div class="preview-date" id="previewDateTime">Not scheduled yet</div>
+                <div class="preview-details" id="previewDetails">Fill in the form to see preview</div>
+                <div class="preview-details" id="previewDuration" style="margin-top: 8px;"></div>
+                <div class="preview-details" id="previewInterviewer" style="margin-top: 5px;"></div>
+                <div class="preview-details" id="previewLocation" style="margin-top: 5px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Interview Tips -->
+<div class="dashboard-card delay-5">
+    <div style="padding: 25px;">
+        <div class="tips-card">
+            <div class="tips-header">
+                <div class="tips-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h4 class="tips-title">Interview Best Practices</h4>
+            </div>
+            
+            <div class="tips-grid">
+                <div class="tip-section">
+                    <h4><i class="fas fa-laptop" style="color: var(--secondary); margin-right: 8px;"></i> For Virtual Interviews:</h4>
+                    <ul>
+                        <li>Test your equipment 10 minutes before</li>
+                        <li>Share meeting details clearly</li>
+                        <li>Have a backup communication method</li>
+                        <li>Ensure good lighting and quiet environment</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-section">
+                    <h4><i class="fas fa-building" style="color: var(--secondary); margin-right: 8px;"></i> For In-Person Interviews:</h4>
+                    <ul>
+                        <li>Book the conference room in advance</li>
+                        <li>Prepare interview materials</li>
+                        <li>Inform reception about the visitor</li>
+                        <li>Plan for parking/transportation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const form = document.getElementById('interviewForm');
+    const interviewType = document.getElementById('id_interview_type');
+    const platformField = document.getElementById('id_platform');
+    const locationField = document.getElementById('id_location');
+    const meetingLink = document.getElementById('id_meeting_link');
+    const meetingIdField = document.getElementById('id_meeting_id');
+    const passcodeField = document.getElementById('id_passcode');
+    const dateField = document.getElementById('id_scheduled_date');
+    const interviewerField = document.getElementById('id_interviewer');
+    const durationField = document.getElementById('duration');
+    const notesField = document.getElementById('id_notes');
+    const charCounter = document.getElementById('char-count');
+    const virtualFields = document.getElementById('virtual-fields');
+    const locationGroup = document.getElementById('location-group');
+    const platformRequired = document.getElementById('platform-required');
+    const platformError = document.getElementById('platform-error');
+    const platformHint = document.getElementById('platform-hint');
+    const dateError = document.getElementById('date-error');
+    const linkError = document.getElementById('link-error');
+    
+    // Set minimum date/time (1 hour from now)
+    if (dateField) {
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        dateField.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+        
+        // If editing and date is in past, show warning
+        {% if is_edit and interview %}
+        const scheduledDate = new Date("{{ interview.scheduled_date|date:'Y-m-d H:i:s' }}");
+        if (scheduledDate < now) {
+            showNotification('Warning: This interview was scheduled in the past', 'error');
+        }
+        {% endif %}
+        
+        updateCalendarPreview();
+    }
+    
+    // Initialize character counter
+    if (notesField && charCounter) {
+        charCounter.textContent = notesField.value.length;
+        notesField.addEventListener('input', function() {
+            charCounter.textContent = this.value.length;
+            
+            const counterDiv = charCounter.parentNode;
+            counterDiv.className = 'char-counter';
+            if (this.value.length > 800) {
+                counterDiv.classList.add('warning');
+            }
+            if (this.value.length > 950) {
+                counterDiv.classList.add('error');
+            }
+        });
+    }
+    
+    // Show/hide fields based on interview type
+    function toggleInterviewFields() {
+        if (interviewType.value === 'virtual') {
+            virtualFields.style.display = 'block';
+            locationGroup.style.display = 'none';
+            platformRequired.style.display = 'inline';
+            platformField.required = true;
+            showPlatformHints();
+        } else if (interviewType.value === 'in_person') {
+            virtualFields.style.display = 'none';
+            locationGroup.style.display = 'block';
+            platformRequired.style.display = 'none';
+            platformField.required = false;
+            platformHint.style.display = 'none';
+            platformError.style.display = 'none';
+        } else if (interviewType.value === 'phone') {
+            virtualFields.style.display = 'none';
+            locationGroup.style.display = 'none';
+            platformRequired.style.display = 'none';
+            platformField.required = false;
+            platformHint.style.display = 'none';
+            platformError.style.display = 'none';
+        } else {
+            virtualFields.style.display = 'block';
+            locationGroup.style.display = 'none';
+            platformRequired.style.display = 'none';
+            platformField.required = false;
+        }
+        updateCalendarPreview();
+    }
+    
+    // Show platform-specific hints
+    function showPlatformHints() {
+        const platform = platformField.value.toLowerCase();
+        platformHint.style.display = 'block';
+        
+        if (platform.includes('google')) {
+            platformHint.innerHTML = `
+                <i class="fas fa-info-circle"></i> 
+                Google Meet: Create at <a href="https://meet.google.com" target="_blank">meet.google.com</a> 
+                | Format: meet.google.com/abc-defg-hij
+            `;
+        } else if (platform.includes('zoom')) {
+            platformHint.innerHTML = `
+                <i class="fas fa-info-circle"></i> 
+                Zoom: Create at <a href="https://zoom.us/meeting/schedule" target="_blank">zoom.us</a> 
+                | Meeting ID: 9-11 digits | Auto-format: 123 456 7890
+            `;
+        } else if (platform.includes('teams') || platform.includes('microsoft')) {
+            platformHint.innerHTML = `
+                <i class="fas fa-info-circle"></i> 
+                Microsoft Teams: Create from Teams calendar | 
+                Format: teams.microsoft.com/l/meetup-join/...
+            `;
+        } else {
+            platformHint.innerHTML = `
+                <i class="fas fa-info-circle"></i> 
+                Enter the platform name (e.g., Google Meet, Zoom, Microsoft Teams)
+            `;
+        }
+    }
+    
+    // Generate demo data (only for new interviews)
+    window.fillDemoData = function() {
+        {% if not is_edit %}
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(14, 0, 0, 0);
+        
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
+        
+        dateField.value = `${year}-${month}-${day}T14:00`;
+        interviewType.value = 'virtual';
+        platformField.value = 'Google Meet';
+        meetingLink.value = 'https://meet.google.com/abc-defg-hij';
+        meetingIdField.value = '';
+        passcodeField.value = '123456';
+        interviewerField.value = 'HR Manager';
+        durationField.value = '60';
+        notesField.value = 'Please prepare to discuss your previous projects and technical skills. Bring your portfolio if available.';
+        
+        toggleInterviewFields();
+        formatMeetingId();
+        updateCalendarPreview();
+        showNotification('Demo data filled successfully!', 'success');
+        {% endif %}
+    };
+    
+    // Auto-format meeting ID for Zoom
+    function formatMeetingId() {
+        if (!meetingIdField.value) return;
+        
+        const value = meetingIdField.value.replace(/\s/g, '');
+        
+        if (value.length >= 9 && /^\d+$/.test(value)) {
+            if (value.length === 9) {
+                meetingIdField.value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+            } else if (value.length === 10) {
+                meetingIdField.value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
+            } else if (value.length === 11) {
+                meetingIdField.value = value.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3');
+            }
+        }
+    }
+    
+    // Check passcode strength
+    function checkPasscodeStrength(passcode) {
+        let strength = 0;
+        
+        if (passcode.length >= 4) strength++;
+        if (passcode.length >= 6) strength++;
+        if (/\d/.test(passcode)) strength++;
+        if (/[a-zA-Z]/.test(passcode)) strength++;
+        if (/[^a-zA-Z0-9]/.test(passcode)) strength++;
+        
+        const strengthColors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#10b981'];
+        const strengthText = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+        
+        return {
+            level: strength,
+            color: strengthColors[strength - 1] || '#ef4444',
+            text: strengthText[strength - 1] || 'Very Weak'
+        };
+    }
+    
+    // Update passcode strength indicator
+    function updatePasscodeStrength() {
+        const strengthDiv = document.getElementById('passcode-strength');
+        if (!passcodeField.value) {
+            strengthDiv.style.display = 'none';
+            return;
+        }
+        
+        const strength = checkPasscodeStrength(passcodeField.value);
+        strengthDiv.style.display = 'flex';
+        strengthDiv.innerHTML = `
+            <div style="width: 60px; height: 4px; background: #e5e7eb; border-radius: 2px;">
+                <div style="width: ${strength.level * 20}%; height: 100%; background: ${strength.color}; border-radius: 2px;"></div>
+            </div>
+            <span style="color: ${strength.color}">${strength.text}</span>
+        `;
+    }
+    
+    // Validation functions
+    function validateNotes(notes) {
+        if (notes.length > 1000) {
+            return "Notes cannot exceed 1000 characters";
+        }
+        
+        const lineBreaks = (notes.match(/\n/g) || []).length;
+        if (lineBreaks > 20) {
+            return "Too many line breaks. Please keep notes concise";
+        }
+        
+        const urlPattern = /(https?:\/\/[^\s]+)/g;
+        const urls = notes.match(urlPattern);
+        if (urls && urls.length > 3) {
+            return "Too many URLs. Please limit to 3 URLs maximum";
+        }
+        
+        return null;
+    }
+    
+    function validateMeetingId(meetingId, platform) {
+        if (!meetingId.trim()) return null;
+        
+        const cleanId = meetingId.replace(/\s/g, '');
+        const platformLower = platform.toLowerCase();
+        
+        if (cleanId.length < 3) {
+            return "Meeting ID is too short";
+        }
+        
+        if (cleanId.length > 50) {
+            return "Meeting ID is too long (max 50 characters)";
+        }
+        
+        if (platformLower.includes('zoom') && /^\d+$/.test(cleanId)) {
+            if (cleanId.length < 9 || cleanId.length > 11) {
+                return "Zoom Meeting ID should be 9-11 digits";
+            }
+        }
+        
+        if (!/^[a-zA-Z0-9\-_@\.]+$/.test(cleanId)) {
+            return "Meeting ID contains invalid characters";
+        }
+        
+        return null;
+    }
+    
+    function validatePasscode(passcode, platform) {
+        if (!passcode.trim()) return null;
+        
+        const platformLower = platform.toLowerCase();
+        const cleanPasscode = passcode.replace(/\s/g, '');
+        
+        if (cleanPasscode.length < 4) {
+            return "Passcode should be at least 4 characters";
+        }
+        
+        if (cleanPasscode.length > 12) {
+            return "Passcode should not exceed 12 characters";
+        }
+        
+        if (platformLower.includes('zoom') && !/^\d{4,8}$/.test(cleanPasscode)) {
+            return "Zoom passcode should be 4-8 digits";
+        }
+        
+        if (isSequential(cleanPasscode)) {
+            return "Passcode cannot be sequential (e.g., 1234, abcd)";
+        }
+        
+        if (/^(\w)\1+$/.test(cleanPasscode)) {
+            return "Passcode cannot be all the same character";
+        }
+        
+        return null;
+    }
+    
+    function isSequential(str) {
+        if (/^\d+$/.test(str) && str.length >= 4) {
+            let isSequential = true;
+            for (let i = 0; i < str.length - 1; i++) {
+                if (parseInt(str[i + 1]) !== parseInt(str[i]) + 1) {
+                    isSequential = false;
+                    break;
+                }
+            }
+            return isSequential;
+        }
+        return false;
+    }
+    
+    // Main form validation
+    function validateInterviewForm() {
+        let isValid = true;
+        
+        document.querySelectorAll('.field-error').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.has-error').forEach(el => {
+            el.classList.remove('has-error');
+        });
+        
+        // Validate date
+        if (dateField && dateField.value) {
+            const selectedDate = new Date(dateField.value);
+            const minDate = new Date();
+            minDate.setHours(minDate.getHours() + 1);
+            
+            if (selectedDate < minDate) {
+                dateError.style.display = 'flex';
+                dateField.classList.add('has-error');
+                isValid = false;
+            }
+        }
+        
+        // Validate based on interview type
+        if (interviewType.value === 'virtual') {
+            if (!platformField.value.trim()) {
+                platformError.style.display = 'flex';
+                platformField.classList.add('has-error');
+                isValid = false;
+            }
+            
+            if (meetingLink.value && !isValidURL(meetingLink.value)) {
+                linkError.style.display = 'flex';
+                meetingLink.classList.add('has-error');
+                isValid = false;
+            }
+            
+            const meetingIdError = validateMeetingId(meetingIdField.value, platformField.value);
+            if (meetingIdError) {
+                showFieldError(meetingIdField, 'meeting-id-error', meetingIdError);
+                isValid = false;
+            }
+            
+            const passcodeError = validatePasscode(passcodeField.value, platformField.value);
+            if (passcodeError) {
+                showFieldError(passcodeField, 'passcode-error', passcodeError);
+                isValid = false;
+            }
+        } else if (interviewType.value === 'in_person') {
+            if (!locationField.value.trim()) {
+                showFieldError(locationField, 'location-error', 'Location is required for in-person interviews');
+                isValid = false;
+            }
+        }
+        
+        const notesError = validateNotes(notesField.value);
+        if (notesError) {
+            showFieldError(notesField, 'notes-error', notesError);
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+    
+    function showFieldError(field, errorId, message) {
+        field.classList.add('has-error');
+        let errorDiv = document.getElementById(errorId);
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = errorId;
+            errorDiv.className = 'field-error';
+            field.parentNode.appendChild(errorDiv);
+        }
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+        errorDiv.style.display = 'flex';
+    }
+    
+    function isValidURL(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+    
+    // Calendar Preview
+    function updateCalendarPreview() {
+        const dateTimeDiv = document.getElementById('previewDateTime');
+        const detailsDiv = document.getElementById('previewDetails');
+        const durationDiv = document.getElementById('previewDuration');
+        const interviewerDiv = document.getElementById('previewInterviewer');
+        
+        if (dateField && dateField.value) {
+            try {
+                const date = new Date(dateField.value);
+                
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                };
+                
+                dateTimeDiv.textContent = date.toLocaleDateString('en-US', options);
+                dateTimeDiv.style.color = 'var(--primary)';
+                
+                let details = [];
+                
+                if (interviewType.value) {
+                    const typeText = interviewType.options[interviewType.selectedIndex].text;
+                    details.push(`Type: ${typeText}`);
+                }
+                
+                if (interviewType.value === 'virtual' && platformField.value) {
+                    details.push(`Platform: ${platformField.value}`);
+                } else if (interviewType.value === 'in_person' && locationField.value) {
+                    details.push(`Location: ${locationField.value}`);
+                }
+                
+                detailsDiv.innerHTML = details.join(' • ') || 'No additional details';
+                
+                if (durationField.value) {
+                    const durationText = durationField.options[durationField.selectedIndex].text;
+                    durationDiv.textContent = `Duration: ${durationText}`;
+                    durationDiv.style.display = 'block';
+                } else {
+                    durationDiv.style.display = 'none';
+                }
+                
+                if (interviewerField.value) {
+                    interviewerDiv.textContent = `Interviewer: ${interviewerField.value}`;
+                    interviewerDiv.style.display = 'block';
+                } else {
+                    interviewerDiv.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('Error updating preview:', error);
+                dateTimeDiv.textContent = 'Invalid date/time';
+                dateTimeDiv.style.color = 'var(--danger)';
+            }
+        } else {
+            dateTimeDiv.textContent = 'Not scheduled yet';
+            dateTimeDiv.style.color = 'var(--gray-medium)';
+            detailsDiv.textContent = 'Fill in the form to see preview';
+            durationDiv.style.display = 'none';
+            interviewerDiv.style.display = 'none';
+        }
+    }
+    
+    // Event Listeners
+    if (interviewType) {
+        interviewType.addEventListener('change', toggleInterviewFields);
+        toggleInterviewFields();
+    }
+    
+    if (platformField) {
+        platformField.addEventListener('input', showPlatformHints);
+        platformField.addEventListener('change', function() {
+            showPlatformHints();
+            updateCalendarPreview();
+        });
+    }
+    
+    if (locationField) {
+        locationField.addEventListener('input', updateCalendarPreview);
+    }
+    
+    if (meetingIdField) {
+        meetingIdField.addEventListener('blur', formatMeetingId);
+    }
+    
+    if (passcodeField) {
+        passcodeField.addEventListener('input', updatePasscodeStrength);
+    }
+    
+    const previewFields = [dateField, interviewType, platformField, durationField, interviewerField, locationField];
+    previewFields.forEach(field => {
+        if (field) {
+            field.addEventListener('change', updateCalendarPreview);
+            field.addEventListener('input', updateCalendarPreview);
+        }
+    });
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (!validateInterviewForm()) {
+                e.preventDefault();
+                showNotification('Please fix the errors in the form', 'error');
+            }
+        });
+    }
+    
+    updateCalendarPreview();
+    updatePasscodeStrength();
+    
+    // Notification function
+    window.showNotification = function(message, type = 'success') {
+        document.querySelectorAll('.notification').forEach(el => el.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    };
+});
+</script>
+{% endblock %}

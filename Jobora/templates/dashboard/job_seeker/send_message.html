@@ -1,0 +1,1217 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load static %}
+
+{% block title %}Send Message - Job Seeker | Jobora{% endblock %}
+
+{% block title_icon %}fa-paper-plane{% endblock %}
+{% block page_title %}Send Message{% endblock %}
+
+{% block page_subtitle %}Communicate with companies professionally{% endblock %}
+
+{% block page_actions %}
+    <a href="{% url 'my_messages' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Messages
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - SEND MESSAGE === */
+    :root {
+        --primary: #006994;
+        --primary-light: #2a8cbc;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #20c4b0;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #e6f3f5;
+        --light-teal: #d4f0f0;
+        --gray-light: #cce7e8;
+        --gray-medium: #5f7d8c;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.12);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.2);
+        --teal-glow: 0 0 20px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .animate-bounce {
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* Main Card - Ocean Teal Theme */
+    .modern-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+        margin-bottom: 25px;
+        position: relative;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .modern-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 40%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.05) 0%, rgba(255, 179, 71, 0.03) 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .modern-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .modern-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 30px;
+        border-bottom: 2px solid rgba(0, 168, 150, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .modern-card:hover .modern-card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .modern-card-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .modern-card:hover .modern-card-header h5 {
+        color: var(--secondary);
+    }
+
+    .modern-card-header h5 i {
+        color: var(--secondary);
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .modern-card:hover .modern-card-header h5 i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+
+    .modern-card-body {
+        padding: 30px;
+    }
+
+    /* Company Info Card */
+    .company-info-card {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.1));
+        border-radius: 25px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        opacity: 0;
+        animation: fadeInLeft 0.8s ease forwards;
+    }
+
+    .company-info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .company-info-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .company-avatar {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 28px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.3);
+        border: 3px solid white;
+        transition: all 0.3s ease;
+    }
+
+    .company-info-card:hover .company-avatar {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.4);
+    }
+
+    /* Form Elements */
+    .modern-label {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+    }
+
+    .modern-label i {
+        color: var(--secondary);
+    }
+
+    .modern-input, .modern-textarea, select.modern-input {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid var(--gray-light);
+        border-radius: 16px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .modern-input:focus, .modern-textarea:focus, select.modern-input:focus {
+        border-color: var(--secondary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        outline: none;
+        transform: translateY(-2px);
+    }
+
+    .modern-input:hover, .modern-textarea:hover, select.modern-input:hover {
+        border-color: var(--secondary-light);
+    }
+
+    .modern-textarea {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    /* Character Counter */
+    .char-counter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--gray-medium);
+        transition: all 0.3s ease;
+    }
+
+    .char-counter span {
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: var(--light);
+        color: var(--dark);
+    }
+
+    .char-counter.warning span {
+        background: rgba(255, 179, 71, 0.2);
+        color: var(--accent-dark);
+    }
+
+    .char-counter.danger span {
+        background: rgba(239, 68, 68, 0.1);
+        color: #b91c1c;
+    }
+
+    /* Template Buttons */
+    .template-container {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 20px 0;
+    }
+
+    .template-btn-modern {
+        background: white;
+        border: 2px solid var(--gray-light);
+        color: var(--primary) !important;
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .template-btn-modern i {
+        font-size: 16px;
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .template-btn-modern:hover {
+        transform: translateY(-5px) scale(1.05);
+        border-color: var(--secondary);
+        color: white !important;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+
+    .template-btn-modern:hover i {
+        color: white !important;
+        transform: scale(1.2);
+    }
+
+    /* Preview Card */
+    .preview-card {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.05), rgba(0, 168, 150, 0.05));
+        border-radius: 25px;
+        padding: 25px;
+        margin-top: 25px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+        transition: all 0.4s ease;
+    }
+
+    .preview-card:hover {
+        border-color: var(--secondary);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .preview-content {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        line-height: 1.7;
+        color: var(--dark);
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .preview-content:hover {
+        border-color: var(--secondary-light);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 2px dashed var(--gray-light);
+    }
+
+    .btn-modern-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white !important;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.3);
+    }
+
+    .btn-modern-primary:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4);
+        color: white !important;
+    }
+
+    .btn-modern-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-modern-secondary {
+        background: white;
+        color: var(--primary) !important;
+        border: 2px solid var(--primary);
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .btn-modern-secondary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white !important;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+
+    /* FIXED: Back to Messages Button - No blue, Ocean Teal theme */
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary) !important;
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-outline-primary::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+        z-index: 0;
+    }
+
+    .btn-outline-primary:active::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white !important;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+
+    .btn-outline-primary i {
+        color: var(--primary) !important;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover i {
+        color: white !important;
+        transform: scale(1.2);
+    }
+
+    /* Checkbox */
+    .modern-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+
+    .modern-checkbox:hover {
+        color: var(--secondary);
+    }
+
+    .modern-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 2px solid var(--gray-light);
+        cursor: pointer;
+        accent-color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .modern-checkbox input[type="checkbox"]:hover {
+        transform: scale(1.2);
+        border-color: var(--secondary);
+    }
+
+    /* Alerts */
+    .modern-alert {
+        border-radius: 20px;
+        padding: 20px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        animation: fadeInLeft 0.4s ease;
+        margin-bottom: 20px;
+    }
+
+    .modern-alert-success {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.1));
+        border-left: 4px solid var(--secondary);
+    }
+
+    .modern-alert-error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(255, 179, 71, 0.1));
+        border-left: 4px solid #ef4444;
+    }
+
+    .modern-alert-warning {
+        background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(0, 168, 150, 0.1));
+        border-left: 4px solid var(--accent);
+    }
+
+    .modern-alert-info {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.1));
+        border-left: 4px solid var(--primary);
+    }
+
+    /* Tips Card */
+    .tips-card {
+        background: linear-gradient(135deg, white, var(--light));
+        border-radius: 30px;
+        padding: 30px;
+        border: 1px solid rgba(0, 168, 150, 0.2);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        opacity: 0;
+        animation: fadeInRight 0.8s ease forwards;
+    }
+
+    .tips-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .tips-card h5 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .tips-card h5 i {
+        color: var(--secondary);
+        animation: float 3s infinite;
+    }
+
+    .tip-item {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 18px;
+        margin-bottom: 12px;
+        transition: all 0.4s ease;
+        border: 1px solid var(--gray-light);
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .tip-item:nth-child(1) { animation-delay: 0.1s; }
+    .tip-item:nth-child(2) { animation-delay: 0.2s; }
+    .tip-item:nth-child(3) { animation-delay: 0.3s; }
+    .tip-item:nth-child(4) { animation-delay: 0.4s; }
+
+    .tip-item:hover {
+        transform: translateX(8px) scale(1.02);
+        border-color: var(--secondary);
+        box-shadow: var(--hover-shadow);
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .tip-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .tip-item:hover .tip-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.3);
+    }
+
+    .tip-item h6 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .tip-item:hover h6 {
+        color: var(--secondary);
+    }
+
+    .tip-item p {
+        color: var(--gray-medium);
+        transition: all 0.3s ease;
+    }
+
+    .tip-item:hover p {
+        color: var(--dark);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .modern-card-header,
+        .modern-card-body {
+            padding: 20px;
+        }
+        
+        .template-container {
+            gap: 8px;
+        }
+        
+        .template-btn-modern {
+            padding: 10px 18px;
+            font-size: 13px;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Alerts -->
+        <div id="messageAlerts">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="modern-alert modern-alert-{{ message.tags|default:'info' }} d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} fa-2x" style="color: {% if message.tags == 'success' %}var(--secondary){% elif message.tags == 'error' %}#ef4444{% elif message.tags == 'warning' %}var(--accent){% else %}var(--primary){% endif %};"></i>
+                    <div>
+                        <h6 class="mb-1 fw-bold" style="color: var(--primary);">
+                            {% if message.tags == 'success' %}Success!
+                            {% elif message.tags == 'error' %}Error
+                            {% elif message.tags == 'warning' %}Warning
+                            {% else %}Information{% endif %}
+                        </h6>
+                        <p class="mb-0" style="color: var(--gray-medium);">{{ message }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Hidden data container with actual Django values -->
+        <div id="template-data" 
+             data-user-name="{{ request.user.get_full_name|default:request.user.username }}"
+             data-user-email="{{ request.user.email }}"
+             style="display: none;">
+        </div>
+
+        <!-- Selected Company Info -->
+        {% if selected_company %}
+        <div class="company-info-card d-flex align-items-center gap-4">
+            <div class="company-avatar">
+                {% if selected_company.logo %}
+                <img src="{{ selected_company.logo.url }}" alt="{{ selected_company.name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                {{ selected_company.name|first|upper }}
+                {% endif %}
+            </div>
+            <div>
+                <h4 class="fw-bold mb-2" style="color: var(--primary);">{{ selected_company.name }}</h4>
+                {% if selected_company.industry %}
+                <p class="mb-1"><i class="fas fa-building me-2" style="color: var(--secondary);"></i> <span style="color: var(--gray-medium);">{{ selected_company.industry }}</span></p>
+                {% endif %}
+                {% if job %}
+                <p class="mb-0"><i class="fas fa-briefcase me-2" style="color: var(--secondary);"></i> <span style="color: var(--gray-medium);">Regarding: {{ job.title }}</span></p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Main Form Card -->
+        <div class="modern-card">
+            <div class="modern-card-header">
+                <h5>
+                    <i class="fas fa-pen-fancy"></i>
+                    Compose New Message
+                </h5>
+            </div>
+            
+            <div class="modern-card-body">
+                <form method="POST" action="{% url 'send_message' %}" id="messageForm">
+                    {% csrf_token %}
+                    
+                    <!-- Hidden fields for pre-selected recipient -->
+                    {% if recipient_id %}
+                    <input type="hidden" name="recipient" value="{{ recipient_id }}">
+                    {% endif %}
+                    
+                    <!-- Recipient Selection (only show if no recipient pre-selected) -->
+                    {% if not recipient_id %}
+                    <div class="mb-4 animate-fadeInUp delay-1">
+                        <label class="modern-label">
+                            <i class="fas fa-building"></i>
+                            Select Company *
+                        </label>
+                        <select class="modern-input" id="recipient_select" name="recipient" required>
+                            <option value="">-- Choose a company --</option>
+                            {% for company in companies %}
+                            <option value="{{ company.user.id }}" data-company-name="{{ company.company_name }}">
+                                {{ company.company_name }}
+                            </option>
+                            {% empty %}
+                            <option value="" disabled>No companies available. Apply to jobs first.</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="fas fa-info-circle me-1" style="color: var(--secondary);"></i>
+                            You can only message companies you've applied to
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Subject -->
+                    <div class="mb-4 animate-fadeInUp delay-2">
+                        <label class="modern-label">
+                            <i class="fas fa-heading"></i>
+                            Subject *
+                        </label>
+                        <input type="text" 
+                               class="modern-input" 
+                               id="subject" 
+                               name="subject" 
+                               value="{{ prefilled_subject }}"
+                               placeholder="e.g., Follow-up on Software Developer application"
+                               maxlength="200"
+                               required>
+                        <div class="char-counter" id="subjectCounterContainer">
+                            <span><i class="fas fa-info-circle me-1"></i> Be clear and specific</span>
+                            <span id="subjectCounter">0</span>/200
+                        </div>
+                    </div>
+                    
+                    <!-- Message Content -->
+                    <div class="mb-4 animate-fadeInUp delay-3">
+                        <label class="modern-label">
+                            <i class="fas fa-edit"></i>
+                            Message *
+                        </label>
+                        <textarea class="modern-textarea" 
+                                  id="content" 
+                                  name="content" 
+                                  placeholder="Write your professional message here..." 
+                                  maxlength="5000"
+                                  required>{{ prefilled_content }}</textarea>
+                        <div class="char-counter" id="contentCounterContainer">
+                            <span><i class="fas fa-lightbulb me-1" style="color: var(--accent);"></i> Be professional and specific</span>
+                            <span id="contentCounter">0</span>/5000
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Templates -->
+                    <div class="mb-4 animate-fadeInUp delay-4">
+                        <label class="modern-label">
+                            <i class="fas fa-magic"></i>
+                            Quick Templates
+                        </label>
+                        <div class="template-container">
+                            <button type="button" class="template-btn-modern" data-template="followup">
+                                <i class="fas fa-sync-alt"></i>
+                                Follow-up
+                            </button>
+                            <button type="button" class="template-btn-modern" data-template="interview_query">
+                                <i class="fas fa-calendar-alt"></i>
+                                Interview Query
+                            </button>
+                            <button type="button" class="template-btn-modern" data-template="thankyou">
+                                <i class="fas fa-handshake"></i>
+                                Thank You
+                            </button>
+                            <button type="button" class="template-btn-modern" data-template="question">
+                                <i class="fas fa-question-circle"></i>
+                                Question
+                            </button>
+                            <button type="button" class="template-btn-modern" data-template="withdraw">
+                                <i class="fas fa-times-circle"></i>
+                                Withdraw
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Preview -->
+                    <div class="preview-card animate-fadeInUp delay-5">
+                        <label class="modern-label mb-3">
+                            <i class="fas fa-eye"></i>
+                            Message Preview
+                        </label>
+                        <div class="preview-content" id="messagePreview">
+                            <div style="color: var(--gray-medium); font-style: italic; text-align: center; padding: 40px 20px;">
+                                <i class="fas fa-paper-plane fa-3x mb-3" style="color: var(--secondary); opacity: 0.5;"></i>
+                                <p>✨ Your message preview will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons animate-fadeInUp delay-6">
+                        <label class="modern-checkbox">
+                            <input type="checkbox" name="save_draft" id="saveDraft">
+                            <span><i class="fas fa-save me-1" style="color: var(--secondary);"></i> Save as draft</span>
+                        </label>
+                        
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'my_messages' %}" class="btn-outline-primary">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn-modern-primary" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Tips Card -->
+        <div class="tips-card">
+            <h5 class="fw-bold mb-4 d-flex align-items-center gap-3">
+                <i class="fas fa-lightbulb"></i>
+                Professional Communication Tips
+            </h5>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Be Clear & Concise</h6>
+                            <p class="mb-0 small">State your purpose clearly in the subject line and get straight to the point.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Professional Tone</h6>
+                            <p class="mb-0 small">Maintain professionalism while being friendly and approachable.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Proofread</h6>
+                            <p class="mb-0 small">Always check for typos and clarity before hitting send.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Timely Response</h6>
+                            <p class="mb-0 small">Respond to messages within 24-48 hours for best results.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const templateData = document.getElementById('template-data');
+    const contentField = document.getElementById('content');
+    const subjectField = document.getElementById('subject');
+    const subjectCounter = document.getElementById('subjectCounter');
+    const contentCounter = document.getElementById('contentCounter');
+    const subjectContainer = document.getElementById('subjectCounterContainer');
+    const contentContainer = document.getElementById('contentCounterContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageForm = document.getElementById('messageForm');
+    const messagePreview = document.getElementById('messagePreview');
+    const recipientSelect = document.getElementById('recipient_select');
+    
+    // Get user data from data attributes
+    const userName = templateData?.dataset.userName || 'User';
+    const userEmail = templateData?.dataset.userEmail || '';
+    
+    // Templates - Ocean Teal Theme
+    const templates = {
+        followup: {
+            subject: "Follow-up on Application",
+            content: `Dear Hiring Manager,
+
+I hope this message finds you well. I'm writing to follow up on my application for the [Position Name] role that I submitted on [Date].
+
+I remain very enthusiastic about this opportunity and believe my skills in [Your Skills] would be a valuable addition to your team.
+
+Please let me know if there are any updates on the hiring process or if you need any additional information.
+
+Thank you for your time and consideration.
+
+Best regards,
+${userName}
+${userEmail}`
+        },
+        
+        interview_query: {
+            subject: "Interview Inquiry",
+            content: `Dear Hiring Manager,
+
+I hope you're having a productive week. I'm writing to inquire about the interview timeline for the [Position Name] position.
+
+I'm very excited about this opportunity and would be delighted to discuss how my experience could benefit your team.
+
+Could you please let me know the next steps in the interview process?
+
+Looking forward to your response.
+
+Sincerely,
+${userName}
+${userEmail}`
+        },
+        
+        thankyou: {
+            subject: "Thank You",
+            content: `Dear [Interviewer Name],
+
+Thank you for taking the time to interview me for the [Position Name] role. I truly enjoyed our conversation and learning more about the position.
+
+I remain very interested in this opportunity and believe my background would allow me to contribute effectively to your team.
+
+Thank you again for your time.
+
+Best regards,
+${userName}
+${userEmail}`
+        },
+        
+        question: {
+            subject: "Question Regarding Application",
+            content: `Dear Hiring Manager,
+
+I hope this message finds you well. I'm writing with a question regarding my application for the [Position Name] role.
+
+[State your specific question here]
+
+Thank you for your assistance.
+
+Sincerely,
+${userName}
+${userEmail}`
+        },
+        
+        withdraw: {
+            subject: "Application Withdrawal",
+            content: `Dear Hiring Manager,
+
+I am writing to formally withdraw my application for the [Position Name] position.
+
+Thank you for considering my application and for your time.
+
+Best regards,
+${userName}
+${userEmail}`
+        }
+    };
+    
+    // Update counters with color coding
+    function updateCounters() {
+        if (subjectField && subjectCounter) {
+            const subLength = subjectField.value.length;
+            subjectCounter.textContent = subLength;
+        }
+        
+        if (contentField && contentCounter) {
+            const length = contentField.value.length;
+            contentCounter.textContent = length;
+            
+            // Update container class
+            if (contentContainer) {
+                contentContainer.className = 'char-counter';
+                if (length > 4500) {
+                    contentContainer.classList.add('danger');
+                } else if (length > 4000) {
+                    contentContainer.classList.add('warning');
+                }
+            }
+            
+            // Auto-resize
+            contentField.style.height = 'auto';
+            contentField.style.height = (contentField.scrollHeight) + 'px';
+        }
+        updatePreview();
+    }
+    
+    // Update preview
+    function updatePreview() {
+        if (!messagePreview) return;
+        
+        const subject = subjectField?.value || '';
+        const content = contentField?.value || '';
+        
+        let previewHTML = '';
+        
+        if (subject) {
+            previewHTML += `<div style="font-weight: 700; color: var(--primary); margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid var(--gray-light); padding-bottom: 10px;">📧 ${escapeHtml(subject)}</div>`;
+        }
+        
+        if (content) {
+            const formattedContent = escapeHtml(content).replace(/\n/g, '<br>');
+            previewHTML += `<div style="color: var(--dark); line-height: 1.8; white-space: pre-wrap;">${formattedContent}</div>`;
+        } else {
+            previewHTML += '<div style="color: var(--gray-medium); font-style: italic; text-align: center; padding: 40px 20px;"><i class="fas fa-paper-plane fa-3x mb-3" style="color: var(--secondary); opacity: 0.5;"></i><p>✨ Your message preview will appear here</p></div>';
+        }
+        
+        previewHTML += `
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px dashed var(--gray-light); color: var(--gray-medium); font-size: 13px;">
+                <div style="font-weight: 600; color: var(--primary); margin-bottom: 5px;">From: ${escapeHtml(userName)}</div>
+                <div><i class="fas fa-envelope me-1" style="color: var(--secondary);"></i> ${escapeHtml(userEmail)}</div>
+                <div style="margin-top: 8px;"><i class="fas fa-bolt me-1" style="color: var(--accent);"></i> Sent via Jobora Platform</div>
+            </div>
+        `;
+        
+        messagePreview.innerHTML = previewHTML;
+    }
+    
+    // Apply template
+    document.querySelectorAll('.template-btn-modern').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const templateName = this.dataset.template;
+            if (templates[templateName]) {
+                subjectField.value = templates[templateName].subject;
+                contentField.value = templates[templateName].content;
+                updateCounters();
+                
+                // Show success toast
+                showToast(`✨ "${templateName.replace('_', ' ')}" template applied`, 'success');
+            }
+        });
+    });
+    
+    // Form validation
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Check recipient if no pre-selected recipient
+            if (!document.querySelector('input[name="recipient"]') && recipientSelect) {
+                if (!recipientSelect.value) {
+                    isValid = false;
+                    errorMessage = '⚠️ Please select a company';
+                    recipientSelect.focus();
+                }
+            }
+            
+            // Check subject
+            if (isValid && !subjectField.value.trim()) {
+                isValid = false;
+                errorMessage = '⚠️ Please enter a subject';
+                subjectField.focus();
+            }
+            
+            // Check content
+            if (isValid && !contentField.value.trim()) {
+                isValid = false;
+                errorMessage = '⚠️ Please enter a message';
+                contentField.focus();
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                showToast(errorMessage, 'error');
+                return false;
+            }
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        });
+    }
+    
+    // Event listeners
+    if (subjectField) subjectField.addEventListener('input', updateCounters);
+    if (contentField) {
+        contentField.addEventListener('input', updateCounters);
+    }
+    
+    // Initialize
+    updateCounters();
+    
+    // Escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Toast notification
+    function showToast(message, type = 'info') {
+        // Remove any existing toast
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.style.cssText = `
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            background: ${type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #00a896, #006994)'};
+            color: white;
+            border-radius: 50px;
+            box-shadow: var(--hover-shadow);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+        `;
+        toast.innerHTML = `
+            <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} fa-lg"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+});
+</script>
+{% endblock %}

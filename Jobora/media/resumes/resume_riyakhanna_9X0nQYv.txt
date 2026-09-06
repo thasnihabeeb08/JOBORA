@@ -1,0 +1,54 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Riya Khanna
+Email: riyakhanna@example.com
+Phone: +917221978873
+Location: Ahmedabad
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced IT professional with expertise in java, teamwork, azure. 
+Proven track record of delivering high-quality solutions and working in team environments.
+
+TECHNICAL SKILLS
+---------------
+• java
+• teamwork
+• azure
+• docker
+• adobe xd
+• communication
+• social media
+• cloud computing
+
+WORK EXPERIENCE
+--------------
+• 8+ years of professional experience
+• Developed and maintained multiple software applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+• Solved complex technical problems
+• Communicated effectively with stakeholders
+
+EDUCATION
+---------
+• Bachelor's Degree
+• Christ University
+• 2017
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

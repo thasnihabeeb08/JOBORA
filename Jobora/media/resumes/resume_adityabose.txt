@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ADITYA BOSE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Aditya Bose
+Email: adityabose@example.com
+Phone: +917103812056
+Location: Lucknow
+
+EDUCATION
+---------
+• bachelors in Information Technology
+• NIT Warangal
+• Graduation Year: 2013
+
+WORK EXPERIENCE
+--------------
+• 14 years of professional experience
+• Current Role: Software Developer
+• Skills: React, Ruby on Rails, SQL, Ansible, Vue.js, Project Management, C#, Kubernetes
+
+TECHNICAL SKILLS
+----------------
+React, Ruby on Rails, SQL, Ansible, Vue.js, Project Management, C#, Kubernetes
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

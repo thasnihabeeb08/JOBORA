@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Menon
+Email: anvimenon@example.com
+Location: Bangalore
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking UI/UX Designer position. Strong background in Figma, Adobe XD, UI Design.
+
+TECHNICAL SKILLS
+---------------
+• Figma
+• Adobe XD
+• UI Design
+• UX Research
+• HTML
+• CSS
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

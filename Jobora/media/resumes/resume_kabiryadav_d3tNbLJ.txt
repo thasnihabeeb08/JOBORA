@@ -1,0 +1,39 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Kabir Yadav
+Email: kabiryadav@example.com
+Location: Pune
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking QA Engineer position. 
+Skilled in testing, automation, selenium.
+
+TECHNICAL SKILLS
+---------------
+• testing
+• automation
+• selenium
+• python
+• java
+• test cases
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

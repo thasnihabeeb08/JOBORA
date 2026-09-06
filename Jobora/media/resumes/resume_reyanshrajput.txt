@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - REYANSH RAJPUT
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Reyansh Rajput
+Email: reyanshrajput@example.com
+Phone: +917280963219
+Location: Kochi
+
+EDUCATION
+---------
+• bachelors in Business Administration
+• IIIT Bangalore
+• Graduation Year: 2020
+
+WORK EXPERIENCE
+--------------
+• 12 years of professional experience
+• Current Role: Data Analyst
+• Skills: JavaScript, C#, Photoshop, Team Leadership, Ansible, Terraform, Vue.js, CI/CD
+
+TECHNICAL SKILLS
+----------------
+JavaScript, C#, Photoshop, Team Leadership, Ansible, Terraform, Vue.js, CI/CD
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

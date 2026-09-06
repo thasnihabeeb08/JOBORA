@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vivaan Verma
+Email: vivaanverma@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Cloud Architect position. Strong background in AWS, Azure, Cloud Computing.
+
+TECHNICAL SKILLS
+---------------
+• AWS
+• Azure
+• Cloud Computing
+• Python
+• DevOps
+• Docker
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Full Stack Developer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Suresh Kumar
+Email: sureshkumar@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Full Stack Developer position.
+Skilled in Python, Django, React, PostgreSQL, JavaScript.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• Django
+• React
+• PostgreSQL
+• JavaScript
+• HTML
+• CSS
+• REST APIs
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

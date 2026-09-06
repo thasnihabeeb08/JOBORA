@@ -1,0 +1,39 @@
+<!-- Cancel Interview Modal -->
+<div class="modal fade" id="cancelInterviewModal{{ interview.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header border-danger bg-danger bg-opacity-10">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Request Interview Cancellation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to request cancellation for this interview?</p>
+                
+                <div class="alert alert-warning small">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Important:</strong> This will send a cancellation request to the company. 
+                    The interview will remain scheduled until the company approves your request.
+                </div>
+                
+                <form id="cancelForm{{ interview.id }}" method="POST" action="{% url 'cancel_interview' interview.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Reason for Cancellation *</label>
+                        <textarea class="form-control" name="cancellation_reason" 
+                                  rows="3" placeholder="Please provide a reason..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Go Back
+                </button>
+                <button type="submit" form="cancelForm{{ interview.id }}" class="btn btn-danger">
+                    <i class="fas fa-paper-plane me-2"></i> Send Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

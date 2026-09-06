@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Rohan Jha
+Email: rohanjha@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Cybersecurity Analyst position. Strong background in Cybersecurity, Network Security, Python.
+
+TECHNICAL SKILLS
+---------------
+• Cybersecurity
+• Network Security
+• Python
+• Linux
+• Firewall
+
+WORK EXPERIENCE
+--------------
+• 2+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

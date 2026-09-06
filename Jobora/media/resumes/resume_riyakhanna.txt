@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - RIYA KHANNA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Riya Khanna
+Email: riyakhanna@example.com
+Phone: +917221978873
+Location: Ahmedabad
+
+EDUCATION
+---------
+• bachelors in Computer Science
+• Christ University
+• Graduation Year: 2017
+
+WORK EXPERIENCE
+--------------
+• 8 years of professional experience
+• Current Role: Product Manager
+• Skills: Team Leadership, Docker, TypeScript, FastAPI, CI/CD, Java, Django, Terraform
+
+TECHNICAL SKILLS
+----------------
+Team Leadership, Docker, TypeScript, FastAPI, CI/CD, Java, Django, Terraform
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

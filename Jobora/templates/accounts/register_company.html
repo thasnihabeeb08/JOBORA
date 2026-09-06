@@ -1,0 +1,1771 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration | Jobora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        /* === MODERN DESIGN WITH TEAL-GREEN GRADIENT === */
+        :root {
+            --primary: #006994;
+            --primary-dark: #004c70;
+            --primary-light: #4a9fc5;
+            --secondary: #00a896;
+            --secondary-light: #4ecdc4;
+            --accent: #ffb347;
+            --accent-light: #ffcc7a;
+            --dark: #1e2f4a;
+            --light: #e6f5f0;
+            --gray-light: #c2d9e8;
+            --gray-medium: #6f8f9f;
+            --bg-white: rgba(255, 255, 255, 0.95);
+            --text-dark: #1e2f4a;
+            --text-medium: #2c4058;
+            --text-light: #4a637a;
+            --border: #c2d9e8;
+            --success: #00a896;
+            --error: #e67e22;
+            --warning: #ffb347;
+            --info: #4a9fc5;
+            --radius: 16px;
+            --shadow-sm: 0 4px 12px rgba(0, 105, 148, 0.1);
+            --shadow-md: 0 8px 24px rgba(0, 105, 148, 0.15);
+            --shadow-lg: 0 16px 32px rgba(0, 105, 148, 0.2);
+            --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.15);
+            --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            animation: bgShift 15s ease-in-out infinite alternate;
+        }
+
+        /* Animated floating particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;5;3" dur="6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite"/></circle><circle cx="60" cy="40" r="4" fill="rgba(0,105,148,0.1)"><animate attributeName="r" values="4;7;4" dur="7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.25;0.1" dur="7s" repeatCount="indefinite"/></circle><circle cx="30" cy="70" r="2" fill="rgba(255,179,71,0.1)"><animate attributeName="r" values="2;4;2" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.2;0.1" dur="5s" repeatCount="indefinite"/></circle><circle cx="70" cy="15" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;6;3" dur="8s" repeatCount="indefinite"/></circle></svg>');
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticles 20s ease-in-out infinite;
+        }
+
+        /* Additional animated gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(0,168,150,0.1) 0%, transparent 30%),
+                        radial-gradient(circle at 70% 30%, rgba(0,105,148,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 30% 70%, rgba(255,179,71,0.1) 0%, transparent 40%);
+            animation: rotateOverlay 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes bgShift {
+            0% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+            25% { background: linear-gradient(135deg, #c2e9f0 0%, #b5e5d5 50%, #a8e0d0 100%); }
+            50% { background: linear-gradient(135deg, #b5e5d5 0%, #a8e0d0 50%, #9fd6cf 100%); }
+            75% { background: linear-gradient(135deg, #a8e0d0 0%, #9fd6cf 50%, #b5e5d5 100%); }
+            100% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 1%) rotate(120deg); }
+            66% { transform: translate(-1%, 2%) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes rotateOverlay {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+
+        @keyframes float3d {
+            0% { transform: translateY(0px) rotate(0deg); }
+            40% { transform: translateY(-15px) rotate(2deg); }
+            70% { transform: translateY(5px) rotate(-1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 30px 10px rgba(0, 168, 150, 0.2); filter: brightness(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes buildingPulse {
+            0% { transform: scale(1); color: var(--primary); }
+            50% { transform: scale(1.1); color: var(--secondary); }
+            100% { transform: scale(1); color: var(--primary); }
+        }
+
+        /* Animation Classes */
+        .animate-float3d {
+            animation: float3d 6s ease-in-out infinite;
+        }
+
+        .animate-pulseGlow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInRight {
+            animation: slideInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInUp {
+            animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-zoomIn {
+            animation: zoomIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-gradient {
+            background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        .animate-bounce {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .animate-wiggle:hover {
+            animation: wiggle 0.5s ease-in-out;
+        }
+
+        .animate-buildingPulse {
+            animation: buildingPulse 2s ease-in-out infinite;
+        }
+
+        /* Delay Classes */
+        .delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards; }
+
+        /* === ALERT MESSAGES === */
+        .alert-message {
+            padding: 1.25rem; 
+            border-radius: 12px; 
+            margin-bottom: 1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-size: 0.95rem;
+            border: 1px solid;
+            animation: slideInUp 0.6s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .alert-success {
+            background: rgba(0, 168, 150, 0.1); 
+            color: var(--secondary-dark);
+            border-color: rgba(0, 168, 150, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(230, 126, 34, 0.1); 
+            color: #c0392b;
+            border-color: rgba(230, 126, 34, 0.3);
+        }
+
+        .alert-warning {
+            background: rgba(255, 179, 71, 0.1); 
+            color: var(--accent-dark);
+            border-color: rgba(255, 179, 71, 0.3);
+        }
+
+        .alert-info {
+            background: rgba(0, 105, 148, 0.1); 
+            color: var(--primary-dark);
+            border-color: rgba(0, 105, 148, 0.3);
+        }
+
+        .alert-message i {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        /* === HEADER - ENHANCED === */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 1.2rem 0;
+            animation: slideInUp 0.8s ease;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .brand:hover {
+            transform: scale(1.05) rotate(2deg);
+            color: var(--primary-dark);
+            text-shadow: 0 0 10px rgba(0, 105, 148, 0.3);
+        }
+
+        .brand span {
+            color: var(--secondary);
+        }
+
+        .back-link {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            background: white;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+            background: var(--light);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 105, 148, 0.1);
+        }
+
+        .back-link i {
+            color: var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .back-link:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* === MAIN CONTAINER === */
+        .registration-container {
+            max-width: 1280px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === LEFT SIDE: GUIDE - ENHANCED === */
+        .registration-guide {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .registration-guide:hover {
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .guide-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+        }
+
+        .guide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .requirements-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .requirements-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .requirements-list li:hover {
+            transform: translateX(8px);
+            border-bottom-color: var(--secondary);
+        }
+
+        .requirements-list i {
+            color: var(--primary);
+            font-size: 1rem;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 105, 148, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .requirement-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .requirement-detail {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            line-height: 1.5;
+        }
+
+        /* === SECURITY BADGE - ENHANCED === */
+        .security-badge {
+            background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 105, 148, 0.1));
+            border: 1px solid rgba(0, 168, 150, 0.3);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .security-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .security-badge i {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .security-text {
+            font-size: 0.9rem;
+            color: var(--secondary-dark);
+            font-weight: 500;
+        }
+
+        /* === FORM CARD - ENHANCED === */
+        .registration-form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideInRight 0.8s ease;
+        }
+
+        .registration-form-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+            background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite;
+            color: white;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: rotate(30deg);
+            animation: float3d 12s ease-in-out infinite;
+        }
+
+        .form-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 2;
+            animation: slideInLeft 0.8s ease;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .form-header p {
+            opacity: 0.95;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            animation: slideInRight 0.8s ease 0.2s both;
+        }
+
+        .form-content {
+            padding: 3rem;
+        }
+
+        /* === FORM SECTIONS - ENHANCED === */
+        .form-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 2px solid var(--border);
+            opacity: 0;
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section-title i {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            background: rgba(0, 168, 150, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        /* === FORM GRID === */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+            opacity: 0;
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.15s; }
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.25s; }
+        .form-group:nth-child(5) { animation-delay: 0.3s; }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* === FIELD CONTAINERS - ENHANCED === */
+        .field-container {
+            position: relative;
+        }
+
+        .field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .field-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .field-label i {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+        }
+
+        .field-container:hover .field-label i {
+            transform: scale(1.2);
+            color: var(--accent);
+        }
+
+        .required {
+            color: var(--error);
+            font-size: 1.2rem;
+            margin-left: 4px;
+        }
+
+        /* === INPUT FIELDS - ENHANCED === */
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 5px rgba(0, 105, 148, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover:not(:focus) {
+            border-color: var(--secondary-light);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+            background: rgba(230, 126, 34, 0.05);
+            animation: shake 0.3s;
+        }
+
+        .form-input.valid {
+            border-color: var(--secondary);
+            background: rgba(0, 168, 150, 0.05);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* === HELP TEXT - ENHANCED === */
+        .field-help {
+            font-size: 0.8rem;
+            color: var(--gray-medium);
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid var(--secondary);
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus + .field-help {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === PASSWORD RULES - ENHANCED === */
+        .password-rules {
+            background: var(--light);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        #password1:focus ~ .password-rules {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .rule-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rule-title i {
+            color: var(--secondary);
+            flex-shrink: 0;
+        }
+
+        #rule-summary {
+            font-weight: 500;
+            color: var(--gray-medium);
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .rule-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .strength-meter {
+            flex-grow: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            min-width: 150px;
+            max-width: 250px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-medium);
+            min-width: 120px;
+            text-align: right;
+        }
+
+        /* === PASSWORD STRENGTH COLORS === */
+        .strength-weak { background: #e74c3c; }
+        .strength-fair { background: #e67e22; }
+        .strength-good { background: var(--accent); }
+        .strength-strong { background: var(--secondary); }
+        .strength-text-weak { color: #e74c3c; }
+        .strength-text-fair { color: #e67e22; }
+        .strength-text-good { color: var(--accent-dark); }
+        .strength-text-strong { color: var(--secondary-dark); }
+
+        /* === VALIDATION MESSAGES === */
+        .validation-result {
+            font-size: 0.85rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            margin-top: 0.75rem;
+            display: none;
+            animation: slideInUp 0.3s ease;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .validation-result.show {
+            display: flex;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .validation-success {
+            background: rgba(0, 168, 150, 0.1);
+            color: var(--secondary-dark);
+            border: 1px solid rgba(0, 168, 150, 0.2);
+        }
+
+        .validation-error {
+            background: rgba(230, 126, 34, 0.1);
+            color: #c0392b;
+            border: 1px solid rgba(230, 126, 34, 0.2);
+        }
+
+        /* === CAPTCHA SECTION - ENHANCED === */
+        .captcha-section {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2.5rem 0;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            animation: slideInUp 0.6s ease 0.3s both;
+        }
+
+        .captcha-section:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .captcha-help {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        /* Hide test message */
+        .grecaptcha-badge .text {
+            display: none !important;
+        }
+
+        /* === TERMS SECTION - ENHANCED === */
+        .terms-section {
+            background: var(--light);
+            padding: 1.75rem;
+            border-radius: 20px;
+            margin: 2.5rem 0;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            animation: slideInUp 0.6s ease 0.4s both;
+        }
+
+        .terms-section:focus-within {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.15);
+        }
+
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .terms-check input {
+            margin-top: 4px;
+            accent-color: var(--secondary);
+            transform: scale(1.2);
+        }
+
+        .terms-text {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        .terms-text a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .terms-text a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .terms-text a:hover::after {
+            width: 100%;
+        }
+
+        /* === SUBMIT BUTTON - ENHANCED === */
+        .submit-section {
+            margin-top: 3rem;
+            animation: slideInUp 0.6s ease 0.5s both;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 25px rgba(0, 105, 148, 0.3);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4);
+        }
+
+        .submit-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            background: linear-gradient(135deg, var(--gray-medium), var(--gray-light));
+        }
+
+        .submit-btn i {
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover:not(:disabled) i {
+            transform: translateX(8px) rotate(5deg);
+        }
+
+        /* === FOOTER - ENHANCED === */
+        .form-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--gray-medium);
+            font-size: 0.95rem;
+            animation: slideInUp 0.6s ease 0.6s both;
+        }
+
+        .form-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 700;
+            position: relative;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .form-footer a:hover {
+            background: rgba(0, 168, 150, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* === LOADING ANIMATION === */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--secondary);
+            border-right-color: var(--accent);
+            border-bottom-color: var(--primary-light);
+            border-left-color: var(--secondary-light);
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 30px rgba(0, 168, 150, 0.5);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 1024px) {
+            .registration-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            
+            .registration-guide {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-content {
+                padding: 2rem;
+            }
+            
+            .registration-container {
+                padding: 0 1.5rem;
+            }
+            
+            .form-header {
+                padding: 2rem;
+            }
+            
+            .form-header h2 {
+                font-size: 2rem;
+            }
+            
+            .form-header p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .form-content {
+                padding: 1.5rem;
+            }
+            
+            .registration-guide {
+                padding: 1.5rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* === CUSTOM SCROLLBAR === */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 7px;
+            border: 3px solid var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+        }
+
+        /* === SELECTION === */
+        ::selection {
+            background: var(--secondary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <a href="{% url 'homepage' %}" class="brand">
+                <i class="fas fa-briefcase"></i> Job<span>ora</span>
+            </a>
+            <a href="{% url 'homepage' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Registration -->
+    <main class="registration-container">
+        <!-- Left Side: Instructions -->
+        <div class="registration-guide">
+            <h3 class="guide-title">Requirements Checklist</h3>
+            <p style="font-size: 0.95rem; color: var(--gray-medium); margin-bottom: 1.5rem;">
+                Please ensure you have the following information ready:
+            </p>
+            
+            <ul class="requirements-list">
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <div class="requirement-label">Company Email</div>
+                        <div class="requirement-detail">Official company email address</div>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-building"></i>
+                    <div>
+                        <div class="requirement-label">Company Name</div>
+                        <div class="requirement-detail">Official registered business name</div>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <div class="requirement-label">Contact Person</div>
+                        <div class="requirement-detail">Authorized representative's full name</div>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <div class="requirement-label">Mobile Number</div>
+                        <div class="requirement-detail">10-digit Indian mobile number</div>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <div class="requirement-label">Location</div>
+                        <div class="requirement-detail">City and state where company operates</div>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="security-badge">
+                <i class="fas fa-shield-alt animate-bounce"></i>
+                <div class="security-text">Your data is secured with 256-bit encryption</div>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="registration-form-card">
+            <div class="form-header">
+                <h2>Register Your Company</h2>
+                <p>Join thousands of companies hiring on Jobora</p>
+            </div>
+
+            <div class="form-content">
+                <!-- Fixed Message Section -->
+                {% if messages %}
+                    <div style="margin-bottom: 2rem;">
+                        {% for message in messages %}
+                            <div class="alert-message alert-{{ message.tags|default:'info' }}">
+                                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST" id="companyRegistrationForm">
+                    {% csrf_token %}
+                    
+                    <!-- Account Details -->
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-user-circle"></i> Account Details</h3>
+                        <div class="form-grid">
+                            <!-- Email -->
+                            <div class="form-group full-width">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-envelope"></i> Company Email
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="email" 
+                                           name="email" 
+                                           class="form-input {% if form.email.errors %}error{% endif %}"
+                                           value="{{ form.email.value|default:'' }}" 
+                                           placeholder="company@example.com" 
+                                           required
+                                           data-validation="email"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        Enter your official company email address
+                                    </div>
+                                    <div class="validation-result {% if form.email.errors %}validation-error show{% endif %}" id="email-validation">
+                                        {% if form.email.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.email.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-lock"></i> Password
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="password" 
+                                           name="password1" 
+                                           id="password1" 
+                                           class="form-input {% if form.password1.errors %}error{% endif %}"
+                                           value="{{ form.password1.value|default:'' }}"
+                                           placeholder="Create password" 
+                                           required
+                                           data-validation="password"
+                                           data-touched="false">
+                                    
+                                    <div class="field-help">
+                                        Create a strong password with at least 8 characters
+                                    </div>
+                                    
+                                    <!-- Password Rules -->
+                                    <div class="password-rules" id="passwordRules">
+                                        <div class="rule-title">
+                                            <i class="fas fa-shield-alt"></i> Password Requirements:
+                                            <span id="rule-summary">Enter 8+ characters with uppercase, lowercase & number</span>
+                                        </div>
+                                        <div class="rule-status">
+                                            <div class="strength-meter">
+                                                <div class="strength-fill" id="password-strength"></div>
+                                            </div>
+                                            <div class="strength-text" id="strength-text">Password strength: None</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="validation-result {% if form.password1.errors %}validation-error show{% endif %}" id="password-validation">
+                                        {% if form.password1.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.password1.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="form-group">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-lock"></i> Confirm Password
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="password" 
+                                           name="password2" 
+                                           id="password2" 
+                                           class="form-input {% if form.password2.errors %}error{% endif %}"
+                                           value="{{ form.password2.value|default:'' }}"
+                                           placeholder="Re-enter password" 
+                                           required
+                                           data-validation="confirm"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        Must match the password above
+                                    </div>
+                                    <div class="validation-result {% if form.password2.errors %}validation-error show{% endif %}" id="confirm-validation">
+                                        {% if form.password2.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.password2.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-building"></i> Company Information</h3>
+                        <div class="form-grid">
+                            <!-- Company Name -->
+                            <div class="form-group full-width">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-building"></i> Company Name
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="company_name" 
+                                           class="form-input {% if form.company_name.errors %}error{% endif %}"
+                                           value="{{ form.company_name.value|default:'' }}"
+                                           placeholder="Enter your company's official name" 
+                                           maxlength="30" 
+                                           required
+                                           data-validation="text"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        2-30 characters. Letters, numbers, spaces, &, ., ', - allowed
+                                    </div>
+                                    <div class="validation-result {% if form.company_name.errors %}validation-error show{% endif %}" id="company-validation">
+                                        {% if form.company_name.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.company_name.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Person -->
+                            <div class="form-group">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-user"></i> Contact Person
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="contact_person" 
+                                           class="form-input {% if form.contact_person.errors %}error{% endif %}"
+                                           value="{{ form.contact_person.value|default:'' }}"
+                                           placeholder="Full name" 
+                                           maxlength="30" 
+                                           required
+                                           data-validation="name"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        Authorized representative's full name
+                                    </div>
+                                    <div class="validation-result {% if form.contact_person.errors %}validation-error show{% endif %}" id="contact-validation">
+                                        {% if form.contact_person.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.contact_person.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="form-group">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-phone"></i> Mobile Number
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="tel" 
+                                           name="mobile" 
+                                           class="form-input {% if form.mobile.errors %}error{% endif %}"
+                                           value="{{ form.mobile.value|default:'' }}"
+                                           placeholder="10-digit Indian number" 
+                                           pattern="[6-9][0-9]{9}" 
+                                           required
+                                           data-validation="phone"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        Must start with 6-9 and be 10 digits
+                                    </div>
+                                    <div class="validation-result {% if form.mobile.errors %}validation-error show{% endif %}" id="mobile-validation">
+                                        {% if form.mobile.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.mobile.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="form-group">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-map-marker-alt"></i> Location
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="location" 
+                                           class="form-input {% if form.location.errors %}error{% endif %}"
+                                           value="{{ form.location.value|default:'' }}"
+                                           placeholder="City, State" 
+                                           required
+                                           data-validation="text"
+                                           data-touched="false">
+                                    <div class="field-help">
+                                        Primary business location
+                                    </div>
+                                    <div class="validation-result {% if form.location.errors %}validation-error show{% endif %}" id="location-validation">
+                                        {% if form.location.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.location.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Industry -->
+                            <div class="form-group full-width">
+                                <div class="field-container">
+                                    <div class="field-header">
+                                        <label class="field-label">
+                                            <i class="fas fa-industry"></i> Industry
+                                            <span class="required">*</span>
+                                        </label>
+                                    </div>
+                                    <select name="industry" 
+                                            class="form-input {% if form.industry.errors %}error{% endif %}" 
+                                            required
+                                            data-validation="select"
+                                            data-touched="false">
+                                        <option value="">Select your industry</option>
+                                        {% for value, label in form.fields.industry.choices %}
+                                            {% if value %}
+                                                <option value="{{ value }}" 
+                                                    {% if form.industry.value == value %}selected{% endif %}>
+                                                    {{ label }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <div class="field-help">
+                                        Select the industry your company operates in
+                                    </div>
+                                    <div class="validation-result {% if form.industry.errors %}validation-error show{% endif %}" id="industry-validation">
+                                        {% if form.industry.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ form.industry.errors.0 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- reCAPTCHA -->
+                    <div class="captcha-section">
+                        <div class="g-recaptcha" 
+                             data-sitekey="6LeGCiAsAAAAABechJrixdtjTaJ8NzFW1fkBicYH"
+                             data-callback="enableSubmitBtn"
+                             data-expired-callback="disableSubmitBtn"
+                             data-error-callback="captchaError">
+                        </div>
+                        <p class="captcha-help">This helps us prevent automated registrations</p>
+                        {% if form.captcha.errors %}
+                            <div class="validation-result validation-error show" style="margin-top: 1.5rem;">
+                                <i class="fas fa-exclamation-circle"></i> {{ form.captcha.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="terms-section">
+                        <label class="terms-check">
+                            <input type="checkbox" id="terms" required>
+                            <span class="terms-text">
+                                I agree to the <a href="{% url 'terms' %}" target="_blank">Terms of Service</a> 
+                                and <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>. 
+                                I confirm that I have the authority to register this company on Jobora.
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                            <i class="fas fa-rocket"></i>
+                            Create Company Account
+                        </button>
+                    </div>
+                </form>
+
+                <div class="form-footer">
+                    Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Hide loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 500);
+        });
+
+        // Track if user has interacted with each field
+        const fields = document.querySelectorAll('.form-input');
+        
+        fields.forEach(field => {
+            // Mark field as touched on focus
+            field.addEventListener('focus', function() {
+                this.setAttribute('data-touched', 'true');
+                // Only show validation message if user has typed something
+                if (this.value.trim() !== '') {
+                    validateField(this, true);
+                }
+            });
+            
+            // Validate on input (only show if touched)
+            field.addEventListener('input', function() {
+                if (this.getAttribute('data-touched') === 'true') {
+                    validateField(this, true);
+                }
+            });
+            
+            // Validate on blur (only show if touched)
+            field.addEventListener('blur', function() {
+                if (this.getAttribute('data-touched') === 'true') {
+                    validateField(this, true);
+                }
+            });
+        });
+        
+        // Simplified Password Validation
+        const passwordField = document.getElementById('password1');
+        const ruleSummary = document.getElementById('rule-summary');
+        const strengthText = document.getElementById('strength-text');
+        const strengthBar = document.getElementById('password-strength');
+
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Check requirements
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            
+            // Calculate strength
+            let strength = 0;
+            let requirementsMet = 0;
+            
+            if (hasLength) { strength += 25; requirementsMet++; }
+            if (hasUppercase) { strength += 25; requirementsMet++; }
+            if (hasLowercase) { strength += 25; requirementsMet++; }
+            if (hasNumber) { strength += 25; requirementsMet++; }
+            
+            // Update strength meter
+            updateStrengthMeter(strength, requirementsMet);
+            
+            // Update rule summary
+            const totalRequirements = 4;
+            const requirementText = `${requirementsMet}/${totalRequirements} requirements met`;
+            ruleSummary.textContent = requirementText;
+            
+            // Validate field (only show message if touched)
+            if (this.getAttribute('data-touched') === 'true') {
+                validateField(this, true);
+            }
+        });
+        
+        function updateStrengthMeter(strength, met) {
+            strengthBar.style.width = strength + '%';
+            
+            // Remove all existing classes
+            strengthBar.className = 'strength-fill';
+            strengthText.className = 'strength-text';
+            
+            if (strength === 0) {
+                strengthBar.style.backgroundColor = '#c2d9e8';
+                strengthText.textContent = 'Password strength: None';
+                strengthText.style.color = '#6f8f9f';
+            } else if (strength <= 25) {
+                strengthBar.classList.add('strength-weak');
+                strengthText.textContent = 'Password strength: Very Weak';
+                strengthText.classList.add('strength-text-weak');
+            } else if (strength <= 50) {
+                strengthBar.classList.add('strength-fair');
+                strengthText.textContent = 'Password strength: Fair';
+                strengthText.classList.add('strength-text-fair');
+            } else if (strength <= 75) {
+                strengthBar.classList.add('strength-good');
+                strengthText.textContent = 'Password strength: Good';
+                strengthText.classList.add('strength-text-good');
+            } else {
+                strengthBar.classList.add('strength-strong');
+                strengthText.textContent = 'Password strength: Strong';
+                strengthText.classList.add('strength-text-strong');
+            }
+        }
+        
+        // Field Validation (only shows message when showMessage is true)
+        function validateField(field, showMessage = false) {
+            const value = field.value.trim();
+            const validationType = field.getAttribute('data-validation');
+            let isValid = true;
+            let message = '';
+            
+            switch(validationType) {
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    isValid = emailRegex.test(value);
+                    message = isValid ? '✓ Valid email format' : '✗ Please enter a valid email address';
+                    break;
+                    
+                case 'password':
+                    const password = value;
+                    const hasLength = password.length >= 8;
+                    const hasUppercase = /[A-Z]/.test(password);
+                    const hasLowercase = /[a-z]/.test(password);
+                    const hasNumber = /[0-9]/.test(password);
+                    isValid = hasLength && hasUppercase && hasLowercase && hasNumber;
+                    message = isValid ? '✓ Password meets all requirements' : '✗ Password does not meet all requirements';
+                    break;
+                    
+                case 'confirm':
+                    const password1 = document.getElementById('password1').value;
+                    const password2 = value;
+                    isValid = password1 === password2 && password2.length > 0;
+                    message = isValid ? '✓ Passwords match' : '✗ Passwords do not match';
+                    break;
+                    
+                case 'phone':
+                    const phoneRegex = /^[6-9]\d{9}$/;
+                    isValid = phoneRegex.test(value);
+                    message = isValid ? '✓ Valid Indian mobile number' : '✗ Please enter a valid 10-digit Indian mobile number starting with 6-9';
+                    break;
+                    
+                case 'name':
+                    const nameRegex = /^[a-zA-Z\s.-]+$/;
+                    isValid = nameRegex.test(value);
+                    message = isValid ? '✓ Valid name format' : '✗ Name can only contain letters, spaces, dots and hyphens';
+                    break;
+                    
+                case 'text':
+                    isValid = value.length >= 2;
+                    message = isValid ? '✓ Valid input' : '✗ Please enter at least 2 characters';
+                    break;
+                    
+                case 'select':
+                    isValid = value !== '';
+                    message = isValid ? '✓ Selection made' : '✗ Please select an option';
+                    break;
+            }
+            
+            // Update field appearance (always)
+            if (value === '') {
+                field.classList.remove('error', 'valid');
+            } else if (isValid) {
+                field.classList.remove('error');
+                field.classList.add('valid');
+            } else {
+                field.classList.remove('valid');
+                field.classList.add('error');
+            }
+            
+            // Update validation message (only if showMessage is true)
+            const validationId = field.name + '-validation';
+            const validationMsg = document.getElementById(validationId);
+            if (validationMsg) {
+                if (!showMessage || value === '') {
+                    validationMsg.classList.remove('show');
+                } else {
+                    validationMsg.innerHTML = `<i class="fas fa-${isValid ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+                    validationMsg.className = `validation-result ${isValid ? 'validation-success' : 'validation-error'} show`;
+                }
+            }
+            
+            return isValid;
+        }
+        
+        // Confirm password validation
+        document.getElementById('password2').addEventListener('input', function() {
+            if (this.getAttribute('data-touched') === 'true') {
+                validateField(this, true);
+            }
+        });
+        
+        // Form submission
+        document.getElementById('companyRegistrationForm').addEventListener('submit', function(e) {
+            // Check terms
+            const terms = document.getElementById('terms');
+            if (!terms.checked) {
+                e.preventDefault();
+                alert('Please agree to the Terms of Service and Privacy Policy to continue.');
+                terms.focus();
+                return false;
+            }
+            
+            // Validate all fields (force validation on submit)
+            let allValid = true;
+            document.querySelectorAll('.form-input[required]').forEach(field => {
+                // Mark as touched to show errors
+                field.setAttribute('data-touched', 'true');
+                if (!validateField(field, true) && field.value.trim() !== '') {
+                    allValid = false;
+                }
+            });
+            
+            if (!allValid) {
+                e.preventDefault();
+                alert('Please fix the errors in the form before submitting.');
+                return false;
+            }
+            
+            // Check reCAPTCHA
+            if (typeof grecaptcha !== 'undefined') {
+                const response = grecaptcha.getResponse();
+                if (response.length === 0) {
+                    e.preventDefault();
+                    alert('Please complete the reCAPTCHA verification.');
+                    return false;
+                }
+            }
+            
+            // Show loading
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+            
+            return true;
+        });
+        
+        // reCAPTCHA callbacks
+        function enableSubmitBtn() {
+            document.getElementById('submitBtn').disabled = false;
+        }
+        
+        function disableSubmitBtn() {
+            document.getElementById('submitBtn').disabled = true;
+        }
+        
+        function captchaError() {
+            document.getElementById('submitBtn').disabled = true;
+            alert('reCAPTCHA verification failed. Please try again.');
+        }
+    </script>
+</body>
+</html>

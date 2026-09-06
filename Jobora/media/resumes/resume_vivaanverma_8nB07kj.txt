@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Frontend Developer (React)
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vivaan Verma
+Email: vivaanverma@example.com
+Location: Kolkata
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Frontend Developer (React) position.
+Skilled in React, JavaScript, HTML5, CSS3, TypeScript.
+
+TECHNICAL SKILLS
+---------------
+• React
+• JavaScript
+• HTML5
+• CSS3
+• TypeScript
+• Redux
+• Vue.js
+• Angular
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

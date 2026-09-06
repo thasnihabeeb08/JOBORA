@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ANVI THAKUR
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Anvi Thakur
+Email: anvithakur@example.com
+Phone: +917533329879
+Location: Delhi
+
+EDUCATION
+---------
+• masters in Marketing
+• IIT Madras
+• Graduation Year: 2019
+
+WORK EXPERIENCE
+--------------
+• 12 years of professional experience
+• Current Role: Software Developer
+• Skills: Java, Photoshop, Google Suite, Excel, Ruby on Rails, Critical Thinking, Microsoft Office, Machine Learning
+
+TECHNICAL SKILLS
+----------------
+Java, Photoshop, Google Suite, Excel, Ruby on Rails, Critical Thinking, Microsoft Office, Machine Learning
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

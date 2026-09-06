@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ISHAAN AGARWAL
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Ishaan Agarwal
+Email: ishaanagarwal@example.com
+Phone: +916835729974
+Location: Pune
+
+EDUCATION
+---------
+• bachelors in Marketing
+• DTU Delhi
+• Graduation Year: 2020
+
+WORK EXPERIENCE
+--------------
+• 6 years of professional experience
+• Current Role: Product Manager
+• Skills: Microsoft Office, Artificial Intelligence, Photoshop, FastAPI, GraphQL, DevOps, Project Management, Docker
+
+TECHNICAL SKILLS
+----------------
+Microsoft Office, Artificial Intelligence, Photoshop, FastAPI, GraphQL, DevOps, Project Management, Docker
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

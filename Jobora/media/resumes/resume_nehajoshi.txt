@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - NEHA JOSHI
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Neha Joshi
+Email: nehajoshi@example.com
+Phone: +916150121640
+Location: Delhi
+
+EDUCATION
+---------
+• bachelors in Marketing
+• Amity University
+• Graduation Year: 2016
+
+WORK EXPERIENCE
+--------------
+• 7 years of professional experience
+• Current Role: Marketing Manager
+• Skills: Ansible, AWS, MongoDB, Linux, Illustrator, Java, React, GraphQL
+
+TECHNICAL SKILLS
+----------------
+Ansible, AWS, MongoDB, Linux, Illustrator, Java, React, GraphQL
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

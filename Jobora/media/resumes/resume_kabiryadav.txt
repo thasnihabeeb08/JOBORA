@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - KABIR YADAV
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Kabir Yadav
+Email: kabiryadav@example.com
+Phone: +917723891746
+Location: Vadodara
+
+EDUCATION
+---------
+• bachelors in Business Administration
+• NSIT Delhi
+• Graduation Year: 2024
+
+WORK EXPERIENCE
+--------------
+• 8 years of professional experience
+• Current Role: Product Manager
+• Skills: Flask, AWS, Django, TypeScript, Photoshop, Linux, Team Leadership, MongoDB
+
+TECHNICAL SKILLS
+----------------
+Flask, AWS, Django, TypeScript, Photoshop, Linux, Team Leadership, MongoDB
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

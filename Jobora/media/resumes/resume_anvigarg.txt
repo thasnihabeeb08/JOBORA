@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ANVI GARG
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Anvi Garg
+Email: anvigarg@example.com
+Phone: +917935160935
+Location: Patna
+
+EDUCATION
+---------
+• bachelors in Computer Science
+• NIT Calicut
+• Graduation Year: 2011
+
+WORK EXPERIENCE
+--------------
+• 4 years of professional experience
+• Current Role: Marketing Manager
+• Skills: React, MongoDB, Ansible, Flask, Illustrator, Microsoft Office, Node.js, C#
+
+TECHNICAL SKILLS
+----------------
+React, MongoDB, Ansible, Flask, Illustrator, Microsoft Office, Node.js, C#
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

@@ -1,0 +1,38 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Senior Software Engineer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Sai Shinde
+Email: saishinde@example.com
+Location: Pune
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Senior Software Engineer position.
+Skilled in Python, SQL, Communication, Teamwork, Problem Solving.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• SQL
+• Communication
+• Teamwork
+• Problem Solving
+
+WORK EXPERIENCE
+--------------
+• 7+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

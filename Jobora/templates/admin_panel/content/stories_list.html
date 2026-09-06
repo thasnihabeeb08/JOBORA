@@ -1,0 +1,471 @@
+{% extends 'admin_panel/admin_base.html' %}
+
+{% block title %}Success Stories Management{% endblock %}
+
+{% block page_title %}Success Stories{% endblock %}
+
+{% block content %}
+<style>
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        border-color: #2563eb;
+    }
+
+    .stat-card:nth-child(1) { border-top: 4px solid #2563eb; }
+    .stat-card:nth-child(2) { border-top: 4px solid #f59e0b; }
+    .stat-card:nth-child(3) { border-top: 4px solid #10b981; }
+    .stat-card:nth-child(4) { border-top: 4px solid #ef4444; }
+
+    .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    /* Card Styles */
+    .card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .card-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .card-header h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .card-body {
+        padding: 0;
+    }
+
+    /* Table Styles */
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .admin-table th {
+        background: #f8fafc;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #475569;
+        font-size: 13px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .admin-table td {
+        padding: 15px;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: middle;
+    }
+
+    .admin-table tr:hover {
+        background: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge-success {
+        background: #10b981;
+        color: white;
+    }
+
+    .badge-warning {
+        background: #f59e0b;
+        color: white;
+    }
+
+    .badge-danger {
+        background: #ef4444;
+        color: white;
+    }
+
+    .badge-info {
+        background: #2563eb;
+        color: white;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        padding: 15px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-select-sm {
+        padding: 6px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 13px;
+        width: 100%;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+        border: none;
+    }
+
+    .btn-outline-secondary {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+    }
+
+    .btn-outline-secondary:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+
+    /* Button Group */
+    .btn-group {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .btn-outline-info {
+        background: transparent;
+        border: 1px solid #2563eb;
+        color: #2563eb;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+    }
+
+    .btn-outline-info:hover {
+        background: #2563eb;
+        color: white;
+    }
+
+    .btn-outline-success {
+        background: transparent;
+        border: 1px solid #10b981;
+        color: #10b981;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+    }
+
+    .btn-outline-success:hover {
+        background: #10b981;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        background: transparent;
+        border: 1px solid #ef4444;
+        color: #ef4444;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+    }
+
+    .btn-outline-danger:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        color: #cbd5e1;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h5 {
+        color: #64748b;
+        margin-bottom: 10px;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        padding: 20px;
+        list-style: none;
+    }
+
+    .page-item {
+        display: inline-block;
+    }
+
+    .page-link {
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .page-link:hover {
+        background: #f1f5f9;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+
+    .page-item.active .page-link {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_stories }}</div>
+                <div class="stat-label">Total Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ pending_stories }}</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ approved_stories }}</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ rejected_stories }}</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <h5 class="mb-0">All Success Stories</h5>
+            <div>
+                <form method="GET" style="display: flex; gap: 10px;">
+                    <input type="text" name="search" class="form-control" placeholder="Search by name, role, email..." value="{{ search_query }}" style="padding: 6px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; width: 250px;">
+                    <button type="submit" class="btn-primary btn-sm" style="background: #2563eb; color: white; border: none; padding: 6px 16px; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="filter-section">
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <select name="status" class="form-select-sm" onchange="window.location.href=this.value" style="width: auto; min-width: 150px;">
+                <option value="?{% if search_query %}search={{ search_query }}&{% endif %}">All Status</option>
+                <option value="?status=pending{% if search_query %}&search={{ search_query }}{% endif %}" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="?status=approved{% if search_query %}&search={{ search_query }}{% endif %}" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                <option value="?status=rejected{% if search_query %}&search={{ search_query }}{% endif %}" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+            
+            <a href="{% url 'admin_stories_list' %}" class="btn-outline-secondary btn-sm">
+                <i class="fas fa-times"></i> Clear Filters
+            </a>
+        </div>
+    </div>
+    
+    <!-- Table -->
+    <div style="overflow-x: auto;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Current Role</th>
+                    <th>Email</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for story in stories %}
+                <tr>
+                    <td>{{ story.id }}</td>  <!-- FIXED: Removed # symbol -->
+                    <td><strong>{{ story.full_name }}</strong></td>
+                    <td>{{ story.current_role|truncatechars:30 }}</td>
+                    <td><a href="mailto:{{ story.email }}" style="color: #2563eb; text-decoration: none;">{{ story.email }}</a></td>
+                    <td>{{ story.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        {% if story.status == 'approved' %}
+                            <span class="badge badge-success">Approved</span>
+                        {% elif story.status == 'pending' %}
+                            <span class="badge badge-warning">Pending</span>
+                        {% else %}
+                            <span class="badge badge-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'admin_story_detail' story.id %}" class="btn-outline-info btn-sm" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if story.status == 'pending' %}
+                            <form method="POST" action="{% url 'admin_story_approve' story.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-outline-success btn-sm" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'admin_story_reject' story.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-outline-danger btn-sm" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                            <form method="POST" action="{% url 'admin_story_delete' story.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this story?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-outline-danger btn-sm" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <i class="fas fa-star"></i>
+                            <h5>No success stories found</h5>
+                            <p style="color: #94a3b8;">Stories submitted by users will appear here</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if stories.has_other_pages %}
+    <div style="border-top: 1px solid #e2e8f0; padding: 20px;">
+        <ul class="pagination">
+            {% if stories.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ stories.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for i in stories.paginator.page_range %}
+                {% if stories.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% elif i > stories.number|add:'-3' and i < stories.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        {{ i }}
+                    </a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if stories.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ stories.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

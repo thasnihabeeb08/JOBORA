@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Garg
+Email: anvigarg@example.com
+Location: Chennai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Science Teacher position. 
+Skilled in education skills, communication, teamwork.
+
+TECHNICAL SKILLS
+---------------
+• education skills
+• communication
+• teamwork
+• problem solving
+• analytical thinking
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

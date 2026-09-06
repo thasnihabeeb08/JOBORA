@@ -1,0 +1,40 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Quality Control Engineer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vivaan Verma
+Email: vivaanverma@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Quality Control Engineer position.
+Skilled in Testing, QA, Selenium, JUnit, Test Planning.
+
+TECHNICAL SKILLS
+---------------
+• Testing
+• QA
+• Selenium
+• JUnit
+• Test Planning
+• Bug Tracking
+• Automation
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

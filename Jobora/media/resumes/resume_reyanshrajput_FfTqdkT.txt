@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Reyansh Rajput
+Email: reyanshrajput@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Store Manager position. Strong background in retail skills, Communication, Teamwork.
+
+TECHNICAL SKILLS
+---------------
+• retail skills
+• Communication
+• Teamwork
+• Problem Solving
+• Analytical Thinking
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

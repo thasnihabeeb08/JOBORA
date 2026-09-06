@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Aadhya Desai
+Email: aadhyadesai@example.com
+Location: Hybrid
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Marketing Intern position. 
+Skilled in social media, content writing, seo.
+
+TECHNICAL SKILLS
+---------------
+• social media
+• content writing
+• seo
+• analytics
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

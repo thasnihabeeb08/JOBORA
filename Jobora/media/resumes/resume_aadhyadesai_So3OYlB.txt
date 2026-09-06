@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Aadhya Desai
+Email: aadhyadesai@example.com
+Location: Chennai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Cybersecurity Analyst position. 
+Skilled in cybersecurity, network security, python.
+
+TECHNICAL SKILLS
+---------------
+• cybersecurity
+• network security
+• python
+• linux
+• firewall
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,52 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Aditya Bose
+Email: adityabose@example.com
+Phone: +917103812056
+Location: Lucknow
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in React, Ruby on Rails, SQL. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• React
+• Ruby on Rails
+• SQL
+• Ansible
+• Vue.js
+• Project Management
+• C#
+• Kubernetes
+
+WORK EXPERIENCE
+--------------
+• 14+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Bachelor's Degree
+• NIT Warangal
+• 2013
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

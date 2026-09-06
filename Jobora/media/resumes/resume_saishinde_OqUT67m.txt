@@ -1,0 +1,54 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Sai Shinde
+Email: saishinde@example.com
+Phone: +916276399631
+Location: Mumbai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced IT professional with expertise in leadership, teamwork, adobe xd. 
+Proven track record of delivering high-quality solutions and working in team environments.
+
+TECHNICAL SKILLS
+---------------
+• leadership
+• teamwork
+• adobe xd
+• communication
+• jira
+• basic programming
+• agile
+• manufacturing skills
+
+WORK EXPERIENCE
+--------------
+• 4+ years of professional experience
+• Developed and maintained multiple software applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+• Solved complex technical problems
+• Communicated effectively with stakeholders
+
+EDUCATION
+---------
+• Master's Degree
+• BITS Hyderabad
+• 2015
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

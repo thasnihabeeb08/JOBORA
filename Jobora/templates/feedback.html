@@ -1,0 +1,919 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Jobora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%);
+            color: #1e2f4a;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            animation: bgShift 15s ease-in-out infinite alternate;
+        }
+
+        /* Animated floating particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;5;3" dur="6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite"/></circle><circle cx="60" cy="40" r="4" fill="rgba(0,105,148,0.1)"><animate attributeName="r" values="4;7;4" dur="7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.25;0.1" dur="7s" repeatCount="indefinite"/></circle><circle cx="30" cy="70" r="2" fill="rgba(255,179,71,0.1)"><animate attributeName="r" values="2;4;2" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.2;0.1" dur="5s" repeatCount="indefinite"/></circle><circle cx="70" cy="15" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;6;3" dur="8s" repeatCount="indefinite"/></circle></svg>');
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticles 20s ease-in-out infinite;
+        }
+
+        /* Additional animated gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(0,168,150,0.1) 0%, transparent 30%),
+                        radial-gradient(circle at 70% 30%, rgba(0,105,148,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 30% 70%, rgba(255,179,71,0.1) 0%, transparent 40%);
+            animation: rotateOverlay 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ocean Breeze Color Palette */
+        :root {
+            --primary: #006994;
+            --primary-light: #4a9fc5;
+            --primary-dark: #004c70;
+            --secondary: #00a896;
+            --secondary-light: #4ecdc4;
+            --secondary-dark: #028476;
+            --accent: #ffb347;
+            --accent-light: #ffcc7a;
+            --accent-dark: #e6952f;
+            --dark: #1e2f4a;
+            --light: #e6f5f0;
+            --gray-light: #c2d9e8;
+            --gray-medium: #6f8f9f;
+            --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.15);
+            --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.25);
+        }
+
+        /* ==================== */
+        /* ENHANCED ANIMATIONS  */
+        /* ==================== */
+
+        @keyframes bgShift {
+            0% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+            25% { background: linear-gradient(135deg, #c2e9f0 0%, #b5e5d5 50%, #a8e0d0 100%); }
+            50% { background: linear-gradient(135deg, #b5e5d5 0%, #a8e0d0 50%, #9fd6cf 100%); }
+            75% { background: linear-gradient(135deg, #a8e0d0 0%, #9fd6cf 50%, #b5e5d5 100%); }
+            100% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 1%) rotate(120deg); }
+            66% { transform: translate(-1%, 2%) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes rotateOverlay {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+
+        @keyframes float3d {
+            0% { transform: translateY(0px) rotate(0deg); }
+            40% { transform: translateY(-15px) rotate(2deg); }
+            70% { transform: translateY(5px) rotate(-1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 30px 10px rgba(0, 168, 150, 0.2); filter: brightness(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes scalePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Animation Classes */
+        .animate-float3d {
+            animation: float3d 6s ease-in-out infinite;
+        }
+
+        .animate-pulseGlow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInRight {
+            animation: slideInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInUp {
+            animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-zoomIn {
+            animation: zoomIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-gradient {
+            background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        .animate-bounce {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .animate-wiggle:hover {
+            animation: wiggle 0.5s ease-in-out;
+        }
+
+        .animate-scalePulse {
+            animation: scalePulse 2s ease-in-out infinite;
+        }
+
+        /* Delay Classes */
+        .delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-6 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-bottom: 2px solid var(--gray-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideInUp 0.8s ease;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            transition: all 0.3s;
+        }
+
+        .logo h1:hover {
+            color: var(--primary-dark);
+            text-shadow: 0 0 10px rgba(0, 105, 148, 0.3);
+        }
+
+        .logo span {
+            color: var(--secondary);
+            display: inline-block;
+        }
+
+        .back-home {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border: 1px solid var(--gray-light);
+            background: white;
+        }
+
+        .back-home:hover {
+            color: var(--primary);
+            background: var(--light);
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 105, 148, 0.1);
+        }
+
+        .back-home i {
+            color: var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .back-home:hover i {
+            transform: translateX(-5px);
+        }
+
+        /* Feedback Card - Enhanced */
+        .feedback-card {
+            background: white;
+            border-radius: 40px;
+            border: 1px solid var(--gray-light);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            opacity: 0;
+            animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .feedback-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 70%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 168, 150, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3d 15s ease-in-out infinite;
+        }
+
+        .feedback-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -20%;
+            width: 70%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 179, 71, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float3d 18s ease-in-out infinite reverse;
+        }
+
+        .feedback-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+            background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite;
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feedback-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: rotate(30deg);
+            animation: float3d 12s ease-in-out infinite;
+        }
+
+        .feedback-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(-30deg);
+            animation: float3d 15s ease-in-out infinite reverse;
+        }
+
+        .feedback-header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            animation: slideInLeft 0.8s ease;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feedback-header p {
+            font-size: 18px;
+            opacity: 0.95;
+            animation: slideInRight 0.8s ease 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feedback-body {
+            padding: 60px 50px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Form Elements - Enhanced */
+        .form-group {
+            margin-bottom: 35px;
+            opacity: 0;
+            animation: slideInLeft 0.6s ease forwards;
+            position: relative;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+        .form-group:hover .form-label i {
+            transform: scale(1.3) rotate(5deg);
+            color: var(--accent);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-label i {
+            color: var(--secondary);
+            margin-right: 8px;
+            width: 20px;
+            transition: all 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-light);
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: var(--light);
+            color: var(--dark);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-control:hover {
+            border-color: var(--primary-light);
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 105, 148, 0.1);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(0, 105, 148, 0.15), 0 10px 25px rgba(0, 105, 148, 0.1);
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        textarea.form-control {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        /* Rating Stars - Enhanced */
+        .rating-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .rating-option {
+            flex: 1;
+            min-width: 80px;
+            position: relative;
+        }
+
+        .rating-option input {
+            display: none;
+        }
+
+        .rating-option label {
+            display: block;
+            text-align: center;
+            padding: 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: white;
+            color: var(--dark);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rating-option label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .rating-option label:active::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Different colors for each rating with enhanced effects */
+        .rating-option input[value="1"]:checked + label {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .rating-option input[value="2"]:checked + label {
+            background: #e67e22;
+            color: white;
+            border-color: #e67e22;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(230, 126, 34, 0.4);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .rating-option input[value="3"]:checked + label {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 179, 71, 0.4);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .rating-option input[value="4"]:checked + label {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 168, 150, 0.4);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .rating-option input[value="5"]:checked + label {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 105, 148, 0.4);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .rating-option label:hover {
+            border-color: var(--primary);
+            background: var(--light);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Submit Button - Enhanced */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(0, 105, 148, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4);
+        }
+
+        .submit-btn i {
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover i {
+            transform: translateX(10px) rotate(5deg);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 18px 25px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left-width: 4px;
+            border-left-style: solid;
+            animation: slideInUp 0.6s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-success {
+            background: rgba(0, 168, 150, 0.15);
+            border-left-color: var(--secondary);
+            color: var(--secondary-dark);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.15);
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        .alert i {
+            font-size: 22px;
+        }
+
+        /* Required Field Indicator */
+        .required::after {
+            content: '*';
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        .form-text {
+            font-size: 13px;
+            color: var(--gray-medium);
+            margin-top: 8px;
+            display: block;
+            font-style: italic;
+        }
+
+        .error-text {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+            animation: slideInLeft 0.3s ease;
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--secondary);
+            border-right-color: var(--accent);
+            border-bottom-color: var(--primary-light);
+            border-left-color: var(--secondary-light);
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 30px rgba(0, 168, 150, 0.5);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .feedback-header {
+                padding: 40px 20px;
+            }
+            
+            .feedback-header h1 {
+                font-size: 32px;
+            }
+            
+            .feedback-header p {
+                font-size: 16px;
+            }
+            
+            .feedback-body {
+                padding: 35px 25px;
+            }
+            
+            .rating-container {
+                gap: 8px;
+            }
+            
+            .rating-option {
+                min-width: 50px;
+            }
+            
+            .rating-option label {
+                padding: 12px 5px;
+                font-size: 13px;
+            }
+            
+            .header-content {
+                padding: 12px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .back-home span {
+                display: none;
+            }
+            
+            .back-home i {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .rating-option label {
+                padding: 10px 3px;
+                font-size: 12px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 7px;
+            border: 3px solid var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--secondary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo animate-slideInLeft">
+                <h1>Job<span>ora</span></h1>
+            </div>
+            <a href="{% url 'homepage' %}" class="back-home animate-slideInRight">
+                <i class="fas fa-arrow-left"></i> <span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="feedback-card animate-pulseGlow">
+            <div class="feedback-header">
+                <h1 class="animate-slideInLeft">We Value Your Feedback</h1>
+                <p class="animate-slideInRight delay-1">Help us make Jobora better for everyone</p>
+            </div>
+            <div class="feedback-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-user animate-wiggle"></i> Your Name
+                        </label>
+                        <input type="text" name="name" class="form-control" value="{{ form.name.value|default:'' }}" placeholder="Enter your full name" required>
+                        {% if form.name.errors %}
+                            <span class="error-text">{{ form.name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-envelope animate-bounce"></i> Email Address
+                        </label>
+                        <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" placeholder="Enter your email" required>
+                        {% if form.email.errors %}
+                            <span class="error-text">{{ form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-tag animate-wiggle"></i> Subject
+                        </label>
+                        <input type="text" name="subject" class="form-control" value="{{ form.subject.value|default:'' }}" placeholder="What is your feedback about?" required>
+                        {% if form.subject.errors %}
+                            <span class="error-text">{{ form.subject.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-star animate-scalePulse"></i> Rating
+                        </label>
+                        <div class="rating-container">
+                            {% for value, label in form.rating.field.choices %}
+                            <div class="rating-option">
+                                <input type="radio" name="rating" id="rating{{ value }}" value="{{ value }}" {% if form.rating.value == value %}checked{% endif %} required>
+                                <label for="rating{{ value }}" class="animate-wiggle">{{ label }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-comment animate-bounce"></i> Your Feedback
+                        </label>
+                        <textarea name="message" class="form-control" placeholder="Tell us about your experience...">{{ form.message.value|default:'' }}</textarea>
+                        {% if form.message.errors %}
+                            <span class="error-text">{{ form.message.errors.0 }}</span>
+                        {% endif %}
+                        <small class="form-text">Your feedback helps us improve Jobora for everyone.</small>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading animation
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

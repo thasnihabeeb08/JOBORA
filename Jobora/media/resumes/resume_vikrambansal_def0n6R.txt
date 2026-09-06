@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vikram Bansal
+Email: vikrambansal@example.com
+Location: Chennai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking DevOps Engineer position. Strong background in Docker, Kubernetes, AWS.
+
+TECHNICAL SKILLS
+---------------
+• Docker
+• Kubernetes
+• AWS
+• CI/CD
+• Linux
+• Python
+
+WORK EXPERIENCE
+--------------
+• 2+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

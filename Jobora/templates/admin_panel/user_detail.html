@@ -1,0 +1,835 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}User Details - Admin{% endblock %}
+
+{% block page_title %}User Profile{% endblock %}
+
+{% block page_actions %}
+<div style="display: flex; gap: 10px;">
+    <a href="{% url 'admin_users' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Users
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - USER DETAILS === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    /* ==================== */
+    /* CARD STYLES */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* USER AVATAR */
+    /* ==================== */
+    .user-avatar {
+        width: 130px;
+        height: 130px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 52px;
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(0, 105, 148, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .user-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.3);
+    }
+    
+    .user-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .user-name:hover {
+        color: var(--primary);
+    }
+    
+    .user-email {
+        color: var(--gray-medium);
+        margin-bottom: 15px;
+        font-size: 0.85rem;
+    }
+
+    /* ==================== */
+    /* BADGES */
+    /* ==================== */
+    .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-active {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-blocked {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    
+    .badge-verified {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    }
+    
+    .badge-experienced {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-fresher {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+    
+    .badge-status {
+        padding: 4px 12px;
+        font-size: 0.7rem;
+    }
+    
+    .badge-applied { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+    .badge-shortlisted { background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); }
+    .badge-interview { background: linear-gradient(135deg, var(--accent), var(--accent-light)); }
+    .badge-selected { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .badge-rejected { background: linear-gradient(135deg, #ef4444, #f87171); }
+
+    /* ==================== */
+    /* INFO SECTIONS */
+    /* ==================== */
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .info-row:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+    }
+    
+    .info-label {
+        color: var(--gray-medium);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .info-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.85rem;
+    }
+    
+    /* ==================== */
+    /* STATS SECTION */
+    /* ==================== */
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--gray-light);
+    }
+    
+    .stat-row:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+        border-bottom-color: var(--secondary);
+    }
+    
+    .stat-label {
+        color: var(--gray-medium);
+        font-size: 0.8rem;
+    }
+    
+    .stat-value {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+
+    /* ==================== */
+    /* SKILLS */
+    /* ==================== */
+    .skill-tag {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        color: white;
+        padding: 5px 14px;
+        border-radius: 30px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .skill-tag:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 105, 148, 0.2);
+    }
+
+    /* ==================== */
+    /* BUTTONS */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(255, 179, 71, 0.2);
+    }
+    
+    .btn-warning:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(255, 179, 71, 0.3);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ==================== */
+    /* TABLE STYLES */
+    /* ==================== */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .admin-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.8rem;
+        border-bottom: 2px solid var(--gray-light);
+    }
+    
+    .admin-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+        color: var(--dark);
+    }
+    
+    .admin-table tr {
+        transition: all 0.3s ease;
+    }
+    
+    .admin-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+
+    /* ==================== */
+    /* EMPTY STATE */
+    /* ==================== */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .empty-state:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--gray-light);
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: var(--gray-medium);
+        margin: 0;
+    }
+
+    /* ==================== */
+    /* ACTION BUTTONS GROUP */
+    /* ==================== */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    /* ==================== */
+    /* RESPONSIVE */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+        }
+        
+        .card-header .card-title {
+            font-size: 1rem;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+        }
+        
+        .user-name {
+            font-size: 1.2rem;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .info-row {
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .stat-row {
+            flex-direction: column;
+            gap: 5px;
+            text-align: center;
+        }
+        
+        .admin-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .action-buttons .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- User Profile Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-circle me-2"></i>
+                    Profile Information
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <!-- Avatar -->
+                <div class="user-avatar">
+                    {{ profile.user.first_name|first|default:profile.user.username|first|upper }}
+                </div>
+                
+                <h4 class="user-name">
+                    {{ profile.user.get_full_name|default:profile.user.username }}
+                </h4>
+                <p class="user-email">
+                    <i class="fas fa-envelope me-1"></i> {{ profile.user.email }}
+                </p>
+                
+                <!-- Status Badges -->
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    {% if profile.user.is_active %}
+                        <span class="badge badge-active">
+                            <i class="fas fa-check-circle me-1"></i> Active
+                        </span>
+                    {% else %}
+                        <span class="badge badge-blocked">
+                            <i class="fas fa-ban me-1"></i> Blocked
+                        </span>
+                    {% endif %}
+                    
+                    {% if profile.is_verified %}
+                        <span class="badge badge-verified">
+                            <i class="fas fa-shield-alt me-1"></i> Verified
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    {% if profile.user.is_active %}
+                    <form method="POST" action="{% url 'block_user' profile.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning" onclick="return confirm('⚠️ Block this user? They will no longer be able to access the platform.')">
+                            <i class="fas fa-ban me-2"></i> Block User
+                        </button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{% url 'unblock_user' profile.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success" onclick="return confirm('✅ Unblock this user? They will regain access to the platform.')">
+                            <i class="fas fa-check-circle me-2"></i> Unblock User
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <form method="POST" action="{% url 'delete_user' profile.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('⚠️ DANGER: This will permanently delete this user and all their data! This action cannot be undone. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i> Delete User
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Quick Stats
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <i class="fas fa-file-alt me-1"></i> Total Applications
+                    </span>
+                    <span class="stat-value">{{ applications|length }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <i class="fas fa-calendar-plus me-1"></i> Member Since
+                    </span>
+                    <span class="stat-value">{{ profile.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <i class="fas fa-calendar-edit me-1"></i> Last Updated
+                    </span>
+                    <span class="stat-value">{{ profile.updated_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Details -->
+    <div class="col-md-8 mb-4">
+        <!-- Personal Information Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Personal Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">{{ profile.user.get_full_name|default:"Not provided" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">{{ profile.user.username }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">{{ profile.user.email }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value">{{ profile.phone|default:"Not provided" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">{{ profile.location|default:"Not provided" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">{{ profile.date_of_birth|date:"M d, Y"|default:"Not provided" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Professional Information Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Professional Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">User Type</div>
+                        <div>
+                            <span class="badge {% if profile.user_type == 'experienced' %}badge-experienced{% else %}badge-fresher{% endif %}">
+                                {{ profile.get_user_type_display|default:profile.user_type }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Years Experience</div>
+                        <div class="info-value">{{ profile.years_experience|default:"0" }} years</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Current Role</div>
+                        <div class="info-value">{{ profile.current_role|default:"Not specified" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Current Company</div>
+                        <div class="info-value">{{ profile.current_company|default:"Not specified" }}</div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="info-label">Skills</div>
+                        <div>
+                            {% if profile.skills %}
+                                {% for skill in profile.skills_list %}
+                                <span class="skill-tag">{{ skill }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted">No skills listed</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Education Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Education
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Highest Education</div>
+                        <div class="info-value">{{ profile.get_highest_education_display|default:"Not specified" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Field of Study</div>
+                        <div class="info-value">{{ profile.field_of_study|default:"Not specified" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Institution</div>
+                        <div class="info-value">{{ profile.institution|default:"Not specified" }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="info-label">Graduation Year</div>
+                        <div class="info-value">{{ profile.graduation_year|default:"Not specified" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Applications Card -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-alt me-2"></i>
+                    Recent Applications
+                </h5>
+                <span class="badge badge-active">{{ applications|length }} total</span>
+            </div>
+            <div class="card-body">
+                {% if applications %}
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Applied On</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td style="font-weight: 500; color: var(--primary);">{{ app.job.title }}</td>
+                                <td>{{ app.job.company.name }}</td>
+                                <td>{{ app.applied_on|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge badge-status badge-{{ app.status }}">
+                                        {{ app.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <p>No applications found for this user</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('User Details JS loaded');
+        
+        // Add hover effects for cards
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Animate user avatar on load
+        const avatar = document.querySelector('.user-avatar');
+        if (avatar) {
+            avatar.style.animation = 'pulse 1s ease-in-out';
+            setTimeout(() => {
+                avatar.style.animation = '';
+            }, 1000);
+        }
+        
+        // Add animation delay to table rows
+        const rows = document.querySelectorAll('.admin-table tbody tr');
+        rows.forEach((row, index) => {
+            row.style.animation = `fadeInRight 0.5s ease forwards ${index * 0.05}s`;
+            row.style.opacity = '0';
+        });
+        
+        // Animate stat rows
+        const statRows = document.querySelectorAll('.stat-row');
+        statRows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.animation = `fadeInRight 0.5s ease forwards ${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}

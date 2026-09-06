@@ -1,0 +1,1111 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Jobora{% endblock %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block page_actions %}
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - ADMIN DASHBOARD === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+    .delay-6 { animation-delay: 1.2s; }
+
+    /* ==================== */
+    /* STATS CARDS - Matching Job Seeker Dashboard */
+    /* ==================== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px 24px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        cursor: pointer;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -20%;
+        width: 50%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        animation: float 15s ease-in-out infinite;
+        transition: all 0.5s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .stat-card:hover::before {
+        transform: scale(1.2);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    }
+
+    .stat-card:hover .stat-number,
+    .stat-card:hover .stat-label,
+    .stat-card:hover .stat-trend,
+    .stat-card:hover .stat-subtext,
+    .stat-card:hover .badge {
+        color: white !important;
+    }
+
+    .stat-card:hover .stat-trend i,
+    .stat-card:hover .stat-subtext i {
+        color: white !important;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-number {
+        transform: scale(1.1);
+    }
+    
+    .stat-label {
+        font-size: 0.95rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-trend {
+        font-size: 0.85rem;
+        margin-top: 8px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+        color: var(--gray-medium);
+    }
+    
+    .trend-up {
+        color: var(--secondary);
+    }
+    
+    .stat-subtext {
+        font-size: 0.85rem;
+        color: var(--gray-medium);
+        margin-top: 5px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    /* ==================== */
+    /* CARD STYLES */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* APPROVAL ITEMS */
+    /* ==================== */
+    .approval-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+        border-radius: 16px;
+    }
+    
+    .approval-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(8px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .approval-item strong {
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+    
+    .approval-item:hover strong {
+        color: var(--primary);
+    }
+    
+    .approval-item small {
+        color: var(--gray-medium);
+    }
+
+    /* ==================== */
+    /* ACTIVITY ITEMS */
+    /* ==================== */
+    .timeline {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    .activity-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(8px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .activity-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+        background: var(--gray-light) !important;
+    }
+
+    .activity-icon i {
+        color: var(--dark) !important;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-icon {
+        transform: scale(1.1) rotate(5deg);
+        background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    }
+
+    .activity-item:hover .activity-icon i {
+        color: white !important;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .activity-header strong {
+        font-weight: 600;
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-header strong {
+        color: var(--primary);
+    }
+    
+    .activity-time {
+        font-size: 0.8rem;
+        color: var(--gray-medium);
+    }
+    
+    .activity-desc {
+        font-size: 0.85rem;
+        color: var(--gray-medium);
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-desc {
+        color: var(--dark);
+    }
+    
+    .activity-email {
+        font-size: 0.75rem;
+        color: var(--gray-medium);
+    }
+
+    /* ==================== */
+    /* EMPTY STATES */
+    /* ==================== */
+    .empty-state-small {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px 0;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .empty-state-small:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .empty-state-small i {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .empty-state-small:hover i {
+        color: var(--secondary);
+        transform: scale(1.1);
+    }
+    
+    .empty-state-small p {
+        color: var(--dark);
+        font-weight: 500;
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state-small:hover p {
+        color: var(--primary);
+    }
+    
+    .empty-state-small small {
+        color: var(--gray-medium);
+        font-size: 0.85rem;
+    }
+
+    /* ==================== */
+    /* OVERVIEW GRID - Unified Ocean Teal Colors */
+    /* ==================== */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+    
+    .overview-card {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 25px 20px;
+        border-radius: 24px;
+        text-align: center;
+        transition: all 0.4s ease;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .overview-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -20%;
+        width: 50%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        transition: all 0.5s ease;
+    }
+    
+    .overview-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+    
+    .overview-card:hover::before {
+        transform: scale(1.2);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    }
+    
+    .overview-card:hover .overview-number,
+    .overview-card:hover .overview-label,
+    .overview-card:hover .overview-subtext {
+        color: white !important;
+    }
+    
+    .overview-number {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        color: var(--primary);
+    }
+    
+    .overview-card:hover .overview-number {
+        transform: scale(1.1);
+    }
+    
+    .overview-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+        color: var(--gray-medium);
+    }
+    
+    .overview-subtext {
+        font-size: 0.75rem;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+        color: var(--gray-medium);
+    }
+
+    /* ==================== */
+    /* QUICK ACTIONS - Unified Ocean Teal Colors */
+    /* ==================== */
+    .quick-actions-grid {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .quick-action-btn {
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border: 2px solid var(--primary);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
+    .quick-action-btn i {
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        color: var(--dark);
+    }
+    
+    .quick-action-btn span {
+        position: relative;
+        z-index: 1;
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+    
+    .quick-action-btn .badge {
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-action-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(0, 168, 150, 0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .quick-action-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary) !important;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+    
+    .quick-action-btn:hover i,
+    .quick-action-btn:hover span,
+    .quick-action-btn:hover .badge {
+        color: white !important;
+    }
+    
+    .quick-action-btn:hover i {
+        transform: scale(1.1);
+    }
+
+    /* ==================== */
+    /* BADGE STYLES */
+    /* ==================== */
+    .badge {
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .badge-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+    }
+    
+    .badge-warning {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+    }
+    
+    .badge-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+    }
+    
+    .badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* ==================== */
+    /* BUTTON STYLES */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        cursor: pointer;
+    }
+    
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 0.75rem;
+        border-radius: 30px;
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        box-shadow: 0 5px 15px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline-danger {
+        background: transparent;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+    }
+    
+    .btn-outline-danger:hover {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px) scale(1.05);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: var(--hover-shadow);
+    }
+
+    /* ==================== */
+    /* SCROLLBAR STYLING */
+    /* ==================== */
+    .timeline::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .timeline::-webkit-scrollbar-track {
+        background: var(--gray-light);
+        border-radius: 10px;
+    }
+    
+    .timeline::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+    }
+    
+    .timeline::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary);
+    }
+
+    /* ==================== */
+    /* RESPONSIVE */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .overview-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .quick-actions-grid {
+            flex-direction: column;
+        }
+        
+        .quick-action-btn {
+            justify-content: center;
+        }
+        
+        .approval-item {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+        
+        .activity-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .activity-item {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .activity-icon {
+            margin: 0 auto 10px auto;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .overview-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Stats Cards with Ocean Teal Theme - Matching Job Seeker Dashboard -->
+<div class="stats-grid">
+    <!-- Total Users -->
+    <div class="stat-card delay-1">
+        <div class="stat-number">{{ total_users|intcomma }}</div>
+        <div class="stat-label">Total Users</div>
+        <div class="stat-trend trend-up">
+            <i class="fas fa-arrow-up me-1"></i> {{ new_users_week|default:0 }} new this week
+        </div>
+        <div class="stat-subtext">
+            <span class="badge badge-success">{{ new_users_today|default:0 }} today</span>
+        </div>
+    </div>
+
+    <!-- Total Companies -->
+    <div class="stat-card delay-2">
+        <div class="stat-number">{{ total_companies|intcomma }}</div>
+        <div class="stat-label">Registered Companies</div>
+        <div class="stat-trend">
+            <i class="fas fa-clock me-1"></i> {{ pending_companies }} awaiting verification
+        </div>
+        <div class="stat-subtext">
+            <span class="badge badge-warning">{{ pending_companies }} pending</span>
+        </div>
+    </div>
+
+    <!-- Total Jobs -->
+    <div class="stat-card delay-3">
+        <div class="stat-number">{{ total_jobs|intcomma }}</div>
+        <div class="stat-label">Total Jobs</div>
+        <div class="stat-trend">
+            <i class="fas fa-check-circle me-1"></i> {{ active_jobs }} active
+        </div>
+        <div class="stat-subtext">
+            <span class="badge badge-warning">{{ pending_jobs }} need approval</span>
+        </div>
+    </div>
+
+    <!-- Total Applications -->
+    <div class="stat-card delay-4">
+        <div class="stat-number">{{ total_applications|intcomma }}</div>
+        <div class="stat-label">Total Applications</div>
+        <div class="stat-trend trend-up">
+            <i class="fas fa-arrow-up me-1"></i> {{ applications_today }} new today
+        </div>
+        <div class="stat-subtext">
+            <span class="badge badge-success">{{ applications_today }} today</span>
+        </div>
+    </div>
+</div>
+
+<!-- Two Column Layout -->
+<div class="row">
+    <!-- Pending Approvals -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>
+                    Pending Approvals
+                </h5>
+                <span class="badge badge-warning">{{ pending_companies }} Companies, {{ pending_jobs }} Jobs</span>
+            </div>
+            <div class="card-body">
+                <!-- Pending Companies -->
+                <h6 class="mb-3" style="color: var(--primary); font-weight: 700;">
+                    <i class="fas fa-building me-2"></i>
+                    Companies Awaiting Verification
+                </h6>
+                {% for company in pending_companies_list %}
+                <div class="approval-item">
+                    <div>
+                        <strong>{{ company.name }}</strong><br>
+                        <small>{{ company.email }}</small>
+                    </div>
+                    <div>
+                        <a href="{% url 'verify_company' company.id %}" class="btn btn-sm btn-success me-1" onclick="return confirm('Verify {{ company.name }}?')">
+                            <i class="fas fa-check"></i> Verify
+                        </a>
+                        <a href="{% url 'reject_company' company.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Reject {{ company.name }}?')">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state-small">
+                    <i class="fas fa-check-circle"></i>
+                    <p>No pending companies</p>
+                    <small>All companies are verified</small>
+                </div>
+                {% endfor %}
+
+                <!-- Pending Jobs -->
+                <h6 class="mb-3 mt-4" style="color: var(--primary); font-weight: 700;">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Jobs Awaiting Approval
+                </h6>
+                {% for job in pending_jobs_list %}
+                <div class="approval-item">
+                    <div>
+                        <strong>{{ job.title }}</strong><br>
+                        <small>{{ job.company.name }}</small>
+                    </div>
+                    <div>
+                        <a href="{% url 'approve_job' job.id %}" class="btn btn-sm btn-success me-1" onclick="return confirm('Approve this job?')">
+                            <i class="fas fa-check"></i> Approve
+                        </a>
+                        <a href="{% url 'reject_job' job.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Reject this job?')">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state-small">
+                    <i class="fas fa-check-circle"></i>
+                    <p>No pending jobs</p>
+                    <small>All jobs are approved</small>
+                </div>
+                {% endfor %}
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'admin_companies' %}" class="btn-outline btn-sm me-2">Manage Companies</a>
+                    <a href="{% url 'admin_jobs' %}" class="btn-outline btn-sm">Manage Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Activity
+                </h5>
+                <span class="badge badge-primary">Last 24 hours</span>
+            </div>
+            <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                <div class="timeline">
+                    {% for activity in recent_activities %}
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: {{ activity.bg_color }};">
+                            <i class="{{ activity.icon }}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <strong>{{ activity.title }}</strong>
+                                <small class="activity-time">{{ activity.time }}</small>
+                            </div>
+                            <p class="activity-desc">{{ activity.description }}</p>
+                            <small class="activity-email"><i class="fas fa-envelope me-1"></i> {{ activity.email }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state-small">
+                        <i class="fas fa-history"></i>
+                        <p>No recent activity</p>
+                        <small>New activities will appear here</small>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'admin_applications' %}" class="btn-outline btn-sm">
+                        View All Applications <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Platform Overview Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Platform Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="overview-number">{{ total_users|intcomma }}</div>
+                        <div class="overview-label">Job Seekers</div>
+                        <div class="overview-subtext">{{ verified_users }} verified</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-number">{{ total_companies|intcomma }}</div>
+                        <div class="overview-label">Companies</div>
+                        <div class="overview-subtext">{{ verified_companies }} verified</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-number">{{ active_jobs|intcomma }}</div>
+                        <div class="overview-label">Active Jobs</div>
+                        <div class="overview-subtext">{{ total_jobs }} total posted</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-number">{{ total_applications|intcomma }}</div>
+                        <div class="overview-label">Applications</div>
+                        <div class="overview-subtext">{{ applications_today }} today</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions-grid">
+                    <a href="{% url 'admin_companies' %}?status=pending" class="quick-action-btn">
+                        <i class="fas fa-building"></i>
+                        <span>Verify Companies</span>
+                        {% if pending_companies > 0 %}
+                        <span class="badge badge-primary ms-2">{{ pending_companies }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'admin_jobs' %}?status=pending" class="quick-action-btn">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Approve Jobs</span>
+                        {% if pending_jobs > 0 %}
+                        <span class="badge badge-warning ms-2">{{ pending_jobs }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'admin_users' %}" class="quick-action-btn">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </a>
+                    <a href="{% url 'admin_applications' %}" class="quick-action-btn">
+                        <i class="fas fa-file-alt"></i>
+                        <span>View Applications</span>
+                    </a>
+                    <a href="{% url 'admin_analytics' %}" class="quick-action-btn">
+                        <i class="fas fa-chart-line"></i>
+                        <span>View Analytics</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Admin Dashboard JS loaded');
+        
+        // Add hover effect for cards
+        const cards = document.querySelectorAll('.stat-card, .card, .overview-card, .quick-action-btn');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Animate numbers on load
+        const statNumbers = document.querySelectorAll('.stat-number, .overview-number');
+        
+        statNumbers.forEach(element => {
+            const finalValue = parseInt(element.innerText.replace(/[^0-9]/g, ''));
+            if (!isNaN(finalValue)) {
+                let currentValue = 0;
+                const duration = 1000;
+                const increment = finalValue / (duration / 16);
+                
+                const updateNumber = () => {
+                    currentValue += increment;
+                    if (currentValue < finalValue) {
+                        element.innerText = Math.floor(currentValue).toLocaleString();
+                        requestAnimationFrame(updateNumber);
+                    } else {
+                        element.innerText = finalValue.toLocaleString();
+                    }
+                };
+                
+                // Only animate if element is visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateNumber();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(element);
+            }
+        });
+    });
+</script>
+{% endblock %}

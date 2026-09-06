@@ -1,0 +1,52 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Anvi Thakur
+Email: anvithakur@example.com
+Phone: +917533329879
+Location: Delhi
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in Java, Photoshop, Google Suite. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• Java
+• Photoshop
+• Google Suite
+• Excel
+• Ruby on Rails
+• Critical Thinking
+• Microsoft Office
+• Machine Learning
+
+WORK EXPERIENCE
+--------------
+• 12+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Master's Degree
+• IIT Madras
+• 2019
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

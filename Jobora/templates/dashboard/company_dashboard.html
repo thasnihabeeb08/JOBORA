@@ -1,0 +1,942 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+
+{% block title %}Jobora - Company Dashboard{% endblock %}
+{% block page_title %}Welcome, {{ company.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - COMPANY DASHBOARD === */
+    /* Matching Job Seeker Dashboard Styling */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS - Same as Job Seeker */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(100%); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+    .delay-6 { animation-delay: 1.2s; }
+
+    /* ==================== */
+    /* Stats Cards - Matching Job Seeker */
+    /* ==================== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px 24px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        cursor: pointer;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -20%;
+        width: 50%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(0, 168, 150, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        animation: float 15s ease-in-out infinite;
+        transition: all 0.5s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .stat-card:hover::before {
+        transform: scale(1.2);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    }
+
+    .stat-card:hover .stat-number,
+    .stat-card:hover .stat-label,
+    .stat-card:hover .stat-subtext {
+        color: white !important;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-number {
+        transform: scale(1.1);
+    }
+    
+    .stat-label {
+        font-size: 0.95rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-subtext {
+        font-size: 0.85rem;
+        color: var(--gray-medium);
+        margin-top: 5px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    /* ==================== */
+    /* Card Styles - Matching Job Seeker */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* Table Styles - Matching Job Seeker */
+    /* ==================== */
+    .company-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .company-table th {
+        background: linear-gradient(135deg, var(--light), rgba(0, 168, 150, 0.05));
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.9rem;
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 2px solid var(--gray-light);
+    }
+    
+    .company-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--gray-light);
+        vertical-align: middle;
+        transition: all 0.3s ease;
+    }
+    
+    .company-table tr {
+        transition: all 0.3s ease;
+        animation: fadeInRight 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .company-table tr:hover td {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.05), rgba(255, 179, 71, 0.02));
+    }
+
+    /* ==================== */
+    /* Status Badges - Consistent with Job Seeker */
+    /* ==================== */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-applied { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-shortlisted { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-interview { background: rgba(255, 179, 71, 0.1); color: var(--accent); }
+    .badge-selected { background: rgba(0, 168, 150, 0.2); color: var(--secondary-dark); }
+    .badge-rejected { background: rgba(230, 126, 34, 0.1); color: #c0392b; }
+    .badge-active { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-inactive { background: rgba(127, 140, 141, 0.1); color: var(--gray-medium); }
+
+    /* ==================== */
+    /* Interview Type Badges */
+    /* ==================== */
+    .interview-type-badge {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 105, 148, 0.1));
+        color: var(--primary);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .interview-type-badge:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        color: white;
+    }
+
+    /* ==================== */
+    /* Empty States - Matching Job Seeker */
+    /* ==================== */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        margin: 20px;
+        border: 1px solid var(--gray-light);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .empty-state:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-icon {
+        color: var(--secondary);
+        transform: scale(1.1);
+    }
+    
+    .empty-state-text {
+        color: var(--dark);
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover .empty-state-text {
+        color: var(--primary);
+    }
+
+    /* ==================== */
+    /* Summary Cards - Matching Metric Cards */
+    /* ==================== */
+    .summary-card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid var(--gray-light);
+        text-align: center;
+        height: 100%;
+        transition: all 0.4s ease;
+        box-shadow: var(--card-shadow);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .summary-card:hover .summary-value,
+    .summary-card:hover .summary-label {
+        color: white !important;
+    }
+
+    .summary-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .summary-card:hover .summary-value {
+        transform: scale(1.1);
+    }
+    
+    .summary-label {
+        font-size: 0.9rem;
+        color: var(--gray-medium);
+        font-weight: 500;
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+
+    /* ==================== */
+    /* Button Styles - Matching Job Seeker */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+    }
+
+    /* ==================== */
+    /* Quick Actions Container */
+    /* ==================== */
+    .d-grid.gap-2.d-md-flex {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    /* ==================== */
+    /* Badge Styles */
+    /* ==================== */
+    .badge {
+        border-radius: 30px;
+        padding: 4px 12px;
+        font-weight: 600;
+    }
+    
+    .badge-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    /* ==================== */
+    /* Responsive Design */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .company-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .summary-card {
+            padding: 15px;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Stats Overview - Same styling as Job Seeker -->
+    <div class="stats-grid">
+        <div class="stat-card delay-1">
+            <div class="stat-number">{{ total_jobs|default:0 }}</div>
+            <div class="stat-label">Total Jobs Posted</div>
+            {% if active_jobs > 0 %}
+            <div class="stat-subtext">
+                <i class="fas fa-check-circle me-1" style="color: var(--secondary);"></i> {{ active_jobs }} currently active
+            </div>
+            {% else %}
+            <div class="stat-subtext">
+                <i class="fas fa-clock me-1" style="color: var(--accent);"></i> No active jobs
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="stat-card delay-2">
+            <div class="stat-number">{{ total_applications|default:0 }}</div>
+            <div class="stat-label">Total Applications</div>
+            {% if total_applications > 0 %}
+            <div class="stat-subtext">
+                <i class="fas fa-users me-1" style="color: var(--secondary);"></i> {{ total_applications }} total received
+            </div>
+            {% else %}
+            <div class="stat-subtext">
+                <i class="fas fa-inbox me-1" style="color: var(--gray-medium);"></i> No applications yet
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="stat-card delay-3">
+            <div class="stat-number">{{ upcoming_interviews|length|default:0 }}</div>
+            <div class="stat-label">Upcoming Interviews</div>
+            {% if upcoming_interviews %}
+            <div class="stat-subtext">
+                <i class="fas fa-calendar me-1" style="color: var(--accent);"></i> Next: {{ upcoming_interviews.0.scheduled_date|date:"M d" }}
+            </div>
+            {% else %}
+            <div class="stat-subtext">
+                <i class="fas fa-calendar-times me-1" style="color: var(--gray-medium);"></i> No upcoming interviews
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="stat-card delay-4">
+            <div class="stat-number">{{ recent_jobs|length|default:0 }}</div>
+            <div class="stat-label">Recent Jobs</div>
+            {% if recent_jobs %}
+            <div class="stat-subtext">
+                <i class="fas fa-briefcase me-1" style="color: var(--secondary);"></i> {{ recent_jobs|length }} active jobs
+            </div>
+            {% else %}
+            <div class="stat-subtext">
+                <i class="fas fa-plus-circle me-1" style="color: var(--accent);"></i> <a href="{% url 'post_job' %}">Post your first job</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="row">
+        <!-- Recent Applications -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-file-alt me-2"></i>
+                        Recent Applications
+                    </h5>
+                    <a href="{% url 'view_applications' %}" class="btn btn-sm btn-outline-primary">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_applications %}
+                        <div class="table-responsive">
+                            <table class="company-table">
+                                <thead>
+                                    <tr>
+                                        <th>Candidate</th>
+                                        <th>Job</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for app in recent_applications %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-500">{{ app.candidate.get_full_name|default:app.candidate.username|truncatechars:15 }}</div>
+                                            <small class="text-muted" style="color: var(--gray-medium);">{{ app.applied_on|date:"M d, Y" }}</small>
+                                        </td>
+                                        <td class="fw-500">{{ app.job.title|truncatechars:20 }}</td>
+                                        <td>
+                                            <span class="status-badge badge-{{ app.status }}">
+                                                {{ app.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'candidate_profile' app.id %}" class="btn btn-sm btn-outline-primary">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h5 class="empty-state-text">No applications yet</h5>
+                            <p class="mb-4" style="color: var(--gray-medium);">Post your first job to start receiving applications</p>
+                            <a href="{% url 'post_job' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i> Post Job
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Jobs -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-briefcase me-2"></i>
+                        Recent Jobs
+                    </h5>
+                    <a href="{% url 'manage_jobs' %}" class="btn btn-sm btn-outline-primary">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_jobs %}
+                        <div class="table-responsive">
+                            <table class="company-table">
+                                <thead>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for job in recent_jobs %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-500">{{ job.title|truncatechars:25 }}</div>
+                                            <small class="text-muted" style="color: var(--gray-medium);">{{ job.created_at|date:"M d, Y" }}</small>
+                                        </td>
+                                        <td>
+                                            {% if job.is_remote %}
+                                                <span class="badge" style="background: rgba(0, 168, 150, 0.1); color: var(--secondary);">Remote</span>
+                                            {% else %}
+                                                {{ job.location|default:"Not specified"|truncatechars:20 }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if job.is_active %}
+                                                <span class="status-badge badge-active">Active</span>
+                                            {% else %}
+                                                <span class="status-badge badge-inactive">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'view_job_applications' job.id %}" class="btn btn-sm btn-outline-primary">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h5 class="empty-state-text">No jobs posted yet</h5>
+                            <p class="mb-4" style="color: var(--gray-medium);">Create your first job posting</p>
+                            <a href="{% url 'post_job' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i> Create Job
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Summary -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Application Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="summary-card">
+                                <div class="summary-value">{{ total_applications|default:0 }}</div>
+                                <div class="summary-label">Total Applications</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="summary-card">
+                                <div class="summary-value">{{ upcoming_interviews|length|default:0 }}</div>
+                                <div class="summary-label">Upcoming Interviews</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="summary-card">
+                                <div class="summary-value">{{ active_jobs|default:0 }}</div>
+                                <div class="summary-label">Active Jobs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-bolt me-2"></i>
+                Quick Actions
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="d-grid gap-2 d-md-flex">
+                <a href="{% url 'post_job' %}" class="btn btn-primary">
+                    <i class="fas fa-plus-circle me-2"></i> Post New Job
+                </a>
+                <a href="{% url 'view_applications' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-users me-2"></i> View Applications
+                </a>
+                <a href="{% url 'manage_jobs' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit me-2"></i> Manage Jobs
+                </a>
+                <a href="{% url 'edit_company_profile' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-building me-2"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Interviews Section -->
+    {% if upcoming_interviews %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-calendar-alt me-2"></i>
+                Upcoming Interviews
+            </h5>
+            <span class="badge" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">{{ upcoming_interviews|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="company-table">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Job Position</th>
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interview in upcoming_interviews %}
+                        <tr>
+                            <td>
+                                <div class="fw-500">{{ interview.application.candidate.get_full_name|default:interview.application.candidate.username }}</div>
+                                <small style="color: var(--gray-medium);">{{ interview.application.candidate.email }}</small>
+                            </td>
+                            <td class="fw-500">{{ interview.application.job.title|truncatechars:20 }}</td>
+                            <td>
+                                <div class="fw-500">{{ interview.scheduled_date|date:"M d, Y" }}</div>
+                                <small style="color: var(--gray-medium);">{{ interview.scheduled_date|time:"g:i A" }}</small>
+                            </td>
+                            <td>
+                                <span class="interview-type-badge">
+                                    <i class="fas fa-video me-1"></i> {{ interview.get_interview_type_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'candidate_profile' interview.application.id %}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Toast Animation */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    .custom-toast {
+        animation: slideIn 0.3s ease forwards;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border: none;
+        border-radius: 12px;
+        background: white;
+        border-left: 4px solid var(--secondary);
+    }
+    
+    .fw-500 {
+        font-weight: 500;
+    }
+</style>
+
+<script>
+    // Initialize tooltips and animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Show welcome message for new companies
+        const totalJobs = {{ total_jobs|default:0 }};
+        if (totalJobs === 0) {
+            setTimeout(() => {
+                showToast(
+                    '🎉 Welcome to Jobora! Start by posting your first job opening.', 
+                    'info',
+                    5000
+                );
+            }, 1000);
+        }
+    });
+    
+    // Toast function - same as job seeker
+    function showToast(message, type = 'info', duration = 3000) {
+        // Remove existing toasts
+        const existingToasts = document.querySelectorAll('.custom-toast');
+        existingToasts.forEach(toast => toast.remove());
+        
+        // Create new toast
+        const toast = document.createElement('div');
+        toast.className = `custom-toast alert alert-${type} alert-dismissible fade show`;
+        
+        const iconMap = {
+            success: 'fa-check-circle',
+            warning: 'fa-exclamation-triangle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle'
+        };
+        
+        const colorMap = {
+            success: 'var(--secondary)',
+            warning: 'var(--accent)',
+            error: '#e74c3c',
+            info: 'var(--primary)'
+        };
+        
+        toast.innerHTML = `
+            <div class="d-flex align-items-center p-3">
+                <i class="fas ${iconMap[type] || iconMap.info} me-2" style="color: ${colorMap[type] || colorMap.info}; font-size: 1.2rem;"></i>
+                <span style="color: var(--dark);">${message}</span>
+                <button type="button" class="btn-close ms-auto" onclick="this.closest('.custom-toast').remove()"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Auto remove after duration
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, duration);
+    }
+</script>
+{% endblock %}

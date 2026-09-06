@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Django Backend Developer
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Ananya Bose
+Email: ananyabose@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Django Backend Developer position.
+Skilled in Python, Django, PostgreSQL, REST APIs, Node.js.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• Django
+• PostgreSQL
+• REST APIs
+• Node.js
+• MongoDB
+• Java
+• Spring Boot
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

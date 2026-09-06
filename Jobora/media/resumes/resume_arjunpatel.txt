@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ARJUN PATEL
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Arjun Patel
+Email: arjunpatel@example.com
+Phone: +919771662226
+Location: Bangalore
+
+EDUCATION
+---------
+• bachelors in Information Technology
+• Anna University
+• Graduation Year: 2022
+
+WORK EXPERIENCE
+--------------
+• 7 years of professional experience
+• Current Role: Software Developer
+• Skills: Terraform, Critical Thinking, Ansible, Excel, Adobe XD, Docker, SQL, CI/CD
+
+TECHNICAL SKILLS
+----------------
+Terraform, Critical Thinking, Ansible, Excel, Adobe XD, Docker, SQL, CI/CD
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

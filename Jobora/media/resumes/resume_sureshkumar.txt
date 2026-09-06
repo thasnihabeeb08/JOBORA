@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - SURESH KUMAR
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Suresh Kumar
+Email: sureshkumar@example.com
+Phone: +917825245082
+Location: Lucknow
+
+EDUCATION
+---------
+• bachelors in Business Administration
+• Christ University
+• Graduation Year: 2023
+
+WORK EXPERIENCE
+--------------
+• 9 years of professional experience
+• Current Role: Data Analyst
+• Skills: Project Management, AWS, Jenkins, Figma, Problem Solving, Docker, Google Suite, Linux
+
+TECHNICAL SKILLS
+----------------
+Project Management, AWS, Jenkins, Figma, Problem Solving, Docker, Google Suite, Linux
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

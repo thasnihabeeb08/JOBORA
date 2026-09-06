@@ -1,0 +1,39 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Lavanya Jha
+Email: lavanyajha@example.com
+Location: Mumbai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking DevOps Engineer position. 
+Skilled in docker, kubernetes, aws.
+
+TECHNICAL SKILLS
+---------------
+• docker
+• kubernetes
+• aws
+• ci/cd
+• linux
+• python
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - CHIRAG MENON
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Chirag Menon
+Email: chiragmenon@example.com
+Phone: +918674009335
+Location: Coimbatore
+
+EDUCATION
+---------
+• masters in Marketing
+• NIT Surathkal
+• Graduation Year: 2010
+
+WORK EXPERIENCE
+--------------
+• 1 years of professional experience
+• Current Role: Software Developer
+• Skills: Ruby on Rails, Node.js, Team Leadership, Java, Adobe XD, Django, GraphQL, Google Suite
+
+TECHNICAL SKILLS
+----------------
+Ruby on Rails, Node.js, Team Leadership, Java, Adobe XD, Django, GraphQL, Google Suite
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

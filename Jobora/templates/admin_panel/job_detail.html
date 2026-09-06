@@ -1,0 +1,952 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}Job Details - Admin{% endblock %}
+
+{% block page_title %}Job Details{% endblock %}
+
+{% block page_actions %}
+<div style="display: flex; gap: 10px;">
+    <a href="{% url 'admin_jobs' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Jobs
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - JOB DETAILS === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    /* ==================== */
+    /* CARD STYLES */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title {
+        color: var(--secondary);
+    }
+    
+    .card-header .card-title i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header .card-title i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* JOB TITLE */
+    /* ==================== */
+    .job-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .job-title:hover {
+        color: var(--primary);
+    }
+
+    /* ==================== */
+    /* STATUS BADGES */
+    /* ==================== */
+    .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        transition: all 0.3s ease;
+        margin-right: 8px;
+    }
+    
+    .badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .badge-pending {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    }
+    
+    .badge-active {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-inactive {
+        background: linear-gradient(135deg, var(--gray-medium), var(--dark));
+    }
+    
+    .badge-featured {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    }
+    
+    .badge-expired {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    
+    .badge-remote {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    }
+    
+    .badge-skill {
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        padding: 5px 14px;
+        font-size: 0.7rem;
+    }
+
+    /* ==================== */
+    /* INFO GRID */
+    /* ==================== */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+    
+    .info-grid:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .info-label {
+        color: var(--gray-medium);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .info-label i {
+        color: var(--secondary);
+        margin-right: 5px;
+        width: 16px;
+    }
+    
+    .info-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.95rem;
+    }
+
+    /* ==================== */
+    /* DATES SECTION */
+    /* ==================== */
+    .dates-section {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 15px 20px;
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+    
+    .dates-section:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .date-item {
+        flex: 1;
+    }
+    
+    .date-label {
+        color: var(--gray-medium);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .date-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.9rem;
+    }
+    
+    .date-value.expired {
+        color: #ef4444;
+    }
+
+    /* ==================== */
+    /* CONTENT BOXES */
+    /* ==================== */
+    .content-box {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 25px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        line-height: 1.7;
+        color: var(--dark);
+    }
+    
+    .content-box:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .content-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .content-title i {
+        color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* SKILLS SECTION */
+    /* ==================== */
+    .skills-section {
+        margin-top: 20px;
+    }
+    
+    .skills-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* ==================== */
+    /* BUTTONS */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        text-decoration: none;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2);
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(255, 179, 71, 0.2);
+    }
+    
+    .btn-warning:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(255, 179, 71, 0.3);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ==================== */
+    /* STATISTICS */
+    /* ==================== */
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        transform: translateX(5px);
+        border-bottom-color: var(--secondary);
+    }
+    
+    .stat-label {
+        color: var(--gray-medium);
+        font-size: 0.85rem;
+    }
+    
+    .stat-value {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    /* ==================== */
+    /* APPLICATION ITEM */
+    /* ==================== */
+    .application-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    
+    .application-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+        border-color: var(--gray-light);
+    }
+    
+    .app-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .application-item:hover .app-avatar {
+        transform: scale(1.1);
+    }
+    
+    .app-info {
+        flex: 1;
+    }
+    
+    .app-name {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.85rem;
+    }
+    
+    .app-date {
+        color: var(--gray-medium);
+        font-size: 0.7rem;
+    }
+    
+    .app-status {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 30px;
+        color: white;
+    }
+    
+    .status-applied { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+    .status-shortlisted { background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); }
+    .status-interview { background: linear-gradient(135deg, var(--accent), var(--accent-light)); }
+    .status-selected { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .status-rejected { background: linear-gradient(135deg, #ef4444, #f87171); }
+
+    /* ==================== */
+    /* SCROLLBAR */
+    /* ==================== */
+    .applications-scroll {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .applications-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .applications-scroll::-webkit-scrollbar-track {
+        background: var(--gray-light);
+        border-radius: 10px;
+    }
+    
+    .applications-scroll::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+    }
+    
+    .applications-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary);
+    }
+
+    /* ==================== */
+    /* EMPTY STATE */
+    /* ==================== */
+    .empty-applications {
+        text-align: center;
+        padding: 40px 20px;
+        background: var(--light);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .empty-applications:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .empty-applications i {
+        font-size: 3rem;
+        color: var(--gray-light);
+        margin-bottom: 10px;
+    }
+    
+    .empty-applications p {
+        color: var(--gray-medium);
+        margin: 0;
+    }
+
+    /* ==================== */
+    /* RESPONSIVE */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+        }
+        
+        .job-title {
+            font-size: 1.4rem;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .dates-section {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .application-item {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Job Details Card -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2"></i>
+                    Job Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <h3 class="job-title">{{ job.title }}</h3>
+                
+                <!-- Status Badges -->
+                <div style="margin-bottom: 20px;">
+                    {% if not job.is_approved %}
+                        <span class="badge badge-pending">
+                            <i class="fas fa-clock me-1"></i> Pending Approval
+                        </span>
+                    {% elif job.is_active %}
+                        <span class="badge badge-active">
+                            <i class="fas fa-check-circle me-1"></i> Active
+                        </span>
+                    {% else %}
+                        <span class="badge badge-inactive">
+                            <i class="fas fa-pause-circle me-1"></i> Inactive
+                        </span>
+                    {% endif %}
+                    
+                    {% if job.is_featured %}
+                        <span class="badge badge-featured">
+                            <i class="fas fa-star me-1"></i> Featured
+                        </span>
+                    {% endif %}
+                    
+                    {% if job.is_expired %}
+                        <span class="badge badge-expired">
+                            <i class="fas fa-exclamation-circle me-1"></i> Expired
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Key Info -->
+                <div class="info-grid">
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-building"></i> Company
+                        </div>
+                        <div class="info-value">{{ job.company.name }}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-tag"></i> Job Type
+                        </div>
+                        <div class="info-value">{{ job.get_job_type_display }}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-chart-line"></i> Experience
+                        </div>
+                        <div class="info-value">{{ job.get_experience_level_display }}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-folder"></i> Category
+                        </div>
+                        <div class="info-value">{{ job.category.name|default:"Not specified" }}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-map-marker-alt"></i> Location
+                        </div>
+                        <div class="info-value">
+                            {{ job.location }}
+                            {% if job.is_remote %}
+                                <span class="badge badge-remote ms-2" style="padding: 2px 8px; font-size: 0.6rem;">Remote</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-label">
+                            <i class="fas fa-money-bill-wave"></i> Salary
+                        </div>
+                        <div class="info-value">
+                            {% if job.salary_min and job.salary_max %}
+                                ₹{{ job.salary_min|intcomma }} - ₹{{ job.salary_max|intcomma }}
+                            {% elif job.salary_min %}
+                                ₹{{ job.salary_min|intcomma }}+
+                            {% else %}
+                                Negotiable
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dates -->
+                <div class="dates-section">
+                    <div class="date-item">
+                        <div class="date-label">
+                            <i class="fas fa-calendar-plus"></i> Posted On
+                        </div>
+                        <div class="date-value">{{ job.posted_on|date:"F d, Y" }}</div>
+                        <small style="color: var(--gray-medium);">{{ job.posted_on|naturaltime }}</small>
+                    </div>
+                    <div class="date-item">
+                        <div class="date-label">
+                            <i class="fas fa-calendar-times"></i> Application Deadline
+                        </div>
+                        <div class="date-value {% if job.is_expired %}expired{% endif %}">
+                            {{ job.application_deadline|date:"F d, Y" }}
+                        </div>
+                        {% if job.is_expired %}
+                        <small style="color: #ef4444;">Expired</small>
+                        {% endif %}
+                    </div>
+                    <div class="date-item">
+                        <div class="date-label">
+                            <i class="fas fa-users"></i> Vacancies
+                        </div>
+                        <div class="date-value">{{ job.vacancy_count }}</div>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="content-box">
+                    <div class="content-title">
+                        <i class="fas fa-align-left"></i>
+                        Job Description
+                    </div>
+                    {{ job.description|linebreaks|default:"No description provided." }}
+                </div>
+                
+                <!-- Requirements -->
+                <div class="content-box">
+                    <div class="content-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Requirements
+                    </div>
+                    {{ job.requirements|linebreaks|default:"No requirements specified." }}
+                </div>
+                
+                <!-- Skills -->
+                <div class="skills-section">
+                    <div class="skills-title">
+                        <i class="fas fa-code"></i>
+                        Skills Required
+                    </div>
+                    <div class="skills-list">
+                        {% for skill in job.skills_required.split %}
+                        <span class="badge badge-skill">{{ skill|cut:"," }}</span>
+                        {% empty %}
+                        <span style="color: var(--gray-medium);">No skills specified</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-md-4 mb-4">
+        <!-- Actions Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    {% if not job.is_approved %}
+                    <form method="POST" action="{% url 'approve_job' job.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success" onclick="return confirm('✅ Approve this job? It will become visible to job seekers.')">
+                            <i class="fas fa-check me-2"></i> Approve Job
+                        </button>
+                    </form>
+                    
+                    <form method="POST" action="{% url 'reject_job' job.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning" onclick="return confirm('⚠️ Reject this job? The company will be notified.')">
+                            <i class="fas fa-times me-2"></i> Reject Job
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <form method="POST" action="{% url 'delete_job' job.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('⚠️ DANGER: This will permanently delete this job and all associated applications! This action cannot be undone. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i> Delete Job
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-file-alt me-1"></i> Total Applications
+                    </span>
+                    <span class="stat-value">{{ applications|length }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-eye me-1"></i> Views
+                    </span>
+                    <span class="stat-value">{{ job.views_count }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-building me-1"></i> Posted By
+                    </span>
+                    <span class="stat-value">{{ job.company.name }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <i class="fas fa-calendar-week me-1"></i> Days Active
+                    </span>
+                    <span class="stat-value">{{ job.posted_on|timesince }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Applications Card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Recent Applications
+                </h5>
+            </div>
+            <div class="card-body applications-scroll">
+                {% if applications %}
+                    {% for app in applications|slice:":10" %}
+                    <div class="application-item">
+                        <div class="app-avatar">
+                            {{ app.candidate.first_name|first|default:app.candidate.username|first|upper }}
+                        </div>
+                        <div class="app-info">
+                            <div class="app-name">{{ app.candidate.get_full_name|default:app.candidate.username }}</div>
+                            <div class="app-date">{{ app.applied_on|date:"M d, Y" }}</div>
+                        </div>
+                        <span class="app-status status-{{ app.status }}">
+                            {{ app.get_status_display }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if applications|length > 10 %}
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="{% url 'admin_applications' %}?job={{ job.id }}" class="btn btn-outline-primary" style="width: auto; padding: 6px 12px; font-size: 0.7rem;">
+                            View All {{ applications|length }} Applications
+                        </a>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="empty-applications">
+                        <i class="fas fa-inbox"></i>
+                        <p>No applications yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Job Details JS loaded');
+        
+        // Add hover effects for cards
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Animate numbers on load
+        const statValues = document.querySelectorAll('.stat-value');
+        
+        statValues.forEach(element => {
+            const finalValue = parseInt(element.innerText.replace(/[^0-9]/g, ''));
+            if (!isNaN(finalValue)) {
+                let currentValue = 0;
+                const duration = 800;
+                const increment = finalValue / (duration / 16);
+                
+                const updateNumber = () => {
+                    currentValue += increment;
+                    if (currentValue < finalValue) {
+                        element.innerText = Math.floor(currentValue).toLocaleString();
+                        requestAnimationFrame(updateNumber);
+                    } else {
+                        element.innerText = finalValue.toLocaleString();
+                    }
+                };
+                
+                // Only animate if element is visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateNumber();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(element);
+            }
+        });
+        
+        // Add animation delay to application items
+        const appItems = document.querySelectorAll('.application-item');
+        appItems.forEach((item, index) => {
+            item.style.animation = `fadeInRight 0.5s ease forwards ${index * 0.05}s`;
+            item.style.opacity = '0';
+        });
+    });
+</script>
+{% endblock %}

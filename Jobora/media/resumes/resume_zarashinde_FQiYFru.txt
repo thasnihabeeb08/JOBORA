@@ -1,0 +1,52 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Zara Shinde
+Email: zarashinde@example.com
+Phone: +916926559403
+Location: Indore
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in Excel, GraphQL, Java. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• Excel
+• GraphQL
+• Java
+• Artificial Intelligence
+• Linux
+• SQL
+• Team Leadership
+• Data Analysis
+
+WORK EXPERIENCE
+--------------
+• 6+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Master's Degree
+• NSIT Delhi
+• 2016
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

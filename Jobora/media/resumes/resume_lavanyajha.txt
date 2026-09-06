@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - LAVANYA JHA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Lavanya Jha
+Email: lavanyajha@example.com
+Phone: +918836299592
+Location: Mangalore
+
+EDUCATION
+---------
+• bachelors in Information Technology
+• BITS Goa
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 7 years of professional experience
+• Current Role: Data Analyst
+• Skills: React, Microsoft Office, MongoDB, Problem Solving, Ansible, Flask, Figma, PHP
+
+TECHNICAL SKILLS
+----------------
+React, Microsoft Office, MongoDB, Problem Solving, Ansible, Flask, Figma, PHP
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

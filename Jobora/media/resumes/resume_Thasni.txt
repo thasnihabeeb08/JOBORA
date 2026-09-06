@@ -1,0 +1,49 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Thasni Habeeb
+Email: thasnihabeeb08@gmail.com
+Phone: +91 9876543210
+Location: India
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional with expertise in Python, JavaScript, SQL. 
+Proven track record of delivering high-quality results and solving complex problems.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• JavaScript
+• SQL
+• Communication
+• Problem Solving
+
+WORK EXPERIENCE
+--------------
+• 3+ years of professional experience
+• Developed and maintained multiple web applications
+• Collaborated with cross-functional teams
+• Implemented best practices and coding standards
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University Name
+• 2020
+
+CERTIFICATIONS
+--------------
+• Professional Development Certificate
+• Technical Skills Certification
+
+LANGUAGES
+--------
+• English (Fluent)
+• Hindi (Native)
+
+====================================================================

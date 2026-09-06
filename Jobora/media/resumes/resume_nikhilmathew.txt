@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - NIKHIL MATHEW
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Nikhil Mathew
+Email: nikhilmathew@example.com
+Phone: +918881677955
+Location: Visakhapatnam
+
+EDUCATION
+---------
+• masters in Information Technology
+• Delhi University
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 5 years of professional experience
+• Current Role: Product Manager
+• Skills: Project Management, C#, Jenkins, Machine Learning, Kubernetes, Flask, Problem Solving, TypeScript
+
+TECHNICAL SKILLS
+----------------
+Project Management, C#, Jenkins, Machine Learning, Kubernetes, Flask, Problem Solving, TypeScript
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Lavanya Jha
+Email: lavanyajha@example.com
+Location: Pune
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Frontend Developer (React) position. Strong background in hospitality skills, Communication, Teamwork.
+
+TECHNICAL SKILLS
+---------------
+• hospitality skills
+• Communication
+• Teamwork
+• Problem Solving
+• Analytical Thinking
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

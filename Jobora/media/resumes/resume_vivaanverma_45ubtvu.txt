@@ -1,0 +1,39 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Marketing Intern
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Vivaan Verma
+Email: vivaanverma@example.com
+Location: Hybrid
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Marketing Intern position.
+Skilled in Digital Marketing, SEO, Content Marketing, Social Media, Analytics.
+
+TECHNICAL SKILLS
+---------------
+• Digital Marketing
+• SEO
+• Content Marketing
+• Social Media
+• Analytics
+• Email Marketing
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

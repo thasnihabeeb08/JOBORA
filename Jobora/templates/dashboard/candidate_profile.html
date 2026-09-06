@@ -1,0 +1,846 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+
+{% block title %}Candidate Profile - {{ candidate.username }}{% endblock %}
+{% block page_title %}Candidate Profile{% endblock %}
+
+{% block page_actions %}
+<div style="display: flex; gap: 10px;">
+    <a href="{% url 'view_applications' %}" class="btn-outline">
+        <i class="fas fa-arrow-left me-2"></i> Back to Applications
+    </a>
+    <a href="{% url 'send_message' application.id %}" class="btn-primary">
+        <i class="fas fa-envelope me-2"></i> Send Message
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - CANDIDATE PROFILE === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.05); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.3); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(100%); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    /* ==================== */
+    /* Card Styles */
+    /* ==================== */
+    .profile-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .profile-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 18px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover .profile-card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+
+    .profile-card-header h5 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .profile-card-header h5 i {
+        color: var(--secondary);
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover .profile-card-header h5 i {
+        color: var(--primary);
+        transform: rotate(5deg) scale(1.1);
+    }
+
+    .profile-card-body {
+        padding: 25px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* Status Banner */
+    /* ==================== */
+    .status-banner {
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 24px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.4s ease;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .status-banner:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* ==================== */
+    /* Avatar Styles */
+    /* ==================== */
+    .avatar-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 105, 148, 0.2);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .avatar-circle span {
+        font-size: 48px;
+        color: white;
+        font-weight: 700;
+    }
+
+    .avatar-circle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* Badge Styles */
+    /* ==================== */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .badge-applied { background: rgba(0, 105, 148, 0.1); color: var(--primary); }
+    .badge-shortlisted { background: rgba(0, 168, 150, 0.1); color: var(--secondary); }
+    .badge-interview { background: rgba(255, 179, 71, 0.1); color: var(--accent); }
+    .badge-selected { background: rgba(0, 168, 150, 0.2); color: var(--secondary-dark); }
+    .badge-rejected { background: rgba(230, 126, 34, 0.1); color: #c0392b; }
+
+    /* Skill Badges */
+    .skill-badge {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--primary);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .skill-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-color: transparent;
+        box-shadow: var(--card-shadow);
+    }
+
+    /* ==================== */
+    /* Button Styles */
+    /* ==================== */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .btn-outline:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* Form Controls */
+    /* ==================== */
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+    }
+
+    /* ==================== */
+    /* Info Row Styles */
+    /* ==================== */
+    .info-row {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .info-row:hover {
+        transform: translateX(5px);
+        background: linear-gradient(135deg, var(--light), transparent);
+        padding-left: 10px;
+        border-radius: 12px;
+    }
+
+    .info-label {
+        width: 100px;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.85rem;
+    }
+
+    .info-value {
+        flex: 1;
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    /* ==================== */
+    /* Match Score Display */
+    /* ==================== */
+    .match-score {
+        text-align: center;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .match-score:hover {
+        transform: scale(1.02);
+        box-shadow: var(--card-shadow);
+    }
+
+    .match-percentage {
+        font-size: 36px;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .match-bar {
+        width: 100%;
+        height: 10px;
+        background: var(--gray-light);
+        border-radius: 5px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .match-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 5px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .match-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    /* ==================== */
+    /* Interview Section */
+    /* ==================== */
+    .interview-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .interview-item {
+        padding: 15px;
+        background: linear-gradient(135deg, var(--light), white);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray-light);
+    }
+
+    .interview-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow);
+        border-color: var(--secondary);
+    }
+
+    .interview-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--gray-medium);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .interview-label i {
+        color: var(--secondary);
+    }
+
+    .interview-value {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 1rem;
+    }
+
+    /* ==================== */
+    /* Alert/Message Styles */
+    /* ==================== */
+    .alert-message {
+        padding: 15px 20px;
+        border-radius: 16px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: fadeInRight 0.3s ease;
+        border-left: 4px solid;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(0, 168, 150, 0.05));
+        color: var(--secondary-dark);
+        border-left-color: var(--secondary);
+    }
+
+    .alert-error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        color: #c0392b;
+        border-left-color: #ef4444;
+    }
+
+    /* ==================== */
+    /* Responsive */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .avatar-circle span {
+            font-size: 36px;
+        }
+        
+        .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        
+        .info-label {
+            width: auto;
+        }
+        
+        .interview-details {
+            grid-template-columns: 1fr;
+        }
+        
+        .status-banner .row {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Display Messages -->
+{% if messages %}
+    <div style="margin-bottom: 25px;">
+        {% for message in messages %}
+            <div class="alert-message alert-{{ message.tags }}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Status Banner with Form -->
+<div class="status-banner">
+    <div class="row align-items-center">
+        <div class="col-md-7">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div>
+                    <span class="status-badge badge-{{ application.status }}">
+                        <i class="fas 
+                            {% if application.status == 'applied' %}fa-paper-plane
+                            {% elif application.status == 'shortlisted' %}fa-check-circle
+                            {% elif application.status == 'interview' %}fa-calendar-alt
+                            {% elif application.status == 'selected' %}fa-trophy
+                            {% elif application.status == 'rejected' %}fa-times-circle
+                            {% endif %}"></i>
+                        {{ application.get_status_display }}
+                    </span>
+                </div>
+                <div>
+                    <small style="color: var(--gray-medium);">
+                        <i class="fas fa-calendar-alt me-1"></i> Applied on {{ application.applied_on|date:"F d, Y" }}
+                    </small>
+                </div>
+            </div>
+            <h4 style="color: var(--dark); margin-top: 15px; margin-bottom: 10px;">{{ application.job.title }}</h4>
+            <p style="color: var(--gray-medium); margin-bottom: 0;">
+                <i class="fas fa-building me-2" style="color: var(--secondary);"></i> {{ application.job.company.name }}
+            </p>
+        </div>
+        <div class="col-md-5">
+            <form method="POST" action="{% url 'update_status_simple' application.id %}">
+                {% csrf_token %}
+                <div class="row g-2">
+                    <div class="col-7">
+                        <select name="status" class="form-control">
+                            {% for status_code, status_name in application.STATUS_CHOICES %}
+                                <option value="{{ status_code }}" {% if application.status == status_code %}selected{% endif %}>
+                                    {{ status_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <button type="submit" class="btn-primary w-100" style="padding: 10px;">
+                            <i class="fas fa-sync-alt me-2"></i> Update
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Candidate Information -->
+<div class="row">
+    <div class="col-md-4">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-card-body" style="text-align: center;">
+                <div class="avatar-container">
+                    <div class="avatar-circle">
+                        <span>{{ candidate.first_name|first|default:candidate.username|first|upper }}</span>
+                    </div>
+                    <h4 style="color: var(--dark); margin-bottom: 5px;">{{ candidate.get_full_name|default:candidate.username }}</h4>
+                    <p style="color: var(--gray-medium);">
+                        <i class="fas fa-envelope me-1"></i> {{ candidate.email }}
+                    </p>
+                </div>
+                
+                <hr style="border-color: var(--gray-light);">
+                
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-phone me-2" style="color: var(--secondary);"></i> Phone
+                    </div>
+                    <div class="info-value">{{ candidate.profile.phone|default:"Not provided" }}</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt me-2" style="color: var(--secondary);"></i> Location
+                    </div>
+                    <div class="info-value">{{ candidate.profile.location|default:"Not specified" }}</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-briefcase me-2" style="color: var(--secondary);"></i> Experience
+                    </div>
+                    <div class="info-value">{{ candidate.profile.years_experience|default:"0" }} years</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-chart-line me-2" style="color: var(--secondary);"></i> Match Score
+                    </div>
+                    <div class="info-value">
+                        <div class="match-score">
+                            <div class="match-percentage">{{ application.match_percentage|default:"0" }}%</div>
+                            <div class="match-bar">
+                                <div class="match-fill" style="width: {{ application.match_percentage|default:0 }}%;"></div>
+                            </div>
+                            <small style="color: var(--gray-medium);">AI Match Score</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr style="border-color: var(--gray-light);">
+                
+                {% if application.resume %}
+                <a href="{{ application.resume.url }}" target="_blank" class="btn-outline w-100 mb-2">
+                    <i class="fas fa-file-pdf me-2"></i> View Resume
+                </a>
+                {% endif %}
+                
+                <a href="{% url 'schedule_interview' application.id %}" class="btn-primary w-100">
+                    <i class="fas fa-calendar-plus me-2"></i> Schedule Interview
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- About Section -->
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h5>
+                    <i class="fas fa-user-alt"></i>
+                    About
+                </h5>
+            </div>
+            <div class="profile-card-body">
+                <p style="color: var(--dark); line-height: 1.6;">
+                    {{ candidate.profile.summary|default:"No summary provided." }}
+                </p>
+            </div>
+        </div>
+        
+        <!-- Skills Section -->
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h5>
+                    <i class="fas fa-code"></i>
+                    Skills & Expertise
+                </h5>
+            </div>
+            <div class="profile-card-body">
+                {% if candidate.profile.skills %}
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        {% for skill in candidate.profile.skills.split %}
+                            <span class="skill-badge">
+                                <i class="fas fa-check-circle" style="font-size: 12px;"></i>
+                                {{ skill }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: var(--gray-medium); text-align: center; padding: 20px;">
+                        <i class="fas fa-info-circle me-2"></i> No skills listed
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Interview Section -->
+        {% if interview %}
+        <div class="profile-card">
+            <div class="profile-card-header d-flex justify-content-between align-items-center">
+                <h5>
+                    <i class="fas fa-calendar-alt"></i>
+                    Interview Scheduled
+                </h5>
+                <a href="{% url 'schedule_interview' application.id %}" class="btn-outline btn-sm">
+                    <i class="fas fa-edit me-1"></i> Edit
+                </a>
+            </div>
+            <div class="profile-card-body">
+                <div class="interview-details">
+                    <div class="interview-item">
+                        <div class="interview-label">
+                            <i class="fas fa-calendar-day"></i> Date
+                        </div>
+                        <div class="interview-value">{{ interview.scheduled_date|date:"l, F d, Y" }}</div>
+                    </div>
+                    <div class="interview-item">
+                        <div class="interview-label">
+                            <i class="fas fa-clock"></i> Time
+                        </div>
+                        <div class="interview-value">{{ interview.scheduled_date|date:"g:i A" }}</div>
+                    </div>
+                    <div class="interview-item">
+                        <div class="interview-label">
+                            <i class="fas fa-video"></i> Type
+                        </div>
+                        <div class="interview-value">{{ interview.get_interview_type_display }}</div>
+                    </div>
+                    <div class="interview-item">
+                        <div class="interview-label">
+                            <i class="fas fa-chalkboard-user"></i> Interviewer
+                        </div>
+                        <div class="interview-value">{{ interview.interviewer|default:"Not assigned" }}</div>
+                    </div>
+                </div>
+                {% if interview.meeting_link %}
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{{ interview.meeting_link }}" target="_blank" class="btn-success">
+                        <i class="fas fa-video me-2"></i> Join Meeting
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- No Interview Scheduled -->
+        {% if not interview and application.status == 'interview' %}
+        <div class="profile-card">
+            <div class="profile-card-body" style="text-align: center; padding: 40px;">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, var(--light), white); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-calendar-plus" style="font-size: 30px; color: var(--accent);"></i>
+                </div>
+                <h5 style="color: var(--dark); margin-bottom: 10px;">No Interview Scheduled</h5>
+                <p style="color: var(--gray-medium); margin-bottom: 20px;">
+                    This candidate is in the interview stage but no interview has been scheduled yet.
+                </p>
+                <a href="{% url 'schedule_interview' application.id %}" class="btn-primary">
+                    <i class="fas fa-calendar-plus me-2"></i> Schedule Interview Now
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate elements on load
+    const cards = document.querySelectorAll('.profile-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${(index + 1) * 0.15}s`;
+    });
+    
+    // Animate info rows
+    const infoRows = document.querySelectorAll('.info-row');
+    infoRows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.animation = `fadeInLeft 0.5s ease forwards`;
+        row.style.animationDelay = `${(index + 1) * 0.1}s`;
+    });
+    
+    // Animate interview items
+    const interviewItems = document.querySelectorAll('.interview-item');
+    interviewItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.animation = `fadeInUp 0.5s ease forwards`;
+        item.style.animationDelay = `${(index + 1) * 0.1}s`;
+    });
+    
+    // Add hover effect to status badge
+    const statusBadge = document.querySelector('.status-badge');
+    if (statusBadge) {
+        statusBadge.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+        statusBadge.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
+    
+    // Form submit animation
+    const updateForm = document.querySelector('.status-banner form');
+    if (updateForm) {
+        updateForm.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Updating...';
+                submitBtn.disabled = true;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

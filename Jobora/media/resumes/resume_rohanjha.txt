@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ROHAN JHA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Rohan Jha
+Email: rohanjha@example.com
+Phone: +919326636211
+Location: Bangalore
+
+EDUCATION
+---------
+• bachelors in Computer Science
+• NIT Calicut
+• Graduation Year: 2024
+
+WORK EXPERIENCE
+--------------
+• 9 years of professional experience
+• Current Role: Data Analyst
+• Skills: React, Angular, Artificial Intelligence, Figma, Project Management, Critical Thinking, Problem Solving, Python
+
+TECHNICAL SKILLS
+----------------
+React, Angular, Artificial Intelligence, Figma, Project Management, Critical Thinking, Problem Solving, Python
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

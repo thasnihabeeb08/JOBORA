@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Riya Khanna
+Email: riyakhanna@example.com
+Location: Hyderabad
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking School Principal position. 
+Skilled in education skills, communication, teamwork.
+
+TECHNICAL SKILLS
+---------------
+• education skills
+• communication
+• teamwork
+• problem solving
+• analytical thinking
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

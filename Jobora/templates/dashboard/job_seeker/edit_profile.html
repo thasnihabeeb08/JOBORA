@@ -1,0 +1,1254 @@
+{% extends 'dashboard/job_seeker/base.html' %}
+{% load humanize %}
+
+{% block title %}Jobora - Edit Job Seeker Profile{% endblock %}
+
+{% block title_icon %}fa-user-edit{% endblock %}
+{% block page_title %}
+    {% if job_seeker %}Edit Your Profile{% else %}Complete Your Profile{% endif %}
+{% endblock %}
+
+{% block page_actions %}
+    <button type="submit" form="jobSeekerProfileForm" class="btn btn-primary">
+        <i class="fas fa-save me-2"></i> Save Changes
+    </button>
+    <a href="{% if job_seeker %}{% url 'job_seeker_dashboard' %}{% else %}{% url 'homepage' %}{% endif %}" 
+       class="btn btn-outline-primary">
+        <i class="fas fa-times me-2"></i> Cancel
+    </a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - EDIT PROFILE === */
+    :root {
+        --primary: #006994;
+        --primary-light: #2a8cbc;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #20c4b0;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #e6f3f5;
+        --light-teal: #d4f0f0;
+        --gray-light: #cce7e8;
+        --gray-medium: #5f7d8c;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.12);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.2);
+        --teal-glow: 0 0 20px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+    .delay-6 { animation-delay: 0.6s; }
+
+    /* Main Card Styles */
+    .profile-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        margin-bottom: 25px;
+        overflow: hidden;
+        opacity: 1 !important;
+        position: relative;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    /* Card Header */
+    .profile-card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 18px 25px;
+        border-bottom: 2px solid var(--gray-light);
+    }
+
+    .profile-card-header h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .profile-card-header h5 i {
+        color: var(--secondary);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    /* Alert Styles */
+    .alert-info-card {
+        background: linear-gradient(135deg, rgba(0, 105, 148, 0.1), rgba(0, 168, 150, 0.1));
+        border-left: 4px solid var(--secondary);
+        border-radius: 20px;
+        padding: 18px 22px;
+        margin-bottom: 25px;
+        opacity: 1 !important;
+    }
+
+    .progress {
+        background: var(--gray-light);
+        border-radius: 10px;
+        overflow: hidden;
+        height: 8px;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, var(--secondary), var(--accent));
+        transition: width 0.5s ease;
+    }
+
+    /* Form Labels */
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.95rem;
+        opacity: 1 !important;
+    }
+
+    .form-label .text-danger {
+        color: var(--accent) !important;
+    }
+
+    /* Form Controls */
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 16px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: white;
+        opacity: 1 !important;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        outline: none;
+    }
+
+    .form-control:hover, .form-select:hover {
+        border-color: var(--secondary-light);
+    }
+
+    /* Input Groups */
+    .input-group {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        background: var(--light);
+        border: 2px solid var(--gray-light);
+        border-right: none;
+        color: var(--primary);
+        font-size: 1rem;
+        padding: 12px 16px;
+    }
+
+    /* ===== FIXED: Custom Checkbox Styles for Job Type Preferences ===== */
+    .checkbox-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .checkbox-custom {
+        position: relative;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border: 2px solid var(--secondary);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .checkbox-wrapper:hover .checkbox-custom {
+        background-color: var(--light);
+        transform: scale(1.1);
+        border-color: var(--primary);
+    }
+
+    .checkbox-wrapper input[type="checkbox"]:checked ~ .checkbox-custom {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+
+    .checkbox-custom:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .checkbox-wrapper input[type="checkbox"]:checked ~ .checkbox-custom:after {
+        display: block;
+    }
+
+    .checkbox-wrapper .checkbox-custom:after {
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .checkbox-label {
+        color: var(--dark);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .checkbox-wrapper:hover .checkbox-label {
+        color: var(--primary);
+    }
+
+    /* Job Type Preferences Container */
+    .job-type-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .job-type-item {
+        background: var(--light);
+        border-radius: 12px;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .job-type-item:hover {
+        background: white;
+        border-color: var(--secondary);
+        transform: translateX(5px);
+        box-shadow: var(--card-shadow);
+    }
+
+    /* Profile Picture Upload */
+    .profile-pic-container {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid var(--gray-light);
+        transition: all 0.3s ease;
+        margin: 0 auto;
+    }
+
+    .profile-pic-container:hover {
+        border-color: var(--secondary);
+        transform: scale(1.05);
+    }
+
+    .profile-pic-placeholder {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--light);
+        color: var(--gray-medium);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 5px 15px rgba(0, 105, 148, 0.2);
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, 0.2);
+        text-decoration: none;
+    }
+
+    .btn-upload, .btn-remove {
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .btn-upload {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+    }
+
+    .btn-upload:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 105, 148, 0.3);
+    }
+
+    .btn-remove {
+        background: white;
+        color: var(--accent-dark);
+        border: 1px solid var(--accent-light);
+    }
+
+    .btn-remove:hover {
+        background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 179, 71, 0.3);
+    }
+
+    /* Current Resume Display */
+    .resume-current {
+        background: linear-gradient(135deg, rgba(0, 168, 150, 0.1), rgba(255, 179, 71, 0.1));
+        border-radius: 16px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .resume-current:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .resume-current a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .resume-current a:hover {
+        color: var(--secondary);
+    }
+
+    /* Sidebar Card */
+    .tips-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: sticky;
+        top: 20px;
+        opacity: 1 !important;
+    }
+
+    .tips-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+
+    .tips-card-header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 18px 20px;
+    }
+
+    .tips-card-header h5 {
+        color: white;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .tips-list {
+        padding: 20px;
+    }
+
+    .tip-item {
+        padding: 15px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        opacity: 1 !important;
+    }
+
+    .tip-item:hover {
+        background: var(--light);
+        transform: translateX(5px);
+    }
+
+    .tip-item h6 {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .tip-item h6 i {
+        color: var(--secondary);
+        margin-right: 8px;
+    }
+
+    .pro-tip {
+        background: linear-gradient(135deg, var(--accent-light), var(--accent));
+        border-radius: 16px;
+        padding: 18px;
+        margin: 20px;
+        color: var(--dark);
+    }
+
+    .pro-tip strong {
+        color: var(--primary-dark);
+    }
+
+    /* Text Muted */
+    .text-muted {
+        color: var(--gray-medium) !important;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+        opacity: 1 !important;
+    }
+
+    /* Invalid Feedback */
+    .invalid-feedback {
+        color: var(--accent);
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .profile-pic-container {
+            width: 120px;
+            height: 120px;
+        }
+
+        .tips-card {
+            position: static;
+            margin-top: 20px;
+        }
+
+        .job-type-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Form -->
+    <div class="col-lg-8">
+        <form method="POST" id="jobSeekerProfileForm" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            
+            <!-- Display messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-info-card" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}info-circle{% endif %} fa-lg me-3"></i>
+                            <div>{{ message }}</div>
+                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Profile Completion Alert -->
+            <div class="alert-info-card">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle fs-4 me-3" style="color: var(--secondary);"></i>
+                        <strong style="color: var(--primary);">Profile Completion:</strong>
+                        <span class="ms-2 fw-bold" style="color: var(--secondary);">{{ profile_completion|default:0 }}%</span>
+                    </div>
+                    <div class="flex-grow-1 mx-3" style="max-width: 300px;">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ profile_completion|default:0 }}%;" 
+                                 aria-valuenow="{{ profile_completion|default:0 }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    {% if profile_completion < 100 %}
+                        <small class="text-muted mt-2 mt-sm-0">
+                            <i class="fas fa-lightbulb me-1" style="color: var(--accent);"></i> Complete your profile to get better job matches
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Profile Picture & Resume Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-id-card me-2"></i> Profile Picture & Resume
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Profile Picture -->
+                        <div class="col-md-6 text-center mb-4 mb-md-0">
+                            <label class="form-label">Profile Picture</label>
+                            <div class="mb-3">
+                                <div class="profile-pic-container"
+                                     onclick="document.getElementById('id_profile_picture').click()">
+                                    {% if job_seeker and job_seeker.profile_picture %}
+                                        <img src="{{ job_seeker.profile_picture.url }}" 
+                                             alt="{{ job_seeker.user.get_full_name }}" 
+                                             class="w-100 h-100" style="object-fit: cover;">
+                                    {% else %}
+                                        <div class="profile-pic-placeholder">
+                                            <i class="fas fa-user fa-3x mb-2"></i>
+                                            <small>Click to upload</small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <input type="file" 
+                                   name="profile_picture" 
+                                   id="id_profile_picture" 
+                                   class="d-none"
+                                   accept="image/*"
+                                   onchange="previewProfilePicture(this)">
+                            
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="button" 
+                                        class="btn-upload"
+                                        onclick="document.getElementById('id_profile_picture').click()">
+                                    <i class="fas fa-upload me-1"></i> Upload Photo
+                                </button>
+                                
+                                {% if job_seeker and job_seeker.profile_picture %}
+                                <button type="button" 
+                                        class="btn-remove"
+                                        onclick="removeProfilePicture()">
+                                    <i class="fas fa-trash me-1"></i> Remove
+                                </button>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">300×300px, max 2MB</small>
+                        </div>
+                        
+                        <!-- Resume -->
+                        <div class="col-md-6">
+                            <label class="form-label">Resume/CV</label>
+                            <div class="mb-3">
+                                {% if job_seeker and job_seeker.resume %}
+                                    <div class="resume-current">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-file-pdf fa-2x me-3" style="color: var(--secondary);"></i>
+                                            <div>
+                                                <strong style="color: var(--primary);">Current Resume:</strong>
+                                                <a href="{{ job_seeker.resume.url }}" target="_blank" id="resumeLink" class="d-block mt-1">
+                                                    {# Clean filename #}
+                                                    {% with job_seeker.resume.name as filepath %}
+                                                        {{ filepath|cut:"resumes/" }}
+                                                    {% endwith %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <input type="file" 
+                                       name="resume"
+                                       id="id_resume"
+                                       class="form-control {% if form.resume.errors %}is-invalid{% endif %}"
+                                       accept=".pdf,.doc,.docx">
+                                <small class="text-muted">Upload new resume (PDF, DOC, DOCX) - Max 5MB</small>
+                                {% if form.resume.errors %}
+                                    <div class="invalid-feedback">{{ form.resume.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Information Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2"></i> Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                First Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="first_name"
+                                   value="{{ form.first_name.value|default:request.user.first_name }}"
+                                   class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                   placeholder="John"
+                                   required>
+                            {% if form.first_name.errors %}
+                                <div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Last Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="last_name"
+                                   value="{{ form.last_name.value|default:request.user.last_name }}"
+                                   class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                   placeholder="Doe"
+                                   required>
+                            {% if form.last_name.errors %}
+                                <div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Email Address <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" 
+                                   name="email"
+                                   class="form-control"
+                                   value="{{ request.user.email }}"
+                                   placeholder="your.email@example.com"
+                                   required
+                                   readonly
+                                   style="background: var(--light);">
+                            <small class="text-muted">Your registered email address</small>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Phone Number <span class="text-danger">*</span>
+                            </label>
+                            <input type="tel" 
+                                   name="phone"
+                                   value="{{ form.phone.value|default:job_seeker.phone|default:'' }}"
+                                   class="form-control {% if form.phone.errors %}is-invalid{% endif %}"
+                                   placeholder="9876543210"
+                                   pattern="[6-9][0-9]{9}"
+                                   title="Enter 10-digit Indian mobile number starting with 6,7,8,9"
+                                   required>
+                            <small class="text-muted">10-digit Indian mobile number</small>
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback">{{ form.phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Date of Birth <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="date_of_birth"
+                                   value="{{ form.date_of_birth.value|date:'Y-m-d'|default:job_seeker.date_of_birth|date:'Y-m-d'|default:'' }}"
+                                   class="form-control {% if form.date_of_birth.errors %}is-invalid{% endif %}"
+                                   max="{{ max_date }}"
+                                   required>
+                            <small class="text-muted">You must be at least 18 years old</small>
+                            {% if form.date_of_birth.errors %}
+                                <div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Current Location <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="location"
+                                   value="{{ form.location.value|default:job_seeker.location|default:'' }}"
+                                   class="form-control {% if form.location.errors %}is-invalid{% endif %}"
+                                   placeholder="City, State"
+                                   required>
+                            <small class="text-muted">Your current city and state</small>
+                            {% if form.location.errors %}
+                                <div class="invalid-feedback">{{ form.location.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Professional Information Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-briefcase me-2"></i> Professional Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                I am a <span class="text-danger">*</span>
+                            </label>
+                            <select name="user_type"
+                                    class="form-select {% if form.user_type.errors %}is-invalid{% endif %}"
+                                    required>
+                                <option value="">Select Category</option>
+                                {% for value, label in USER_TYPES %}
+                                    <option value="{{ value }}" 
+                                            {% if form.user_type.value|stringformat:"s" == value|stringformat:"s" or job_seeker.user_type|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.user_type.errors %}
+                                <div class="invalid-feedback">{{ form.user_type.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Current Role</label>
+                            <input type="text" 
+                                   name="current_role"
+                                   value="{{ form.current_role.value|default:job_seeker.current_role|default:'' }}"
+                                   class="form-control {% if form.current_role.errors %}is-invalid{% endif %}"
+                                   placeholder="e.g., Software Engineer">
+                            <small class="text-muted">Your current job title</small>
+                            {% if form.current_role.errors %}
+                                <div class="invalid-feedback">{{ form.current_role.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Current Company</label>
+                            <input type="text" 
+                                   name="current_company"
+                                   value="{{ form.current_company.value|default:job_seeker.current_company|default:'' }}"
+                                   class="form-control {% if form.current_company.errors %}is-invalid{% endif %}"
+                                   placeholder="e.g., Google, Microsoft">
+                            <small class="text-muted">Your current employer (if any)</small>
+                            {% if form.current_company.errors %}
+                                <div class="invalid-feedback">{{ form.current_company.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Years of Experience</label>
+                            <input type="number" 
+                                   name="years_experience"
+                                   value="{{ form.years_experience.value|default:job_seeker.years_experience|default:'0' }}"
+                                   class="form-control {% if form.years_experience.errors %}is-invalid{% endif %}"
+                                   min="0"
+                                   max="50"
+                                   step="0.5"
+                                   placeholder="0">
+                            <small class="text-muted">Total years of experience</small>
+                            {% if form.years_experience.errors %}
+                                <div class="invalid-feedback">{{ form.years_experience.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label">Professional Summary</label>
+                            <textarea name="summary"
+                                      id="id_summary"
+                                      class="form-control {% if form.summary.errors %}is-invalid{% endif %}"
+                                      rows="4"
+                                      placeholder="Write a brief summary of your professional background, key achievements, and career goals..."
+                                      maxlength="2000">{{ form.summary.value|default:job_seeker.summary|default:'' }}</textarea>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Tell employers about yourself</small>
+                                <small class="text-muted" id="summaryCharCount">0/2000</small>
+                            </div>
+                            {% if form.summary.errors %}
+                                <div class="invalid-feedback">{{ form.summary.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-graduation-cap me-2"></i> Education
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Highest Education <span class="text-danger">*</span>
+                            </label>
+                            <select name="highest_education"
+                                    class="form-select {% if form.highest_education.errors %}is-invalid{% endif %}"
+                                    required>
+                                <option value="">Select Education Level</option>
+                                {% for value, label in EDUCATION_LEVELS %}
+                                    <option value="{{ value }}" 
+                                            {% if form.highest_education.value|stringformat:"s" == value|stringformat:"s" or job_seeker.highest_education|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if form.highest_education.errors %}
+                                <div class="invalid-feedback">{{ form.highest_education.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Field of Study</label>
+                            <input type="text" 
+                                   name="field_of_study"
+                                   value="{{ form.field_of_study.value|default:job_seeker.field_of_study|default:'' }}"
+                                   class="form-control {% if form.field_of_study.errors %}is-invalid{% endif %}"
+                                   placeholder="e.g., Computer Science">
+                            <small class="text-muted">Your major or specialization</small>
+                            {% if form.field_of_study.errors %}
+                                <div class="invalid-feedback">{{ form.field_of_study.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Institution</label>
+                            <input type="text" 
+                                   name="institution"
+                                   value="{{ form.institution.value|default:job_seeker.institution|default:'' }}"
+                                   class="form-control {% if form.institution.errors %}is-invalid{% endif %}"
+                                   placeholder="University/College">
+                            <small class="text-muted">Your alma mater</small>
+                            {% if form.institution.errors %}
+                                <div class="invalid-feedback">{{ form.institution.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Graduation Year</label>
+                            <input type="number" 
+                                   name="graduation_year"
+                                   value="{{ form.graduation_year.value|default:job_seeker.graduation_year|default:'' }}"
+                                   class="form-control {% if form.graduation_year.errors %}is-invalid{% endif %}"
+                                   min="1950"
+                                   max="2030"
+                                   placeholder="2023">
+                            <small class="text-muted">Year of graduation</small>
+                            {% if form.graduation_year.errors %}
+                                <div class="invalid-feedback">{{ form.graduation_year.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills & Job Preferences Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-code me-2"></i> Skills & Job Preferences
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Skills <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="skills"
+                                  id="id_skills"
+                                  class="form-control {% if form.skills.errors %}is-invalid{% endif %}"
+                                  rows="3"
+                                  placeholder="Python, Django, JavaScript, React, Communication, Leadership"
+                                  required>{{ form.skills.value|default:job_seeker.skills|default:'' }}</textarea>
+                        <small class="text-muted">Separate skills with commas. Include both technical and soft skills.</small>
+                        {% if form.skills.errors %}
+                            <div class="invalid-feedback">{{ form.skills.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Job Type Preferences <span class="text-danger">*</span>
+                        </label>
+                        <div class="job-type-container">
+                            {% for value, label in JOB_TYPE_CHOICES %}
+                                <div class="job-type-item">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" 
+                                               name="preferred_job_types" 
+                                               value="{{ value }}"
+                                               {% if value in preferred_job_types_list %}checked{% endif %}>
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-label">{{ label }}</span>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">Select all job types you're interested in</small>
+                        {% if form.preferred_job_types.errors %}
+                            <div class="text-danger small mt-1">{{ form.preferred_job_types.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Preferred Locations</label>
+                        <textarea name="preferred_locations"
+                                  class="form-control {% if form.preferred_locations.errors %}is-invalid{% endif %}"
+                                  rows="2"
+                                  placeholder="Bangalore, Mumbai, Pune, Remote">{{ form.preferred_locations.value|default:job_seeker.preferred_locations|default:'' }}</textarea>
+                        <small class="text-muted">Cities or states where you prefer to work (optional)</small>
+                        {% if form.preferred_locations.errors %}
+                            <div class="invalid-feedback">{{ form.preferred_locations.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Expected Salary (Annual)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="number" 
+                                   name="expected_salary"
+                                   value="{{ form.expected_salary.value|default:job_seeker.salary_expectation|default:'' }}"
+                                   class="form-control {% if form.expected_salary.errors %}is-invalid{% endif %}"
+                                   min="0"
+                                   step="10000"
+                                   placeholder="600000">
+                        </div>
+                        <small class="text-muted">Annual expected salary in INR (optional)</small>
+                        {% if form.expected_salary.errors %}
+                            <div class="invalid-feedback">{{ form.expected_salary.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Professional Links Card -->
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i> Professional Links
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">LinkedIn Profile</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                                <input type="url" 
+                                       name="linkedin_profile"
+                                       value="{{ form.linkedin_profile.value|default:job_seeker.linkedin_profile|default:'' }}"
+                                       class="form-control {% if form.linkedin_profile.errors %}is-invalid{% endif %}"
+                                       placeholder="https://linkedin.com/in/username">
+                            </div>
+                            <small class="text-muted">Optional but recommended</small>
+                            {% if form.linkedin_profile.errors %}
+                                <div class="invalid-feedback">{{ form.linkedin_profile.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">GitHub Profile</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-github"></i></span>
+                                <input type="url" 
+                                       name="github_profile"
+                                       value="{{ form.github_profile.value|default:job_seeker.github_profile|default:'' }}"
+                                       class="form-control {% if form.github_profile.errors %}is-invalid{% endif %}"
+                                       placeholder="https://github.com/username">
+                            </div>
+                            <small class="text-muted">For technical roles</small>
+                            {% if form.github_profile.errors %}
+                                <div class="invalid-feedback">{{ form.github_profile.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Portfolio Website</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                <input type="url" 
+                                       name="portfolio_link"
+                                       value="{{ form.portfolio_link.value|default:job_seeker.portfolio_link|default:'' }}"
+                                       class="form-control {% if form.portfolio_link.errors %}is-invalid{% endif %}"
+                                       placeholder="https://yourportfolio.com">
+                            </div>
+                            <small class="text-muted">Personal website or portfolio</small>
+                            {% if form.portfolio_link.errors %}
+                                <div class="invalid-feedback">{{ form.portfolio_link.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="d-flex justify-content-between mt-4 mb-5">
+                <a href="{% if job_seeker %}{% url 'job_seeker_dashboard' %}{% else %}{% url 'homepage' %}{% endif %}" 
+                   class="btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+                </a>
+                <button type="submit" class="btn-primary px-5">
+                    <i class="fas fa-save me-2"></i> Save All Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Right Sidebar: Profile Tips -->
+    <div class="col-lg-4">
+        <div class="tips-card">
+            <div class="tips-card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-lightbulb me-2"></i> Profile Tips
+                </h5>
+            </div>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <h6><i class="fas fa-camera"></i> Profile Photo</h6>
+                    <small class="text-muted">Profiles with professional photos receive <strong style="color: var(--secondary);">3x more</strong> profile views.</small>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-file-pdf"></i> Resume</h6>
+                    <small class="text-muted">Always keep your resume updated. Employers spend an average of <strong style="color: var(--secondary);">7 seconds</strong> scanning a resume.</small>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-tags"></i> Skills</h6>
+                    <small class="text-muted">List <strong style="color: var(--secondary);">10-15 relevant skills</strong>. Both technical and soft skills are important.</small>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-file-alt"></i> Professional Summary</h6>
+                    <small class="text-muted">Write a compelling summary highlighting your experience and achievements.</small>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fab fa-linkedin"></i> LinkedIn</h6>
+                    <small class="text-muted">Add your LinkedIn profile to build credibility with recruiters.</small>
+                </div>
+                
+                <div class="pro-tip">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-rocket fa-2x me-3" style="color: var(--primary-dark);"></i>
+                        <div>
+                            <strong>Pro Tip:</strong>
+                            <small class="d-block mt-1">Complete all sections to get <strong>5x more</strong> job recommendations!</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Profile picture preview
+        window.previewProfilePicture = function(input) {
+            const previewDiv = document.querySelector('.profile-pic-container');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewDiv.innerHTML = `<img src="${e.target.result}" alt="Profile Picture" class="w-100 h-100" style="object-fit: cover;">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+        
+        // Remove profile picture
+        window.removeProfilePicture = function() {
+            const previewDiv = document.querySelector('.profile-pic-container');
+            previewDiv.innerHTML = `
+                <div class="profile-pic-placeholder">
+                    <i class="fas fa-user fa-3x mb-2"></i>
+                    <small>Click to upload</small>
+                </div>
+            `;
+            
+            const fileInput = document.getElementById('id_profile_picture');
+            if (fileInput) fileInput.value = '';
+            
+            if (!document.querySelector('input[name="profile_picture-clear"]')) {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'profile_picture-clear';
+                hiddenInput.value = '1';
+                document.getElementById('jobSeekerProfileForm').appendChild(hiddenInput);
+            }
+        };
+        
+        // Summary character counter
+        const summaryField = document.getElementById('id_summary');
+        const charCountElement = document.getElementById('summaryCharCount');
+        
+        if (summaryField && charCountElement) {
+            function updateCharCount() {
+                const length = summaryField.value.length;
+                charCountElement.textContent = length + '/2000';
+            }
+            summaryField.addEventListener('input', updateCharCount);
+            updateCharCount();
+        }
+        
+        // Phone validation
+        const phoneField = document.querySelector('input[name="phone"]');
+        if (phoneField) {
+            phoneField.addEventListener('input', function() {
+                const phone = this.value;
+                const phoneRegex = /^[6-9]\d{9}$/;
+                if (phone && !phoneRegex.test(phone) && phone.length > 0) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+        
+        // Form validation
+        const form = document.getElementById('jobSeekerProfileForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                // Check required fields
+                document.querySelectorAll('[required]').forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    }
+                });
+                
+                // Check job type preferences
+                if (document.querySelectorAll('input[name="preferred_job_types"]:checked').length === 0) {
+                    isValid = false;
+                    alert('Please select at least one job type preference');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
+                submitBtn.disabled = true;
+            });
+        }
+
+        // Clean resume filename
+        const resumeLink = document.getElementById('resumeLink');
+        if (resumeLink) {
+            const fullText = resumeLink.textContent;
+            const parts = fullText.split('/');
+            const filename = parts[parts.length - 1];
+            resumeLink.textContent = filename;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - VIKRAM BANSAL
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Vikram Bansal
+Email: vikrambansal@example.com
+Phone: +919693297039
+Location: Mysore
+
+EDUCATION
+---------
+• masters in Information Technology
+• DTU Delhi
+• Graduation Year: 2012
+
+WORK EXPERIENCE
+--------------
+• 10 years of professional experience
+• Current Role: Data Analyst
+• Skills: Java, GraphQL, Angular, Jenkins, MongoDB, Machine Learning, Critical Thinking, Docker
+
+TECHNICAL SKILLS
+----------------
+Java, GraphQL, Angular, Jenkins, MongoDB, Machine Learning, Critical Thinking, Docker
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

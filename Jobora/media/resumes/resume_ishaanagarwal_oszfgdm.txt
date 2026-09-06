@@ -1,0 +1,38 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Ishaan Agarwal
+Email: ishaanagarwal@example.com
+Location: Hyderabad
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Operations Head position. 
+Skilled in manufacturing skills, communication, teamwork.
+
+TECHNICAL SKILLS
+---------------
+• manufacturing skills
+• communication
+• teamwork
+• problem solving
+• analytical thinking
+
+WORK EXPERIENCE
+--------------
+• 1+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

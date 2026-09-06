@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Cloud Architect
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Neha Joshi
+Email: nehajoshi@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Cloud Architect position.
+Skilled in AWS, Azure, GCP, Docker, Kubernetes.
+
+TECHNICAL SKILLS
+---------------
+• AWS
+• Azure
+• GCP
+• Docker
+• Kubernetes
+• Terraform
+• Cloud Security
+• DevOps
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

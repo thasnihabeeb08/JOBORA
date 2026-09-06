@@ -1,0 +1,41 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - Data Scientist
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Aadhya Desai
+Email: aadhyadesai@example.com
+Location: Bangalore
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Data Scientist position.
+Skilled in Python, SQL, Machine Learning, Data Analysis, Pandas.
+
+TECHNICAL SKILLS
+---------------
+• Python
+• SQL
+• Machine Learning
+• Data Analysis
+• Pandas
+• NumPy
+• Scikit-learn
+• TensorFlow
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

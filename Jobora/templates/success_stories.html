@@ -1,0 +1,1560 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - Jobora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%);
+            color: #1e2f4a;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            animation: bgShift 15s ease-in-out infinite alternate;
+        }
+
+        /* Animated floating particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;5;3" dur="6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.3;0.1" dur="6s" repeatCount="indefinite"/></circle><circle cx="60" cy="40" r="4" fill="rgba(0,105,148,0.1)"><animate attributeName="r" values="4;7;4" dur="7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.25;0.1" dur="7s" repeatCount="indefinite"/></circle><circle cx="30" cy="70" r="2" fill="rgba(255,179,71,0.1)"><animate attributeName="r" values="2;4;2" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.1;0.2;0.1" dur="5s" repeatCount="indefinite"/></circle><circle cx="70" cy="15" r="3" fill="rgba(0,168,150,0.1)"><animate attributeName="r" values="3;6;3" dur="8s" repeatCount="indefinite"/></circle></svg>');
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticles 20s ease-in-out infinite;
+        }
+
+        /* Additional animated gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(0,168,150,0.1) 0%, transparent 30%),
+                        radial-gradient(circle at 70% 30%, rgba(0,105,148,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 30% 70%, rgba(255,179,71,0.1) 0%, transparent 40%);
+            animation: rotateOverlay 30s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ocean Breeze Color Palette */
+        :root {
+            --primary: #006994;
+            --primary-light: #4a9fc5;
+            --primary-dark: #004c70;
+            --secondary: #00a896;
+            --secondary-light: #4ecdc4;
+            --secondary-dark: #028476;
+            --accent: #ffb347;
+            --accent-light: #ffcc7a;
+            --accent-dark: #e6952f;
+            --dark: #1e2f4a;
+            --light: #e6f5f0;
+            --gray-light: #c2d9e8;
+            --gray-medium: #6f8f9f;
+            --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.15);
+            --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.25);
+        }
+
+        /* ==================== */
+        /* ENHANCED ANIMATIONS  */
+        /* ==================== */
+
+        @keyframes bgShift {
+            0% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+            25% { background: linear-gradient(135deg, #c2e9f0 0%, #b5e5d5 50%, #a8e0d0 100%); }
+            50% { background: linear-gradient(135deg, #b5e5d5 0%, #a8e0d0 50%, #9fd6cf 100%); }
+            75% { background: linear-gradient(135deg, #a8e0d0 0%, #9fd6cf 50%, #b5e5d5 100%); }
+            100% { background: linear-gradient(135deg, #d4f0e8 0%, #c2e9f0 50%, #b5e5d5 100%); }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 1%) rotate(120deg); }
+            66% { transform: translate(-1%, 2%) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes rotateOverlay {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+
+        @keyframes float3d {
+            0% { transform: translateY(0px) rotate(0deg); }
+            40% { transform: translateY(-15px) rotate(2deg); }
+            70% { transform: translateY(5px) rotate(-1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 30px 10px rgba(0, 168, 150, 0.2); filter: brightness(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 168, 150, 0.4); filter: brightness(1); }
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes starPulse {
+            0% { transform: scale(1); color: var(--primary); }
+            50% { transform: scale(1.2); color: var(--accent); }
+            100% { transform: scale(1); color: var(--primary); }
+        }
+
+        /* Animation Classes */
+        .animate-float3d {
+            animation: float3d 6s ease-in-out infinite;
+        }
+
+        .animate-pulseGlow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInRight {
+            animation: slideInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-slideInUp {
+            animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-zoomIn {
+            animation: zoomIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .animate-gradient {
+            background: linear-gradient(-45deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        .animate-bounce {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .animate-wiggle:hover {
+            animation: wiggle 0.5s ease-in-out;
+        }
+
+        .animate-starPulse {
+            animation: starPulse 2s ease-in-out infinite;
+        }
+
+        /* Delay Classes */
+        .delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-6 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+
+        /* Header - Enhanced */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-bottom: 2px solid var(--gray-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideInUp 0.8s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            transition: all 0.3s;
+        }
+
+        .logo h1:hover {
+            color: var(--primary-dark);
+            text-shadow: 0 0 10px rgba(0, 105, 148, 0.3);
+        }
+
+        .logo span {
+            color: var(--secondary);
+            display: inline-block;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transform: translateX(-50%);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 105, 148, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 105, 148, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 14px 32px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-white:hover {
+            background: var(--light);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 168, 150, 0.3);
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown > a {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            min-width: 240px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 8px 0;
+            border: 1px solid var(--gray-light);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .auth-buttons .dropdown .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .dropdown-link:hover {
+            background: var(--light);
+            color: var(--primary);
+            padding-left: 20px;
+        }
+
+        .dropdown-link i {
+            width: 20px;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .dropdown-link:hover i {
+            color: var(--secondary);
+        }
+
+        .dropdown-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 105, 148, 0.2);
+        }
+
+        .dropdown-btn.outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .dropdown-btn.outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Success Hero - Enhanced */
+        .success-hero {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+            background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: rotate(30deg);
+            animation: float3d 12s ease-in-out infinite;
+        }
+
+        .success-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(-30deg);
+            animation: float3d 15s ease-in-out infinite reverse;
+        }
+
+        .success-hero h2 {
+            font-size: 52px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: slideInLeft 0.8s ease;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .success-hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+            animation: slideInRight 0.8s ease 0.2s both;
+        }
+
+        /* Stories Section */
+        .stories-section,
+        .submit-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 40px;
+            color: var(--dark);
+            margin-bottom: 16px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .section-title:hover h2::after {
+            width: 120px;
+        }
+
+        .section-title p {
+            color: var(--gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Stories Grid */
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: zoomIn 0.6s ease forwards;
+        }
+
+        .story-card:nth-child(1) { animation-delay: 0.1s; }
+        .story-card:nth-child(2) { animation-delay: 0.2s; }
+        .story-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .story-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 168, 150, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .story-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .story-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            box-shadow: 0 10px 20px rgba(0, 105, 148, 0.3);
+            transition: all 0.3s;
+        }
+
+        .story-card:hover .story-avatar {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+        }
+
+        .story-info h3 {
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .story-info p {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .story-content {
+            color: var(--dark);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 15px;
+            position: relative;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary);
+            font-style: italic;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .story-date {
+            color: var(--gray-medium);
+            font-size: 14px;
+        }
+
+        .story-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-published {
+            background: rgba(0, 168, 150, 0.1);
+            color: var(--secondary-dark);
+        }
+
+        .status-pending {
+            background: rgba(255, 179, 71, 0.1);
+            color: var(--accent-dark);
+        }
+
+        /* Submit Form */
+        .submit-section {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .submit-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            opacity: 0;
+            animation: slideInUp 0.8s ease forwards;
+        }
+
+        .submit-form:hover {
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 105, 148, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea.form-control {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: var(--gray-medium);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .form-control.error {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            border: 1px solid;
+            animation: slideInUp 0.6s ease;
+        }
+
+        .alert-success {
+            background: rgba(0, 168, 150, 0.1);
+            color: var(--secondary-dark);
+            border-color: rgba(0, 168, 150, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: #c0392b;
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        /* Checkbox Styling */
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            accent-color: var(--secondary);
+        }
+
+        .form-group label[for="consent"] {
+            display: flex;
+            align-items: center;
+            text-transform: none;
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--dark);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray-medium);
+            background: rgba(255,255,255,0.8);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        /* Footer - Enhanced */
+        footer {
+            background: linear-gradient(135deg, var(--dark), #0a1929);
+            color: white;
+            padding: 80px 0 0;
+            border-top: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 168, 150, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float3d 20s ease-in-out infinite;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 80px;
+            padding-bottom: 60px;
+            align-items: start;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-brand-section {
+            transition: transform 0.3s;
+        }
+
+        .footer-brand-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .footer-brand-section .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .footer-brand-section .logo span {
+            color: var(--secondary);
+        }
+
+        .brand-description {
+            color: var(--gray-light);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 400px;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: var(--secondary);
+            transform: translateY(-5px) scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 25px rgba(0, 168, 150, 0.4);
+            border-color: transparent;
+        }
+
+        .footer-links-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+        }
+
+        .link-column {
+            transition: transform 0.3s;
+        }
+
+        .link-column:hover {
+            transform: translateY(-5px);
+        }
+
+        .link-column h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .link-column h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .link-column:hover h4::after {
+            width: 60px;
+        }
+
+        .footer-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-menu li {
+            margin-bottom: 14px;
+        }
+
+        .footer-menu a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            padding-left: 0;
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+        }
+
+        .footer-menu a:hover {
+            color: var(--secondary);
+            padding-left: 12px;
+            opacity: 1;
+        }
+
+        .footer-menu a i {
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .footer-menu a:hover i {
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-legal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .copyright p {
+            color: var(--gray-light);
+            font-size: 0.9rem;
+            margin: 0;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legal-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-weight: 400;
+            position: relative;
+            opacity: 0.7;
+        }
+
+        .legal-links a:hover {
+            color: var(--secondary);
+            opacity: 1;
+        }
+
+        .legal-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .legal-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--secondary);
+            border-right-color: var(--accent);
+            border-bottom-color: var(--primary-light);
+            border-left-color: var(--secondary-light);
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 30px rgba(0, 168, 150, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .success-hero h2 { font-size: 44px; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { 
+                flex-direction: column; 
+                gap: 20px; 
+                padding: 20px 0;
+            }
+            
+            .nav-links { 
+                flex-wrap: wrap; 
+                justify-content: center; 
+            }
+            
+            .auth-buttons { 
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .success-hero h2 { font-size: 36px; }
+            .success-hero p { font-size: 16px; }
+            
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .submit-form {
+                padding: 30px 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            
+            .footer-links-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-legal {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .legal-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .success-hero h2 { font-size: 32px; }
+            .section-title h2 { font-size: 28px; }
+            .footer-links-section { grid-template-columns: 1fr; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 7px;
+            border: 3px solid var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--secondary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Enhanced Header -->
+   
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>Job<span>ora</span></h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{% url 'homepage' %}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{% url 'search_jobs' %}"><i class="fas fa-search"></i> Find Jobs</a></li>
+                    
+                    <!-- Employers Dropdown -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-building"></i> 
+                            Employers 
+                            <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'register_company' %}" class="dropdown-link">
+                                <i class="fas fa-building"></i> Register Company
+                            </a>
+                            <a href="{% url 'login' %}" class="dropdown-link">
+                                <i class="fas fa-sign-in-alt"></i> Company Login
+                            </a>
+                            <a href="{% url 'post_job' %}" class="dropdown-link">
+                                <i class="fas fa-briefcase"></i> Post a Job
+                            </a>
+                            <a href="{% url 'view_applications' %}" class="dropdown-link">
+                                <i class="fas fa-users"></i> Find Talent
+                            </a>
+                        </div>
+                    </li>
+                    
+                    <li><a href="{% url 'about' %}" class="active"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <!-- Sign Up Dropdown -->
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-btn">
+                            <i class="fas fa-user-plus"></i> 
+                            Sign Up 
+                            <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'register_job_seeker' %}" class="dropdown-link">
+                                <i class="fas fa-user-graduate"></i> As Job Seeker
+                            </a>
+                            <a href="{% url 'register_company' %}" class="dropdown-link">
+                                <i class="fas fa-building"></i> As Company
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Login Dropdown -->
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-btn outline">
+                            <i class="fas fa-sign-in-alt"></i> 
+                            Log In 
+                            <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'login_job_seeker' %}" class="dropdown-link">
+                                <i class="fas fa-user-graduate"></i> Job Seeker Login
+                            </a>
+                            <a href="{% url 'login' %}" class="dropdown-link">
+                                <i class="fas fa-building"></i> Company Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="success-hero">
+        <div class="container">
+            <h2 class="animate-slideInLeft">Success Stories</h2>
+            <p class="animate-slideInRight delay-1">Real stories from job seekers who found their dream careers and employers who discovered exceptional talent through Jobora.</p>
+            <button class="btn-white animate-zoomIn delay-2" onclick="scrollToForm()">Share Your Story</button>
+        </div>
+    </section>
+
+    <!-- Success Stories Grid -->
+    <section class="stories-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Inspiring Career Journeys</h2>
+                <p>Discover how Jobora has transformed careers and helped companies build amazing teams.</p>
+            </div>
+
+            <div class="stories-grid" id="stories-container">
+                {% for story in stories %}
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">{{ story.get_initials }}</div>
+                        <div class="story-info">
+                            <h3>{{ story.full_name }}</h3>
+                            <p>{{ story.current_role }}</p>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        "{{ story.story_content }}"
+                    </div>
+                    <div class="story-meta">
+                        <span class="story-date"><i class="far fa-calendar"></i> {{ story.created_at|date:"F j, Y" }}</span>
+                        <span class="story-status status-{{ story.status }}">{{ story.get_status_display }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-star animate-starPulse"></i>
+                    <h3>No Success Stories Yet</h3>
+                    <p>Be the first to share your success story!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Submit Story Form -->
+    <section class="submit-section" id="submit-form">
+        <div class="container">
+            <div class="section-title">
+                <h2>Share Your Success Story</h2>
+                <p>Inspire others by sharing how Jobora helped you achieve your career goals.</p>
+            </div>
+
+            <form class="submit-form" method="POST" action="{% url 'submit_success_story' %}">
+                {% csrf_token %}
+                
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="full_name"><i class="fas fa-user"></i> Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" class="form-control" 
+                           value="{{ form.full_name.value|default:'' }}" placeholder="Enter your full name" required>
+                    <div class="form-hint">Only letters and spaces allowed (3-30 characters)</div>
+                    <div class="error-message" id="nameError">Name must contain only letters and spaces (3-30 characters)</div>
+                    {% if form.full_name.errors %}
+                    <div class="error-message">{{ form.full_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="current_role"><i class="fas fa-briefcase"></i> Current Role *</label>
+                    <input type="text" id="current_role" name="current_role" class="form-control"
+                           value="{{ form.current_role.value|default:'' }}" placeholder="e.g., Software Developer at Company" required>
+                    <div class="form-hint">Only letters and spaces allowed (3-50 characters)</div>
+                    <div class="error-message" id="roleError">Role must contain only letters and spaces (3-50 characters)</div>
+                    {% if form.current_role.errors %}
+                    <div class="error-message">{{ form.current_role.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-control"
+                           value="{{ form.email.value|default:'' }}" placeholder="Enter your email" required>
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="story_content"><i class="fas fa-star"></i> Your Success Story *</label>
+                    <textarea id="story_content" name="story_content" class="form-control" 
+                              placeholder="Tell us about your journey... How did Jobora help you? What made your experience special?" 
+                              required>{{ form.story_content.value|default:'' }}</textarea>
+                    <div class="form-hint">Minimum 100 characters, maximum 2000 characters. Share specific details about your experience.</div>
+                    <div class="error-message" id="storyError">Story must be between 100 and 2000 characters</div>
+                    {% if form.story_content.errors %}
+                    <div class="error-message">{{ form.story_content.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="consent">
+                        <input type="checkbox" id="consent" name="consent" required 
+                               {% if form.consent.value %}checked{% endif %}>
+                        I agree to have my success story published on Jobora (name and story will be visible to all users)
+                    </label>
+                    <div class="error-message" id="consentError">You must agree to share your story</div>
+                    {% if form.consent.errors %}
+                    <div class="error-message">{{ form.consent.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 16px;">
+                    <i class="fas fa-paper-plane"></i> Submit Your Story
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand-section">
+                    <div class="logo">
+                        <h1>Job<span>ora</span></h1>
+                    </div>
+                    <p class="brand-description">Your AI-powered career platform connecting exceptional talent with world-class opportunities.</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/jobora" class="social-link" target="_blank">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://twitter.com/jobora" class="social-link" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://facebook.com/jobora" class="social-link" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links-section">
+                    <div class="link-column">
+                        <h4>Job Seekers</h4>
+                        <ul class="footer-menu">
+                            <li><a href="{% url 'register_job_seeker' %}"><i class="fas fa-chevron-right"></i> Create Free Account</a></li>
+                            <li><a href="{% url 'login_job_seeker' %}"><i class="fas fa-chevron-right"></i> Job Seeker Login</a></li>
+                            <li><a href="{% url 'search_jobs' %}"><i class="fas fa-chevron-right"></i> Browse Jobs</a></li>
+                            <li><a href="{% url 'safe_job_search' %}"><i class="fas fa-chevron-right"></i> Safe Job Search</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="link-column">
+                        <h4>Employers</h4>
+                        <ul class="footer-menu">
+                            <li><a href="{% url 'register_company' %}"><i class="fas fa-chevron-right"></i> Register Company</a></li>
+                            <li><a href="{% url 'login' %}"><i class="fas fa-chevron-right"></i> Company Login</a></li>
+                            <li><a href="{% url 'post_job' %}"><i class="fas fa-chevron-right"></i> Post a Job</a></li>
+                            <li><a href="{% url 'view_applications' %}"><i class="fas fa-chevron-right"></i> Find Talent</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="link-column">
+                        <h4>Company</h4>
+                        <ul class="footer-menu">
+                            <li><a href="{% url 'about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                            <li><a href="{% url 'contact' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                            <li><a href="{% url 'success_stories' %}"><i class="fas fa-chevron-right"></i> Success Stories</a></li>
+                            <li><a href="{% url 'blog' %}"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <div class="copyright">
+                        <p>&copy; 2025 Jobora. All rights reserved. Made with <i class="fas fa-heart" style="color: var(--secondary);"></i></p>
+                    </div>
+                    <div class="legal-links">
+                        <a href="{% url 'terms' %}">Terms of Service</a>
+                        <a href="{% url 'privacy' %}">Privacy Policy</a>
+                        <a href="{% url 'security' %}">Security</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToForm() {
+            document.getElementById('submit-form').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Prevent navigation on dropdown buttons
+        document.querySelectorAll('.dropdown > a, .dropdown-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        });
+
+        // Hide loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 500);
+            
+            console.log('Success Stories page loaded successfully!');
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.style.opacity = '0';
+                    menu.style.visibility = 'hidden';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

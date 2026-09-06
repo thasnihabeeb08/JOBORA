@@ -1,0 +1,39 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Reyansh Rajput
+Email: reyanshrajput@example.com
+Location: Kolkata
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking UI/UX Designer position. 
+Skilled in figma, adobe xd, ui design.
+
+TECHNICAL SKILLS
+---------------
+• figma
+• adobe xd
+• ui design
+• ux research
+• html
+• css
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - SAI SHINDE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Sai Shinde
+Email: saishinde@example.com
+Phone: +916276399631
+Location: Mumbai
+
+EDUCATION
+---------
+• masters in Computer Science
+• BITS Hyderabad
+• Graduation Year: 2015
+
+WORK EXPERIENCE
+--------------
+• 4 years of professional experience
+• Current Role: Software Developer
+• Skills: TypeScript, Critical Thinking, Google Suite, Machine Learning, Flask, Illustrator, Node.js, Microsoft Office
+
+TECHNICAL SKILLS
+----------------
+TypeScript, Critical Thinking, Google Suite, Machine Learning, Flask, Illustrator, Node.js, Microsoft Office
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

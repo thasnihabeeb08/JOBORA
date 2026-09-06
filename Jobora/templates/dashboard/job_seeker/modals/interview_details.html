@@ -1,0 +1,109 @@
+<!-- Interview Details Modal -->
+<div class="modal fade" id="interviewDetailsModal{{ interview.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Interview Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6>Job Position</h6>
+                            <p class="mb-0">
+                                <a href="{% url 'view_job_detail' interview.application.job.id %}" 
+                                   class="text-decoration-none">
+                                    {{ interview.application.job.title }}
+                                </a>
+                            </p>
+                            <small class="text-muted">{{ interview.application.job.company.name }}</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Date & Time</h6>
+                            <p class="mb-0">
+                                <i class="fas fa-calendar me-2"></i>
+                                {{ interview.scheduled_date|date:"F d, Y" }}
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-clock me-2"></i>
+                                {{ interview.scheduled_date|time:"h:i A" }}
+                            </p>
+                            <small class="text-muted">
+                                <i class="fas fa-hourglass-half me-1"></i>
+                                {{ interview.scheduled_date|timeuntil }} from now
+                            </small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Interview Type</h6>
+                            <span class="badge bg-info">{{ interview.interview_type|title }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6>Platform/Location</h6>
+                            <p class="mb-0">{{ interview.platform }}</p>
+                            {% if interview.platform_link %}
+                            <button onclick="window.open('{{ interview.platform_link }}', '_blank')" 
+                                    class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fas fa-external-link-alt me-1"></i> Join Meeting
+                            </button>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Interviewer</h6>
+                            <p class="mb-0">{{ interview.interviewer }}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Status</h6>
+                            <span class="badge {% if interview.status == 'scheduled' %}bg-success{% elif interview.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ interview.status|title }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if interview.additional_notes %}
+                <div class="mb-3">
+                    <h6>Additional Notes</h6>
+                    <div class="bg-light p-3 rounded">
+                        {{ interview.additional_notes|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if interview.feedback %}
+                <div class="mb-3">
+                    <h6>Feedback</h6>
+                    <div class="bg-light p-3 rounded">
+                        {{ interview.feedback|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if interview.status == 'scheduled' %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Reminder:</strong> Join the meeting 5-10 minutes early. 
+                    Have your resume and notes ready.
+                </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                {% if interview.status == 'scheduled' %}
+                <button class="btn btn-danger" data-bs-toggle="modal" 
+                        data-bs-target="#cancelInterviewModal{{ interview.id }}" 
+                        data-bs-dismiss="modal">
+                    <i class="fas fa-times-circle me-1"></i> Request Cancellation
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

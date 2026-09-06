@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - ANVI MENON
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Anvi Menon
+Email: anvimenon@example.com
+Phone: +917905768443
+Location: Pune
+
+EDUCATION
+---------
+• bachelors in Information Technology
+• Manipal University
+• Graduation Year: 2021
+
+WORK EXPERIENCE
+--------------
+• 3 years of professional experience
+• Current Role: Product Manager
+• Skills: PHP, SQL, Data Analysis, UI/UX Design, Photoshop, TypeScript, Figma, Linux
+
+TECHNICAL SKILLS
+----------------
+PHP, SQL, Data Analysis, UI/UX Design, Photoshop, TypeScript, Figma, Linux
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

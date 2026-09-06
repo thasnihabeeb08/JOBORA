@@ -1,0 +1,523 @@
+{% extends 'admin_panel/admin_base.html' %}
+
+{% block title %}My Profile - Admin{% endblock %}
+
+{% block page_title %}My Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === OCEAN TEAL THEME - MY PROFILE === */
+    :root {
+        --primary: #006994;
+        --primary-light: #4a9fc5;
+        --primary-dark: #004c70;
+        --secondary: #00a896;
+        --secondary-light: #4ecdc4;
+        --secondary-dark: #028476;
+        --accent: #ffb347;
+        --accent-light: #ffcc7a;
+        --accent-dark: #e6952f;
+        --dark: #1e2f4a;
+        --light: #f0f7fa;
+        --gray-light: #e2eef5;
+        --gray-medium: #7f8c8d;
+        --card-shadow: 0 20px 40px rgba(0, 105, 148, 0.08);
+        --hover-shadow: 0 30px 60px rgba(0, 168, 150, 0.15);
+    }
+
+    /* ==================== */
+    /* ANIMATIONS */
+    /* ==================== */
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+        50% { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0, 168, 150, 0.4); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 168, 150, 0.2); }
+    }
+
+    /* Animation Classes */
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInLeft {
+        animation: fadeInLeft 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-fadeInRight {
+        animation: fadeInRight 0.8s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Delay Classes */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+
+    /* ==================== */
+    /* CARD STYLES */
+    /* ==================== */
+    .card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid var(--gray-light);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--secondary);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--light), white);
+        padding: 20px 25px;
+        border-bottom: 1px solid var(--gray-light);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header {
+        background: linear-gradient(135deg, white, var(--light));
+    }
+    
+    .card-header h5 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-header h5 {
+        color: var(--secondary);
+    }
+    
+    .card-body {
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ==================== */
+    /* PROFILE AVATAR */
+    /* ==================== */
+    .profile-avatar {
+        width: 130px;
+        height: 130px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 52px;
+        font-weight: 700;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 105, 148, 0.2);
+    }
+    
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.3);
+    }
+    
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-name:hover {
+        color: var(--primary);
+    }
+    
+    .profile-email {
+        color: var(--gray-medium);
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+    
+    .role-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .role-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 168, 150, 0.3);
+    }
+
+    /* ==================== */
+    /* DIVIDER */
+    /* ==================== */
+    hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gray-light), transparent);
+        margin: 20px 0;
+    }
+
+    /* ==================== */
+    /* PROFILE INFO LIST */
+    /* ==================== */
+    .profile-info-list {
+        text-align: left;
+    }
+    
+    .info-item {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .info-item:hover {
+        background: linear-gradient(135deg, var(--light), white);
+        transform: translateX(5px);
+    }
+    
+    .info-item strong {
+        color: var(--primary);
+        font-weight: 600;
+    }
+    
+    .info-item i {
+        width: 24px;
+        color: var(--secondary);
+    }
+    
+    .info-item code {
+        background: var(--gray-light);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        color: var(--primary);
+    }
+
+    /* ==================== */
+    /* FORM STYLES */
+    /* ==================== */
+    .form-label {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 0.8rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-label i {
+        color: var(--secondary);
+        margin-right: 5px;
+    }
+    
+    .form-control {
+        padding: 12px 16px;
+        border: 2px solid var(--gray-light);
+        border-radius: 16px;
+        font-size: 0.9rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        background: white;
+        color: var(--dark);
+    }
+    
+    .form-control:focus {
+        border-color: var(--secondary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .form-control:disabled,
+    .form-control[readonly] {
+        background: linear-gradient(135deg, var(--light), white);
+        cursor: not-allowed;
+        color: var(--gray-medium);
+    }
+    
+    .text-muted {
+        color: var(--gray-medium) !important;
+        font-size: 0.75rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* ==================== */
+    /* BUTTONS */
+    /* ==================== */
+    .btn {
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 105, 148, 0.2);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.3);
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+        color: white;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 168, 150, 0.2);
+    }
+
+    /* ==================== */
+    /* RESPONSIVE */
+    /* ==================== */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+        }
+        
+        .card-header h5 {
+            font-size: 1rem;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+        }
+        
+        .profile-name {
+            font-size: 1.2rem;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .form-control {
+            padding: 10px 14px;
+            font-size: 0.85rem;
+        }
+        
+        .d-flex.gap-2 {
+            flex-direction: column;
+        }
+        
+        .d-flex.gap-2 .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="profile-avatar">
+                    {{ user.first_name|first|default:user.username|first|upper }}
+                </div>
+                <h4 class="profile-name">{{ user.get_full_name|default:user.username }}</h4>
+                <p class="profile-email">{{ user.email }}</p>
+                <span class="role-badge">
+                    <i class="fas fa-shield-alt me-1"></i> Administrator
+                </span>
+                
+                <hr>
+                
+                <div class="profile-info-list">
+                    <div class="info-item">
+                        <strong><i class="fas fa-calendar-alt me-2"></i> Joined:</strong><br>
+                        {{ user.date_joined|date:"F d, Y" }}
+                    </div>
+                    <div class="info-item">
+                        <strong><i class="fas fa-clock me-2"></i> Last Login:</strong><br>
+                        {{ user.last_login|date:"F d, Y H:i"|default:"Never" }}
+                    </div>
+                    <div class="info-item">
+                        <strong><i class="fas fa-network-wired me-2"></i> IP Address:</strong><br>
+                        <code>{{ request.META.REMOTE_ADDR }}</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-edit me-2"></i>
+                    Edit Profile Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-user me-1"></i> First Name
+                            </label>
+                            <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" placeholder="Enter first name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-user me-1"></i> Last Name
+                            </label>
+                            <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" placeholder="Enter last name">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-user-tag me-1"></i> Username
+                        </label>
+                        <input type="text" class="form-control" value="{{ user.username }}" readonly disabled>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i> Username cannot be changed
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-envelope me-1"></i> Email Address
+                        </label>
+                        <input type="email" name="email" class="form-control" value="{{ user.email }}" required placeholder="Enter email address">
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Update Profile
+                        </button>
+                        <a href="{% url 'admin_change_password' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-key me-2"></i> Change Password
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('My Profile JS loaded');
+        
+        // Add hover effects for cards
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+        
+        // Animate profile avatar on load
+        const avatar = document.querySelector('.profile-avatar');
+        if (avatar) {
+            avatar.style.animation = 'pulse 1s ease-in-out';
+            setTimeout(() => {
+                avatar.style.animation = '';
+            }, 1000);
+        }
+        
+        // Add focus effect to form inputs
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+        
+        // Animate info items on load
+        const infoItems = document.querySelectorAll('.info-item');
+        infoItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.animation = `fadeInRight 0.5s ease forwards ${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}

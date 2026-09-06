@@ -1,0 +1,37 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Sai Shinde
+Email: saishinde@example.com
+Location: Remote
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking Senior Software Engineer position. Strong background in hospitality skills, Communication, Teamwork.
+
+TECHNICAL SKILLS
+---------------
+• hospitality skills
+• Communication
+• Teamwork
+• Problem Solving
+• Analytical Thinking
+
+WORK EXPERIENCE
+--------------
+• 4+ years of experience
+• Developed and maintained software applications
+• Collaborated with teams to deliver projects
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree
+• University
+• 2020
+
+====================================================================

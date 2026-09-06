@@ -1,0 +1,40 @@
+
+====================================================================
+                    PROFESSIONAL RESUME - UI/UX Design Intern
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Kabir Yadav
+Email: kabiryadav@example.com
+Location: Hybrid
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced professional seeking UI/UX Design Intern position.
+Skilled in Figma, Adobe XD, User Research, Wireframing, Prototyping.
+
+TECHNICAL SKILLS
+---------------
+• Figma
+• Adobe XD
+• User Research
+• Wireframing
+• Prototyping
+• Sketch
+• Usability Testing
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience
+• Developed and maintained software applications
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+• 2020
+
+====================================================================

@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - MEERA AGARWAL
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Meera Agarwal
+Email: meeraagarwal@example.com
+Phone: +917723164728
+Location: Nagpur
+
+EDUCATION
+---------
+• masters in Computer Science
+• IIIT Delhi
+• Graduation Year: 2013
+
+WORK EXPERIENCE
+--------------
+• 9 years of professional experience
+• Current Role: Marketing Manager
+• Skills: Ruby on Rails, Angular, Google Suite, Machine Learning, Critical Thinking, Team Leadership, Linux, Ansible
+
+TECHNICAL SKILLS
+----------------
+Ruby on Rails, Angular, Google Suite, Machine Learning, Critical Thinking, Team Leadership, Linux, Ansible
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

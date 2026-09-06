@@ -1,0 +1,48 @@
+
+====================================================================
+                    DEVOPS ENGINEER RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Rohit Sabu
+Email: rohitsabu20@gmail.com
+Phone: 8078804137
+Location: Bangalore
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced DevOps Engineer with 3+ years of experience in cloud infrastructure, 
+CI/CD pipelines, and containerization. Proficient in Docker, Kubernetes, AWS, 
+and automation tools.
+
+TECHNICAL SKILLS
+---------------
+• Docker & Containerization
+• Kubernetes Orchestration
+• AWS (EC2, S3, Lambda)
+• CI/CD (Jenkins, GitLab CI)
+• Linux Administration
+• Python Scripting
+• Terraform / Infrastructure as Code
+• Git & Version Control
+
+WORK EXPERIENCE
+--------------
+• 3+ years of DevOps experience
+• Designed and implemented CI/CD pipelines
+• Managed containerized applications with Docker & Kubernetes
+• Automated infrastructure deployment using Terraform
+• Monitored and maintained AWS cloud infrastructure
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University
+
+CERTIFICATIONS
+-------------
+• AWS Certified DevOps Engineer
+• Certified Kubernetes Administrator (CKA)
+
+====================================================================

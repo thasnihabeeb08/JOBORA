@@ -1,0 +1,42 @@
+
+====================================================================
+                         PROFESSIONAL RESUME
+====================================================================
+
+PERSONAL INFORMATION
+--------------------
+Name: Riya Khanna
+Email: riyakhanna@example.com
+Location: Mumbai
+
+PROFESSIONAL SUMMARY
+-------------------
+Experienced IT professional with strong communication, teamwork, and problem-solving abilities. 
+Passionate about data science and analytical thinking.
+
+TECHNICAL SKILLS
+---------------
+• IT Skills
+• Communication
+• Teamwork
+• Problem Solving
+• Analytical Thinking
+• Python
+• SQL
+• Data Analysis
+
+WORK EXPERIENCE
+--------------
+• 3+ years of experience in IT
+• Collaborated with cross-functional teams
+• Solved complex technical problems
+• Communicated effectively with stakeholders
+• Analyzed data to drive business decisions
+
+EDUCATION
+---------
+• Bachelor's Degree in Computer Science
+• University of Mumbai
+• 2020
+
+====================================================================

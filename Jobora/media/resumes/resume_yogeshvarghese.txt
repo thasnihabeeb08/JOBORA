@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - YOGESH VARGHESE
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Yogesh Varghese
+Email: yogeshvarghese@example.com
+Phone: +917494231923
+Location: Bhopal
+
+EDUCATION
+---------
+• bachelors in Information Technology
+• IIIT Delhi
+• Graduation Year: 2011
+
+WORK EXPERIENCE
+--------------
+• 6 years of professional experience
+• Current Role: Product Manager
+• Skills: C++, Vue.js, Jenkins, Python, JavaScript, UI/UX Design, Communication, DevOps
+
+TECHNICAL SKILLS
+----------------
+C++, Vue.js, Jenkins, Python, JavaScript, UI/UX Design, Communication, DevOps
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

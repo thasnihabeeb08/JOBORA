@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - FARHAN DUBEY
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Farhan Dubey
+Email: farhandubey@example.com
+Phone: +919746539665
+Location: Hyderabad
+
+EDUCATION
+---------
+• masters in Marketing
+• Anna University
+• Graduation Year: 2015
+
+WORK EXPERIENCE
+--------------
+• 11 years of professional experience
+• Current Role: Software Developer
+• Skills: Problem Solving, Data Analysis, Illustrator, Photoshop, AWS, Ruby on Rails, Docker, Jenkins
+
+TECHNICAL SKILLS
+----------------
+Problem Solving, Data Analysis, Illustrator, Photoshop, AWS, Ruby on Rails, Docker, Jenkins
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        

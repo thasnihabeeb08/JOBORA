@@ -1,0 +1,46 @@
+
+============================================================
+                       RESUME - VIVAAN VERMA
+============================================================
+
+PERSONAL INFORMATION
+-------------------
+Name: Vivaan Verma
+Email: vivaanverma@example.com
+Phone: +916638339845
+Location: Mysore
+
+EDUCATION
+---------
+• masters in Marketing
+• Anna University
+• Graduation Year: 2013
+
+WORK EXPERIENCE
+--------------
+• 5 years of professional experience
+• Current Role: Product Manager
+• Skills: Excel, CI/CD, Photoshop, PHP, Illustrator, Python, Kubernetes, Django
+
+TECHNICAL SKILLS
+----------------
+Excel, CI/CD, Photoshop, PHP, Illustrator, Python, Kubernetes, Django
+
+PROJECTS
+--------
+• Developed multiple web applications
+• Contributed to open-source projects
+• Built personal portfolio website
+
+CERTIFICATIONS
+--------------
+• Various technical certifications
+
+LANGUAGES
+---------
+• English (Fluent)
+• Hindi (Native)
+• Malayalam (Conversational)
+
+============================================================
+        
